@@ -263,11 +263,6 @@ makes)."
 ;; (if (fboundp 'display-battery-mode)
 ;;   (display-battery-mode t))
 
-;; auto-fill-mode for text buffers
-(add-hook 'text-mode-hook
-  (lambda()
-    (auto-fill-mode)))
-
 ;; 2 space indent for HTML
 (add-hook 'sgml-mode-hook
   (lambda ()
@@ -341,6 +336,10 @@ makes)."
 
 ;; allows "y" instead of "yes" on exit
 (fset 'yes-or-no-p 'y-or-n-p)
+
+;; C-x C-m as replacement for M-x
+(global-set-key "\C-x\C-m" 'execute-extended-command)
+(global-set-key "\C-c\C-m" 'execute-extended-command)
 
 ;; C-x C-u for undo (a common typo of mine)
 (global-set-key [(control ?x) (control ?u)] 'undo)
