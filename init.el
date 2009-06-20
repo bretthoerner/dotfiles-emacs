@@ -224,7 +224,7 @@ makes)."
 (add-to-list 'load-path (concat dotfiles-dir "slime"))
 (add-to-list 'load-path (concat dotfiles-dir "swank-clojure"))
 (require 'swank-clojure-autoload)
-(setq swank-clojure-binary (expand-file-name "~/bin/clj"))
+(setq swank-clojure-binary (expand-file-name "~/bin/clojure"))
 (eval-after-load "slime"
   '(progn (slime-setup '(slime-repl))))
 (require 'slime)
