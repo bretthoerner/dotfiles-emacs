@@ -42,6 +42,10 @@
 ;; ansi-color
 (require 'ansi-color)
 
+;; browse-kill-ring
+(require 'browse-kill-ring)
+(browse-kill-ring-default-keybindings)
+
 ;; clojure
 (add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
 (require 'clojure-mode)
@@ -160,6 +164,9 @@ makes)."
 
 ;; imenu
 (require 'imenu)
+
+;; iswitchb
+(iswitchb-mode 1)
 
 ;; js2-mode
 (autoload 'js2-mode "js2" nil t)
