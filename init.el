@@ -50,6 +50,10 @@
                         '(("(\\|)" . 'esk-paren-face)))
 (add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
 
+;; cua-mode
+(cua-mode t)
+(setq cua-enable-cua-keys nil)
+
 ;; dired
 (require 'dired)
 (require 'dired-single)
@@ -198,6 +202,9 @@ makes)."
 ;; redo
 (require 'redo)
 
+;; revbufs
+(require 'revbufs)
+
 ;; sass
 (when (> emacs-major-version 22)
   (require 'sass-mode))
@@ -253,7 +260,7 @@ makes)."
 )
 
 (add-to-path "/opt/local/bin")
-; (add-to-path "/opt/local/Library/Frameworks/Python.framework/Versions/2.6/bin")
+(add-to-path "/opt/local/Library/Frameworks/Python.framework/Versions/2.6/bin")
 (add-to-path (expand-file-name "~/bin"))
 
 ;; show time, just 'cause
@@ -281,7 +288,8 @@ makes)."
 (setq mouse-drag-copy-region nil)
 
 ;; scroll one line at a time
-(setq-default scroll-conservatively 10000)
+;; (setq-default scroll-conservatively 10000)
+(setq-default scroll-step 1)
 
 ;; don't split horizontally without me asking
 (setq-default split-width-threshold nil)
