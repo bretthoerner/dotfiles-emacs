@@ -609,6 +609,9 @@ buffer-local variable `show-trailing-whitespace'."
     ;; darker background color for expression
     (set-face-background 'show-paren-match-face "gray9")
 
+    ;; bar cursor
+    (setq-default cursor-type 'bar)
+
     ;; disable tool-bar
     (tool-bar-mode -1)
 
