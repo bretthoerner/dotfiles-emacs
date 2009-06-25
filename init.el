@@ -165,9 +165,6 @@ makes)."
 ;; imenu
 (require 'imenu)
 
-;; iswitchb
-(iswitchb-mode 1)
-
 ;; js2-mode
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
@@ -192,6 +189,21 @@ makes)."
 
 ;; org-mode
 (add-to-list 'load-path (concat dotfiles-dir "org-mode/lisp"))
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|txt\\)$" . org-mode))
+(require 'org-install)
+
+(add-hook 'org-mode-hook
+  (lambda ()
+    ;; yasnippet
+    (make-variable-buffer-local 'yas/trigger-key)
+    (setq yas/trigger-key [tab])
+    (define-key yas/keymap [tab] 'yas/next-field-group)
+    ;; flyspell mode to spell check everywhere
+    (flyspell-mode 1)))
+
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
 
 ;; paredit
 (autoload 'paredit-mode "paredit" "Minor mode for pseudo-structurally editing Lisp code." t)
