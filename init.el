@@ -122,7 +122,7 @@
 (require 'project)
 (require 'find-file-in-project)
 (setq ffip-patterns
-  '("*.rb" "*.html" "*.el" "*.js" "*.py" "*.css"))
+  '("*.rb" "*.html" "*.el" "*.js" "*.py" "*.css" "*.sass"))
 
 ;; flymake
 (setq-default flymake-gui-warnings-enabled nil)
@@ -181,7 +181,6 @@ makes)."
 (setq ido-case-fold t)
 (setq ido-enable-flex-matching t)
 (setq ido-save-directory-list-file nil)
-(setq ido-use-filename-at-point t)
 (require 'ido)
 (ido-mode t)
 (ido-everywhere t)
@@ -323,6 +322,10 @@ makes)."
 
 ;; always show trailing whitespace
 (setq-default show-trailing-whitespace t)
+
+;; show line numbers
+;;(require 'linum)
+;;(global-linum-mode 1)
 
 ;; no startup message
 (setq inhibit-startup-message t)
