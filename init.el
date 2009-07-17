@@ -179,6 +179,7 @@ makes)."
 ;; ido
 (setq ido-auto-merge-work-directories-length -1)
 (setq ido-case-fold t)
+(setq ido-create-new-buffer 'always)
 (setq ido-enable-flex-matching t)
 (setq ido-save-directory-list-file nil)
 (require 'ido)
@@ -271,8 +272,8 @@ makes)."
 (require 'tramp)
 
 ;; uniquify
-(setq uniquify-buffer-name-style 'post-forward)
 (setq uniquify-after-kill-buffer-p t)
+(setq uniquify-buffer-name-style 'post-forward)
 (setq uniquify-ignore-buffers-re "^\\*")
 (setq uniquify-separator ": ")
 (require 'uniquify)
@@ -327,7 +328,8 @@ makes)."
 ;;(require 'linum)
 ;;(global-linum-mode 1)
 
-;; no startup message
+;; no startup message or splash screen
+(setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
 
 ;; don't copy selected text to kill-ring automatically
