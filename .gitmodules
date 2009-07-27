@@ -19,3 +19,6 @@
 [submodule "submodules/yasnippet"]
 	path = submodules/yasnippet
 	url = git://github.com/bretthoerner/mirror-yasnippet
+[submodule "submodules/eproject"]
+	path = submodules/eproject
+	url = git://github.com/jrockway/eproject.git
