@@ -118,6 +118,11 @@
       (setq exec-path (cons (concat erlang-path "bin") exec-path))
       (require 'erlang-start))))
 
+;; eproject
+(add-to-list 'load-path (concat dotfiles-dir "eproject"))
+(require 'eproject)
+(require 'eproject-extras)
+
 ;; ffip
 (require 'project)
 (require 'find-file-in-project)
@@ -336,8 +341,8 @@ makes)."
 (setq mouse-drag-copy-region nil)
 
 ;; scroll one line at a time
-;; (setq-default scroll-conservatively 10000)
-(setq-default scroll-step 1)
+(setq-default scroll-conservatively 10000)
+;; (setq-default scroll-step 1)
 
 ;; don't split horizontally without me asking
 (setq-default split-width-threshold nil)
