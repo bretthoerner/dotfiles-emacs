@@ -16,9 +16,6 @@
 [submodule "submodules/find-file-in-project"]
 	path = submodules/find-file-in-project
 	url = git://github.com/technomancy/find-file-in-project.git
-[submodule "submodules/yasnippet"]
-	path = submodules/yasnippet
-	url = git://github.com/bretthoerner/mirror-yasnippet
 [submodule "submodules/eproject"]
 	path = submodules/eproject
 	url = git://github.com/jrockway/eproject.git

@@ -15,7 +15,7 @@ cd ${EMACS_HOME}/magit
 make
 
 echo "MISC"
-for filename in erlang js2 paredit python-mode
+for filename in erlang paredit python-mode
 do
     emacs -batch -q -eval "(byte-compile-file \"${EMACS_HOME}/misc/${filename}.el\")"
 done

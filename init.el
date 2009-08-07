@@ -195,9 +195,11 @@ makes)."
 (require 'imenu)
 
 ;; js2-mode
-(autoload 'js2-mode "js2" nil t)
-(add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
-(setq js2-highlight-level 3)
+(when (> emacs-major-version 22)
+  (progn
+    (autoload 'js2-mode "js2" nil t)
+    (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
+    (setq js2-highlight-level 3)))
 
 ;; magit
 (add-to-list 'load-path (concat dotfiles-dir "magit"))
@@ -223,10 +225,6 @@ makes)."
 
 (add-hook 'org-mode-hook
   (lambda ()
-    ;; yasnippet
-    (make-variable-buffer-local 'yas/trigger-key)
-    (setq yas/trigger-key [tab])
-    (define-key yas/keymap [tab] 'yas/next-field-group)
     ;; flyspell mode to spell check everywhere
     (flyspell-mode 1)))
 
@@ -283,12 +281,6 @@ makes)."
 (setq uniquify-separator ": ")
 (require 'uniquify)
 
-;; yasnippet
-(add-to-list 'load-path (concat dotfiles-dir "yasnippet"))
-(require 'yasnippet)
-(yas/initialize)
-(yas/load-directory (concat dotfiles-dir "yasnippet/snippets"))
-
 
 ;; --------------
 ;; general config
@@ -317,6 +309,9 @@ makes)."
 ;; use battery mode if we have it
 ;; (if (fboundp 'display-battery-mode)
 ;;   (display-battery-mode t))
+
+;; example of .dir-locals.el
+;; ((js2-mode . ((indent-tabs-mode . t))))
 
 ;; 2 space indent for HTML
 (add-hook 'sgml-mode-hook
