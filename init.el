@@ -314,9 +314,9 @@ makes)."
 ;; ((js2-mode . ((indent-tabs-mode . t))))
 
 ;; 2 space indent for HTML
-(add-hook 'sgml-mode-hook
-  (lambda ()
-    (setq tab-width 2)))
+;; (add-hook 'sgml-mode-hook
+;;   (lambda ()
+;;     (setq tab-width 2)))
 
 ;; use text-mode not fundamental-mode
 (setq default-major-mode 'text-mode)
