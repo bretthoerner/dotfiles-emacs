@@ -649,12 +649,6 @@ buffer-local variable `show-trailing-whitespace'."
     ;; start emacs server
     (server-start)
 
-    ;; highlight whole expression inside parens
-    (setq show-paren-style 'expression)
-
-    ;; darker background color for expression
-    (set-face-background 'show-paren-match-face "gray9")
-
     ;; bar cursor
     (setq-default cursor-type 'bar)
 
@@ -677,32 +671,45 @@ buffer-local variable `show-trailing-whitespace'."
     ;; make frame larger
     (setq initial-frame-alist '((width . 140) (height . 40)))
 
+    ;; highlight whole expression inside parens
+    (setq show-paren-style 'expression)
+
+    ;; darker background color for expression
+    ;; (set-face-background 'show-paren-match-face "gray9")
+
+    ;; color-theme
+    (add-to-list 'load-path (concat dotfiles-dir "color-theme"))
+    (require 'color-theme)
+    (color-theme-initialize)
+    (load-file (concat dotfiles-dir "color-theme/themes/blackboard.el"))
+    (color-theme-blackboard)
+
     ;; theme
-    (set-background-color "black")
-    (set-foreground-color "white")
-    (set-border-color "black")
-    (set-cursor-color "yellow")
-    (set-mouse-color "white")
-    (set-face-background 'hl-line "gray4")
-    (set-face-background 'region "DarkSlateGray")
-    (set-face-foreground 'font-lock-builtin-face "SteelBlue")
-    (set-face-foreground 'font-lock-comment-face "AntiqueWhite3")
-    (make-face-italic 'font-lock-comment-face)
-    (set-face-foreground 'font-lock-constant-face "Gold")
-    (make-face-bold 'font-lock-constant-face)
-    (set-face-foreground 'font-lock-doc-face "BurlyWood")
-    (make-face-italic 'font-lock-doc-face)
-    (set-face-foreground 'font-lock-function-name-face "LightSkyBlue")
-    (make-face-bold 'font-lock-function-name-face)
-    (set-face-foreground 'font-lock-keyword-face "LightSkyBlue")
-    (set-face-foreground 'font-lock-preprocessor-face "Gold")
-    (make-face-bold 'font-lock-preprocessor-face)
-    (set-face-foreground 'font-lock-string-face "BurlyWood")
-    (set-face-foreground 'font-lock-type-face "PaleGreen")
-    (make-face-bold 'font-lock-type-face)
-    (set-face-foreground 'font-lock-variable-name-face "Aquamarine")
-    (set-face-foreground 'font-lock-warning-face "chocolate")
-    (make-face-bold 'font-lock-warning-face)
+    ;; (set-background-color "black")
+    ;; (set-foreground-color "white")
+    ;; (set-border-color "black")
+    ;; (set-cursor-color "yellow")
+    ;; (set-mouse-color "white")
+    ;; (set-face-background 'hl-line "gray4")
+    ;; (set-face-background 'region "DarkSlateGray")
+    ;; (set-face-foreground 'font-lock-builtin-face "SteelBlue")
+    ;; (set-face-foreground 'font-lock-comment-face "AntiqueWhite3")
+    ;; (make-face-italic 'font-lock-comment-face)
+    ;; (set-face-foreground 'font-lock-constant-face "Gold")
+    ;; (make-face-bold 'font-lock-constant-face)
+    ;; (set-face-foreground 'font-lock-doc-face "BurlyWood")
+    ;; (make-face-italic 'font-lock-doc-face)
+    ;; (set-face-foreground 'font-lock-function-name-face "LightSkyBlue")
+    ;; (make-face-bold 'font-lock-function-name-face)
+    ;; (set-face-foreground 'font-lock-keyword-face "LightSkyBlue")
+    ;; (set-face-foreground 'font-lock-preprocessor-face "Gold")
+    ;; (make-face-bold 'font-lock-preprocessor-face)
+    ;; (set-face-foreground 'font-lock-string-face "BurlyWood")
+    ;; (set-face-foreground 'font-lock-type-face "PaleGreen")
+    ;; (make-face-bold 'font-lock-type-face)
+    ;; (set-face-foreground 'font-lock-variable-name-face "Aquamarine")
+    ;; (set-face-foreground 'font-lock-warning-face "chocolate")
+    ;; (make-face-bold 'font-lock-warning-face)
 
     ;; mac-specific
     (if (or (string= "mac" window-system) (string= "ns" window-system))
