@@ -308,6 +308,9 @@ makes)."
 ;; show time, just 'cause
 (display-time-mode t)
 
+;; revert changed files automatically
+(global-auto-revert-mode t)
+
 ;; use battery mode if we have it
 ;; (if (fboundp 'display-battery-mode)
 ;;   (display-battery-mode t))
