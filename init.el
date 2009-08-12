@@ -675,7 +675,7 @@ buffer-local variable `show-trailing-whitespace'."
     (setq show-paren-style 'expression)
 
     ;; darker background color for expression
-    ;; (set-face-background 'show-paren-match-face "gray9")
+    (set-face-background 'show-paren-match-face "black")
 
     ;; color-theme
     (add-to-list 'load-path (concat dotfiles-dir "color-theme"))
