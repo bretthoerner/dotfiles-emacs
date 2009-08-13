@@ -684,6 +684,9 @@ buffer-local variable `show-trailing-whitespace'."
     (load-file (concat dotfiles-dir "color-theme/themes/blackboard.el"))
     (color-theme-blackboard)
 
+    ;; fix something that is overriding my region background
+    (set-face-background 'region "#253B76")
+
     ;; theme
     ;; (set-background-color "black")
     ;; (set-foreground-color "white")
