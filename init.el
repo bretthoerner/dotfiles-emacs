@@ -199,7 +199,7 @@ makes)."
 ;; js2-mode
 (when (> emacs-major-version 22)
   (progn
-    (autoload 'js2-mode "js2" nil t)
+    (require 'js2-mode)
     (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
     (setq js2-highlight-level 3)))
 
