@@ -329,6 +329,12 @@ makes)."
 ;; always show trailing whitespace
 (setq-default show-trailing-whitespace t)
 
+;; but not for some modes
+(defun hide-trailing-whitespace ()
+  (setq show-trailing-whitespace nil))
+(add-hook 'help-mode-hook 'hide-trailing-whitespace)
+(add-hook 'slime-repl-mode-hook 'hide-trailing-whitespace)
+
 ;; show line numbers
 ;;(require 'linum)
 ;;(global-linum-mode 1)
@@ -675,7 +681,7 @@ buffer-local variable `show-trailing-whitespace'."
     (setq show-paren-style 'expression)
 
     ;; darker background color for expression
-    (set-face-background 'show-paren-match-face "black")
+    (set-face-background 'show-paren-match-face "#333333")
 
     ;; color-theme
     (add-to-list 'load-path (concat dotfiles-dir "color-theme"))
