@@ -237,6 +237,7 @@ makes)."
 ;; paredit
 (autoload 'paredit-mode "paredit" "Minor mode for pseudo-structurally editing Lisp code." t)
 (defun lisp-enable-paredit-hook () (paredit-mode 1))
+(add-hook 'slime-repl-mode-hook 'paredit-mode)
 
 ;; php
 (require 'php-mode)
