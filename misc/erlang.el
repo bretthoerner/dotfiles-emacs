@@ -1,17 +1,31 @@
 ;; erlang.el --- Major modes for editing and running Erlang
 
 ;; Copyright (C) 1995-1998,2000  Ericsson Telecom AB
-
+;; Copyright (C) 2004  Free Software Foundation, Inc.
 ;; Author:   Anders Lindgren
-;; Version:  2.4.1
+;; Version:  2.5.4
 ;; Keywords: erlang, languages, processes
 ;; Date:     2000-09-11
 
+;; The contents of this file are subject to the Erlang Public License,
+;; Version 1.1, (the "License"); you may not use this file except in
+;; compliance with the License. You should have received a copy of the
+;; Erlang Public License along with this software. If not, it can be
+;; retrieved via the world wide web at http://www.erlang.org/.
+
+;; Software distributed under the License is distributed on an "AS IS"
+;; basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+;; the License for the specific language governing rights and limitations
+;; under the License.
+
+;; The Initial Developer of the Original Code is Ericsson Utvecklings AB.
+;; All Rights Reserved.
+
 ;; Lars Thorsén's modifications of 2000-06-07 included.
- 
+
 ;; The original version of this package was written by Robert Virding.
 ;;
-;; Most skeletons has been written at Ericsson Telecom by
+;; Most skeletons have been written at Ericsson Telecom by
 ;; magnus@erix.ericsson.se and janne@erix.ericsson.se
 
 ;;; Commentary:
@@ -41,8 +55,9 @@
 ;; --------------
 ;;
 ;; Please send bug reports to the following email address:
-;;     support@erlang.ericsson.se
-;;
+;;      erlang-bugs@erlang.org
+;; or if you have a patch suggestion to:
+;;      erlang-patches@erlang.org
 ;; Please state as exactly as possible:
 ;;    - Version number of Erlang Mode (see the menu), Emacs, Erlang,
 ;;	and of any other relevant software.
@@ -52,23 +67,22 @@
 ;;    - Relevant pieces of Erlang code causing the problem.
 ;;    - Personal Emacs customisations, if any.
 ;;
-;; Should the Emacs generate an error, please set the emacs variable
+;; Should the Emacs generate an error, please set the Emacs variable
 ;; `debug-on-error' to `t'.  Repeat the error and enclose the debug
 ;; information in your bug-report.
 ;;
 ;; To set the variable you can use the following command:
 ;;     M-x set-variable RET debug-on-error RET t RET
-
 ;;; Code:
 
 ;; Variables:
 
-(defconst erlang-version "2.4.1"
+(defconst erlang-version "2.5.4"
   "The version number of Erlang mode.")
 
 (defvar erlang-root-dir nil
   "The directory where the Erlang system is installed.
-The name should not contain the ending slash.
+The name should not contain the trailing slash.
 
 Should this variable be nil, no manual pages will show up in the
 Erlang mode menu.")
@@ -80,10 +94,10 @@ Erlang mode menu.")
 			    erlang-menu-man-items
 			    erlang-menu-personal-items
 			    erlang-menu-version-items)
-  "*List of menu item list to combine to create Erland mode menu.
+  "*List of menu item list to combine to create Erlang mode menu.
 
-External programs which temporary adds menu items to the Erland mode
-menu use this variable.  Please use the function `add-hook' to add
+External programs which temporarily add menu items to the Erlang mode
+menu may use this variable.  Please use the function `add-hook' to add
 items.
 
 Please call the function `erlang-menu-init' after every change to this
@@ -113,7 +127,9 @@ variable.")
       ("Mark Clause" erlang-mark-clause)
       nil
       ("New Clause" erlang-generate-new-clause)
-      ("Clone Arguments" erlang-clone-arguments)))
+      ("Clone Arguments" erlang-clone-arguments)
+      nil
+      ("Align Arrows" erlang-align-arrows)))
     ("Syntax Highlighting"
      (("Level 3" erlang-font-lock-level-3)
       ("Level 2" erlang-font-lock-level-2)
@@ -126,10 +142,10 @@ variable.")
       ("Complete Word" erlang-complete-tag)
       ("Tags Apropos" tags-apropos)
       ("Search Files" tags-search))))
-  "*Description of menu used in Erlang mode.
+  "Description of menu used in Erlang mode.
 
-This variable must be a list. The elements are either nil representing
-a horisontal line or a list with two or three elements.  The first is
+This variable must be a list.  The elements are either nil representing
+a horizontal line or a list with two or three elements.  The first is
 the name of the menu item, the second is the function to call, or a
 submenu, on the same same form as ITEMS.  The third optional argument
 is an expression which is evaluated every time the menu is displayed.
@@ -141,7 +157,7 @@ Example:
        ((\"Yellow\" function-yellow)
         (\"Blue\" function-blue)))
       nil
-      (\"Region Funtion\" spook-function midnight-variable))
+      (\"Region Function\" spook-function midnight-variable))
 
 Call the function `erlang-menu-init' after modifying this variable.")
 
@@ -150,7 +166,7 @@ Call the function `erlang-menu-init' after modifying this variable.")
     ("Shell"
      (("Start New Shell" erlang-shell)
       ("Display Shell"   erlang-shell-display))))
-  "*Description of the Shell menu used by Erlang mode.
+  "Description of the Shell menu used by Erlang mode.
 
 Please see the documentation of `erlang-menu-base-items'.")
 
@@ -159,17 +175,17 @@ Please see the documentation of `erlang-menu-base-items'.")
      (("Compile Buffer" erlang-compile)
       ("Display Result" erlang-compile-display)
       ("Next Error"     erlang-next-error))))
-  "*Description of the Compile menu used by Erlang mode.
+  "Description of the Compile menu used by Erlang mode.
 
 Please see the documentation of `erlang-menu-base-items'.")
 
 (defvar erlang-menu-version-items
   '(nil
     ("Version" erlang-version))
-  "*Description of the version menu used in Erlang mode.")
+  "Description of the version menu used in Erlang mode.")
 
 (defvar erlang-menu-personal-items nil
-  "*Description of personal menu items used in Erlang mode.
+  "Description of personal menu items used in Erlang mode.
 
 Please see the variable `erlang-menu-base-items' for a description
 of the format.")
@@ -193,8 +209,8 @@ normally used by the user to personalise the programming environment.
 When used in a site init file, it could be used to customise Erlang
 mode for all users on the system.
 
-The functions added to this hook is runed every time Erlang mode is
-started.  See also `erlang-load-hook', a hook which is runed once,
+The functions added to this hook are run every time Erlang mode is
+started.  See also `erlang-load-hook', a hook which is run once,
 when Erlang mode is loaded into Emacs, and `erlang-shell-mode-hook'
 which is run every time a new inferior Erlang shell is started.
 
@@ -235,11 +251,11 @@ the first time.
 Natural actions for the functions added to this hook are actions which
 only should be performed once, and actions which should be performed
 before starting Erlang mode.  For example, a number of variables are
-used by Erlang mode before `erlang-mode-hook' is runed.
+used by Erlang mode before `erlang-mode-hook' is run.
 
 The following example sets the variable `erlang-root-dir' so that the
 manual pages can be retrieved (note that you must set the value of
-`erlang-root-dir' to match the loation of Erlang on your system):
+`erlang-root-dir' to match the location of Erlang on your system):
 
     (add-hook 'erlang-load-hook 'my-erlang-load-hook)
 
@@ -250,7 +266,7 @@ manual pages can be retrieved (note that you must set the value of
   "Functions to run when a new Erlang source file is being edited.
 
 A useful function is `tempo-template-erlang-normal-header'.
-\(This function only exists when the `tempo' packags is available.)")
+\(This function only exists when the `tempo' package is available.)")
 
 (defvar erlang-check-module-name 'ask
   "*Non-nil means check that module name and file name agrees when saving.
@@ -266,10 +282,10 @@ prompted.  If the value is t the source is silently changed.")
 
 The list should contain the electric commands which should be active.
 Currently, the available electric commands are:
-    erlang-electric-comma
-    erlang-electric-semicolon
-    erlang-electric-gt
-    erlang-electric-newline
+    `erlang-electric-comma'
+    `erlang-electric-semicolon'
+    `erlang-electric-gt'
+    `erlang-electric-newline'
 
 Should the variable be bound to t, all electric commands
 are activated.
@@ -293,7 +309,7 @@ inhibited.")
   '(erlang-electric-semicolon
     erlang-electric-comma
     erlang-electric-gt)
-  "*Command which can inhibit the next newline.")
+  "*Commands which can inhibit the next newline.")
 
 (defvar erlang-electric-semicolon-insert-blank-lines nil
   "*Number of blank lines inserted before header, or nil.
@@ -397,7 +413,7 @@ Setting this variable to zero, electric commands will always be
 triggered by `erlang-next-lines-empty-p', unless inhibited by other
 rules.
 
-Should this variable be `nil', `erlang-next-lines-empty-p' will never
+Should this variable be nil, `erlang-next-lines-empty-p' will never
 trigger an electric command.  The same effect would be reached if the
 function `erlang-next-lines-empty-p' would be removed from the criteria
 lists.
@@ -433,7 +449,7 @@ When nil, indent to the column after the `(' of the
 function.")
 
 (defvar erlang-tab-always-indent t
-  "*Non-nil means TAB in Erlang mode should always reindent the current line,
+  "*Non-nil means TAB in Erlang mode should always re-indent the current line,
 regardless of where in the line point is when the TAB command is used.")
 
 (defvar erlang-error-regexp-alist
@@ -444,12 +460,13 @@ regardless of where in the line point is when the TAB command is used.")
   "Inhibit the creation of the Erlang Manual Pages menu.
 
 The Windows distribution of Erlang does not include man pages, hence
-there is no idea to create the menu.")
+there is no attempt to create the menu.")
 
 (defvar erlang-man-dirs
   '(("Man - Commands" "/man/man1" t)
     ("Man - Modules" "/man/man3" t)
-    ("Man - Unsupported" "/uc/man/man3" t))
+    ("Man - Files" "/man/man4" t)
+    ("Man - Applications" "/man/man6" t))
   "*The man directories displayed in the Erlang menu.
 
 Each item in the list should be a list with three elements, the first
@@ -465,12 +482,13 @@ the directory is relative to the variable `erlang-root-dir'.")
 
 The function is called with one argument, the name of the file
 containing the man page.  Use this variable when the default
-function, erlang-man-display, does not work on your system.")
+function, `erlang-man-display', does not work on your system.")
 
+(eval-and-compile
 (defconst erlang-atom-regexp "\\([a-z][a-zA-Z0-9_]*\\|'[^\n']*[^\\]'\\)"
   "Regexp which should match an Erlang atom.
 
-The regexp must be surrounded with a pair of regexp parentheses.")
+The regexp must be surrounded with a pair of regexp parentheses."))
 (defconst erlang-atom-regexp-matches 1
   "Number of regexp parenthesis pairs in `erlang-atom-regexp'.
 
@@ -480,18 +498,18 @@ contains `erlang-atom-regexp'.")
 (defconst erlang-variable-regexp "\\([A-Z_][a-zA-Z0-9_]*\\)"
   "Regexp which should match an Erlang variable.
 
-The regexp must be surrounded with a pair of regexp parenthesis.")
+The regexp must be surrounded with a pair of regexp parentheses.")
 (defconst erlang-variable-regexp-matches 1
   "Number of regexp parenthesis pairs in `erlang-variable-regexp'.
 
-This is used to determine matches in complex rexeps which contains
+This is used to determine matches in complex regexps which contains
 `erlang-variable-regexp'.")
 
 (defvar erlang-defun-prompt-regexp (concat "^" erlang-atom-regexp "\\s *(")
-  "*Regexp which should match beginning of a clause.")
+  "Regexp which should match beginning of a clause.")
 
 (defvar erlang-file-name-extension-regexp "\\.[eh]rl$"
-  "*Regexp which should match an erlang file name.
+  "*Regexp which should match an Erlang file name.
 
 This regexp is used when an Erlang module name is extracted from the
 name of an Erlang source file.
@@ -501,7 +519,7 @@ be excluded from the module name.
 
 To match all files set this variable to \"\\\\(\\\\..*\\\\|\\\\)$\".
 The matches all except the extension.  This is useful if the Erlang
-tags system should interpretate tags on the form `module:tag' for
+tags system should interpret tags on the form `module:tag' for
 files written in other languages than Erlang.")
 
 (defvar erlang-mode-map nil
@@ -534,11 +552,13 @@ files written in other languages than Erlang.")
   "Common popup menu for all buffers in Erlang mode.
 
 This variable is destructively modified every time the Erlang menu
-is modified.  The effect is that all changes take effekt in all
+is modified.  The effect is that all changes take effect in all
 buffers in Erlang mode, just like under GNU Emacs.
 
 Never EVER set this variable!")
 
+(defconst inferior-erlang-use-cmm (boundp 'minor-mode-overriding-map-alist)
+  "Non-nil means use `compilation-minor-mode' in Erlang shell.")
 
 ;; Tempo skeleton templates:
 
@@ -576,15 +596,22 @@ Never EVER set this variable!")
     ("Library module" "gen-lib"
      erlang-skel-lib erlang-skel-header)
     ("Corba callback" "gen-corba-cb"
-     erlang-skel-corba-callback erlang-skel-header))
-  "*Description of all skeletons templates.
+     erlang-skel-corba-callback erlang-skel-header)
+    ("Small Common Test suite" "ct-test-suite-s"
+     erlang-skel-ct-test-suite-s erlang-skel-header)
+    ("Large Common Test suite" "ct-test-suite-l"
+     erlang-skel-ct-test-suite-l erlang-skel-header)
+    ("Erlang TS test suite" "ts-test-suite"
+     erlang-skel-ts-test-suite erlang-skel-header)
+  )
+  "*Description of all skeleton templates.
 Both functions and menu entries will be created.
 
 Each entry in `erlang-skel' should be a list with three or four
 elements, or the empty list.
 
 The first element is the name which shows up in the menu.  The second
-is the `tempo' identfier (The string \"erlang-\" will be added in
+is the `tempo' identifier (The string \"erlang-\" will be added in
 front of it).  The third is the skeleton descriptor, a variable
 containing `tempo' attributes as described in the function
 `tempo-define-template'.  The optional fourth elements denotes a
@@ -595,16 +622,20 @@ of the function will be `tempo-template-erlang-X' where `X' is the
 tempo identifier as specified in the second argument of the elements
 in this list.
 
-A list with zero elements means that the a horisontal line should
+A list with zero elements means that the a horizontal line should
 be placed in the menu.")
 
 ;; In XEmacs `user-mail-address' returns "x@y.z (Foo Bar)" ARGH!
 ;; What's wrong with that? RFC 822 says it's legal.   [sverkerw]
+;; This needs to use the customized value.  If that's not sane, things like
+;; add-log will lose anyhow.  Avoid it if there _is_ a paren.
 (defvar erlang-skel-mail-address
-  (concat (user-login-name) "@"
-	  (or (and (boundp 'mail-host-address)
-		   (symbol-value 'mail-host-address))
-	      (system-name)))
+  (if (or (not user-mail-address) (string-match "(" user-mail-address))
+      (concat (user-login-name) "@"
+	      (or (and (boundp 'mail-host-address)
+		       mail-host-address)
+		  (system-name)))
+    user-mail-address)
   "Mail address of the user.")
 
 ;; Expression templates:
@@ -636,7 +667,7 @@ Please see the function `tempo-define-template'.")
 (defvar erlang-skel-receive-loop
   '(& o "loop(" p ") ->" n> "receive" n> p "_ ->" n>
       "loop(" p ")" n> "end.")
-  "*The skeleton of a simple `recieve' loop.
+  "*The skeleton of a simple `receive' loop.
 Please see the function `tempo-define-template'.")
 
 
@@ -703,7 +734,7 @@ Please see the function `tempo-define-template'.")
 
 (defvar erlang-skel-file-comment
   '(& "%%% File    : " (file-name-nondirectory buffer-file-name) n)
-  "*The template for creating the \"Module:\" line in the header.
+"*The template for creating the \"Module:\" line in the header.
 Please see the function `tempo-define-template'.")
 
 (defvar erlang-skel-small-header
@@ -731,10 +762,10 @@ Please see the function `tempo-define-template'.")
       (erlang-skel-include erlang-skel-copyright-comment
 			   erlang-skel-file-comment
 			   erlang-skel-author-comment)
-      "%%% Description : " p n 
+      "%%% Description : " p n
       "%%%" n
       (erlang-skel-include erlang-skel-created-comment)
-      (erlang-skel-separator) 
+      (erlang-skel-separator)
       (erlang-skel-include erlang-skel-small-header) )
   "*The template of a large header.
 Please see the function `tempo-define-template'.")
@@ -762,42 +793,23 @@ Please see the function `tempo-define-template'.")
 
 (defvar erlang-skel-application
   '((erlang-skel-include erlang-skel-large-header)
-    "-behaviour(application)." n
-    (erlang-skel-separator 2)
-    "%% Include files" n
-    (erlang-skel-separator 2)
-    n
-    (erlang-skel-separator 2)
-    "%% External exports" n
-    (erlang-skel-separator 2) 
-    "-export([" n> "start/2," n>
-    "stop/1" n
-    "        ])." n
-    n
-    (erlang-skel-separator 2)
-    "%% Internal exports" n
-    (erlang-skel-separator 2) 
-    "-export([" n
-    "        ])." n
-    n 
-    (erlang-skel-separator 2)
-    "%% Macros" n
-    (erlang-skel-separator 2) 
-    n
-    (erlang-skel-separator 2)
-    "%% Records" n
-    (erlang-skel-separator 2) 
-    n
+    "-behaviour(application)." n n
+    "%% Application callbacks" n
+    "-export([start/2, stop/1])." n n
     (erlang-skel-double-separator 2)
-    "%% External functions" n
+    "%% Application callbacks" n
     (erlang-skel-double-separator 2)
     (erlang-skel-separator 2)
-    "%% Func: start/2" n
-    "%% Returns: {ok, Pid}        |" n
-    "%%          {ok, Pid, State} |" n
-    "%%          {error, Reason}   " n
+    "%% Function: start(Type, StartArgs) -> {ok, Pid} |" n
+    "%%                                     {ok, Pid, State} |" n
+    "%%                                     {error, Reason}" n
+    "%% Description: This function is called whenever an application " n
+    "%% is started using application:start/1,2, and should start the processes" n
+    "%% of the application. If the application is structured according to the" n
+    "%% OTP design principles as a supervision tree, this means starting the" n
+    "%% top supervisor of the tree." n
     (erlang-skel-separator 2)
-    "start(Type, StartArgs) ->" n>
+    "start(_Type, StartArgs) ->" n>
     "case 'TopSupervisor':start_link(StartArgs) of" n>
     "{ok, Pid} -> " n>
     "{ok, Pid};" n>
@@ -806,10 +818,12 @@ Please see the function `tempo-define-template'.")
     "end." n
     n
     (erlang-skel-separator 2)
-    "%% Func: stop/1" n
-    "%% Returns: any "n
+    "%% Function: stop(State) -> void()" n
+    "%% Description: This function is called whenever an application" n
+    "%% has stopped. It is intended to be the opposite of Module:start/2 and" n
+    "%% should do any necessary cleaning up. The return value is ignored. "n
     (erlang-skel-separator 2)
-    "stop(State) ->" n>
+    "stop(_State) ->" n>
     "ok." n
     n
     (erlang-skel-double-separator 2)
@@ -821,50 +835,37 @@ Please see the function `tempo-define-template'.")
 
 (defvar erlang-skel-supervisor
   '((erlang-skel-include erlang-skel-large-header)
-    "-behaviour(supervisor)." n
-    (erlang-skel-separator 2)
-    "%% Include files" n
-    (erlang-skel-separator 2)
-    n
-    (erlang-skel-separator 2)
-    "%% External exports" n
-    (erlang-skel-separator 2) 
-    "-export([" n> "start_link/0" n
-    "        ])." n
-    n
-    (erlang-skel-separator 2)
-    "%% Internal exports" n
-    (erlang-skel-separator 2) 
-    "-export([" n> "init/1" n
-    "        ])." n
-    n 
-    (erlang-skel-separator 2)
-    "%% Macros" n
-    (erlang-skel-separator 2)
-    "-define(SERVER, ?MODULE)." n
-    n
-    (erlang-skel-separator 2)
-    "%% Records" n
-    (erlang-skel-separator 2) 
-    n
+    "-behaviour(supervisor)." n n
+
+    "%% API" n
+    "-export([start_link/0])." n n
+
+    "%% Supervisor callbacks" n
+    "-export([init/1])." n n
+
+    "-define(SERVER, ?MODULE)." n n
+
     (erlang-skel-double-separator 2)
-    "%% External functions" n
+    "%% API functions" n
     (erlang-skel-double-separator 2)
     (erlang-skel-separator 2)
-    "%% Function: start_link/0" n
+    "%% Function: start_link() -> {ok,Pid} | ignore | {error,Error}" n
     "%% Description: Starts the supervisor" n
     (erlang-skel-separator 2)
     "start_link() ->" n>
-    "supervisor:start_link({local, ?SERVER}, ?MODULE, [])." n 
+    "supervisor:start_link({local, ?SERVER}, ?MODULE, [])." n
     n
     (erlang-skel-double-separator 2)
-    "%% Server functions" n
+    "%% Supervisor callbacks" n
     (erlang-skel-double-separator 2)
     (erlang-skel-separator 2)
-    "%% Func: init/1" n
-    "%% Returns: {ok,  {SupFlags,  [ChildSpec]}} |" n
-    "%%          ignore                          |" n
-    "%%          {error, Reason}   " n
+    "%% Func: init(Args) -> {ok,  {SupFlags,  [ChildSpec]}} |" n
+    "%%                     ignore                          |" n
+    "%%                     {error, Reason}" n
+    "%% Description: Whenever a supervisor is started using "n
+    "%% supervisor:start_link/[2,3], this function is called by the new process "n
+    "%% to find out about restart strategy, maximum restart frequency and child "n
+    "%% specifications." n
     (erlang-skel-separator 2)
     "init([]) ->" n>
     "AChild = {'AName',{'AModule',start_link,[]}," n>
@@ -880,51 +881,39 @@ Please see the function `tempo-define-template'.")
 
 (defvar erlang-skel-supervisor-bridge
   '((erlang-skel-include erlang-skel-large-header)
-    "-behaviour(supervisor_bridge)." n
-    (erlang-skel-separator 2)
-    "%% Include files" n
-    (erlang-skel-separator 2)
-    n
-    (erlang-skel-separator 2)
-    "%% External exports" n
-    (erlang-skel-separator 2) 
-    "-export([" n> "start_link/0" n
-    "        ])." n
-    n
-    (erlang-skel-separator 2)
-    "%% Internal exports" n
-    (erlang-skel-separator 2) 
-    "-export([" n> "init/1, " n> "terminate/2" n
-    "        ])." n
-    n 
-    (erlang-skel-separator 2)
-    "%% Macros" n
-    (erlang-skel-separator 2) 
-    "-define(SERVER, ?MODULE)." n
-    n
-    (erlang-skel-separator 2)
-    "%% Records" n
-    (erlang-skel-separator 2) 
-    "-record(state, {})." n
-    n
+    "-behaviour(supervisor_bridge)." n n
+
+    "%% API" n
+    "-export([start_link/0])." n n
+
+    "%% supervisor_bridge callbacks" n
+    "-export([init/1, terminate/2])." n n
+
+    "-define(SERVER, ?MODULE)." n n
+
+    "-record(state, {})." n n
+
     (erlang-skel-double-separator 2)
-    "%% External functions" n
+    "%% API" n
     (erlang-skel-double-separator 2)
     (erlang-skel-separator 2)
-    "%% Function: start_link/0" n
+    "%% Function: start_link() -> {ok,Pid} | ignore | {error,Error}" n
     "%% Description: Starts the supervisor bridge" n
-    (erlang-skel-separator 2) 
+    (erlang-skel-separator 2)
     "start_link() ->" n>
     "supervisor_bridge:start_link({local, ?SERVER}, ?MODULE, [])." n
     n
     (erlang-skel-double-separator 2)
-    "%% Server functions" n
+    "%% supervisor_bridge callbacks" n
     (erlang-skel-double-separator 2)
     (erlang-skel-separator 2)
-    "%% Func: init/1" n
-    "%% Returns: {ok,  Pid, State} |" n
-    "%%          ignore            |" n
-    "%%          {error, Reason}    " n
+    "%% Funcion: init(Args) -> {ok,  Pid, State} |" n
+    "%%                        ignore            |" n
+    "%%                        {error, Reason}    " n
+    "%% Description:Creates a supervisor_bridge process, linked to the calling" n
+    "%% process, which calls Module:init/1 to start the subsystem. To ensure a" n
+    "%% synchronized start-up procedure, this function does not return until" n
+    "%% Module:init/1 has returned. "  n
     (erlang-skel-separator 2)
     "init([]) ->" n>
     "case 'AModule':start_link() of" n>
@@ -935,9 +924,10 @@ Please see the function `tempo-define-template'.")
     "end." n
     n
     (erlang-skel-separator 2)
-    "%% Func: terminate/2" n
-    "%% Purpose: Synchronized shutdown of the underlying sub system." n
-    "%% Returns: any" n
+    "%% Func: terminate(Reason, State) -> void()" n
+    "%% Description:This function is called by the supervisor_bridge when it is"n
+    "%% about to terminate. It should be the opposite of Module:init/1 and stop"n
+    "%% the subsystem and do any necessary cleaning up.The return value is ignored."
     (erlang-skel-separator 2)
     "terminate(Reason, State) ->" n>
     "'AModule':stop()," n>
@@ -952,93 +942,91 @@ Please see the function `tempo-define-template'.")
 
 (defvar erlang-skel-generic-server
   '((erlang-skel-include erlang-skel-large-header)
-    "-behaviour(gen_server)." n
-    (erlang-skel-separator 2)
-    "%% Include files" n
-    (erlang-skel-separator 2)
-    n
-    (erlang-skel-separator 2)
-    "%% External exports" n
-    "-export([start_link/0])." n
-    n
+    "-behaviour(gen_server)." n n
+
+    "%% API" n
+    "-export([start_link/0])." n n
+
     "%% gen_server callbacks" n
     "-export([init/1, handle_call/3, handle_cast/2, "
-    "handle_info/2, terminate/2, code_change/3])." n n
-    "-record(state, {})." n
-    n
+    "handle_info/2," n>
+    "terminate/2, code_change/3])." n n
+
+    "-record(state, {})." n n
+
     (erlang-skel-double-separator 2)
-    "%% External functions" n
+    "%% API" n
     (erlang-skel-double-separator 2)
     (erlang-skel-separator 2)
-    "%% Function: start_link/0" n
+    "%% Function: start_link() -> {ok,Pid} | ignore | {error,Error}" n
     "%% Description: Starts the server" n
-    (erlang-skel-separator 2) 
+    (erlang-skel-separator 2)
     "start_link() ->" n>
     "gen_server:start_link({local, ?SERVER}, ?MODULE, [], [])." n
     n
     (erlang-skel-double-separator 2)
-    "%% Server functions" n
+    "%% gen_server callbacks" n
     (erlang-skel-double-separator 2)
     n
     (erlang-skel-separator 2)
-    "%% Function: init/1" n
+    "%% Function: init(Args) -> {ok, State} |" n
+    "%%                         {ok, State, Timeout} |" n
+    "%%                         ignore               |" n
+    "%%                         {stop, Reason}" n
     "%% Description: Initiates the server" n
-    "%% Returns: {ok, State}          |" n
-    "%%          {ok, State, Timeout} |" n
-    "%%          ignore               |" n
-    "%%          {stop, Reason}" n
     (erlang-skel-separator 2)
     "init([]) ->" n>
     "{ok, #state{}}." n
     n
     (erlang-skel-separator 2)
-    "%% Function: handle_call/3" n
+    "%% Function: "
+    "%% handle_call(Request, From, State) -> {reply, Reply, State} |" n
+    "%%                                      {reply, Reply, State, Timeout} |" n
+    "%%                                      {noreply, State} |" n
+    "%%                                      {noreply, State, Timeout} |" n
+    "%%                                      {stop, Reason, Reply, State} |" n
+    "%%                                      {stop, Reason, State}" n
     "%% Description: Handling call messages" n
-    "%% Returns: {reply, Reply, State}          |" n
-    "%%          {reply, Reply, State, Timeout} |" n
-    "%%          {noreply, State}               |" n
-    "%%          {noreply, State, Timeout}      |" n
-    "%%          {stop, Reason, Reply, State}   | (terminate/2 is called)" n
-    "%%          {stop, Reason, State}            (terminate/2 is called)" n
     (erlang-skel-separator 2)
-    "handle_call(Request, From, State) ->" n>
+    "handle_call(_Request, _From, State) ->" n>
     "Reply = ok," n>
     "{reply, Reply, State}." n
     n
     (erlang-skel-separator 2)
-    "%% Function: handle_cast/2" n
+    "%% Function: handle_cast(Msg, State) -> {noreply, State} |" n
+    "%%                                      {noreply, State, Timeout} |" n
+    "%%                                      {stop, Reason, State}" n
     "%% Description: Handling cast messages" n
-    "%% Returns: {noreply, State}          |" n
-    "%%          {noreply, State, Timeout} |" n
-    "%%          {stop, Reason, State}            (terminate/2 is called)" n
+
     (erlang-skel-separator 2)
-    "handle_cast(Msg, State) ->" n>
+    "handle_cast(_Msg, State) ->" n>
     "{noreply, State}." n
     n
     (erlang-skel-separator 2)
-    "%% Function: handle_info/2" n
+    "%% Function: handle_info(Info, State) -> {noreply, State} |" n
+    "%%                                       {noreply, State, Timeout} |" n
+    "%%                                       {stop, Reason, State}" n
     "%% Description: Handling all non call/cast messages" n
-    "%% Returns: {noreply, State}          |" n
-    "%%          {noreply, State, Timeout} |" n
-    "%%          {stop, Reason, State}            (terminate/2 is called)" n
     (erlang-skel-separator 2)
-    "handle_info(Info, State) ->" n>
+    "handle_info(_Info, State) ->" n>
     "{noreply, State}." n
     n
     (erlang-skel-separator 2)
-    "%% Function: terminate/2" n
-    "%% Description: Shutdown the server" n
-    "%% Returns: any (ignored by gen_server)" n
+    "%% Function: terminate(Reason, State) -> void()" n
+    "%% Description: This function is called by a gen_server when it is about to"n
+    "%% terminate. It should be the opposite of Module:init/1 and do any necessary"n
+    "%% cleaning up. When it returns, the gen_server terminates with Reason." n
+    "%% The return value is ignored." n
+
     (erlang-skel-separator 2)
-    "terminate(Reason, State) ->" n>
+    "terminate(_Reason, _State) ->" n>
     "ok." n
     n
     (erlang-skel-separator 2)
-    "%% Func: code_change/3" n
-    "%% Purpose: Convert process state when code is changed" n
-    "%% Returns: {ok, NewState}" n
+    "%% Func: code_change(OldVsn, State, Extra) -> {ok, NewState}" n
+    "%% Description: Convert process state when code is changed" n
     (erlang-skel-separator 2)
-    "code_change(OldVsn, State, Extra) ->" n>
+    "code_change(_OldVsn, State, _Extra) ->" n>
     "{ok, State}." n
     n
     (erlang-skel-separator 2)
@@ -1051,89 +1039,96 @@ Please see the function `tempo-define-template'.")
 (defvar erlang-skel-gen-event
   '((erlang-skel-include erlang-skel-large-header)
     "-behaviour(gen_event)." n
-    (erlang-skel-separator 2)
-    "%% Include files" n
-    (erlang-skel-separator 2)
-    n
-    (erlang-skel-separator 2)
-    "%% External exports" n
-    "-export([start_link/0, add_handler/0])." n
-    n
+
+    "%% API" n
+    "-export([start_link/0, add_handler/0])." n n
+
     "%% gen_event callbacks" n
-    "-export([init/1, handle_event/2, handle_call/2, "
+    "-export([init/1, handle_event/2, handle_call/2, " n>
     "handle_info/2, terminate/2, code_change/3])." n n
-    "-record(state, {})." n 
-    n
+
+    "-record(state, {})." n n
+
     (erlang-skel-double-separator 2)
-    "%% External functions" n
+    "%% gen_event callbacks" n
     (erlang-skel-double-separator 2)
     (erlang-skel-separator 2)
-    "%% Function: start_link/0" n
-    "%% Description: Starts the server" n
-    (erlang-skel-separator 2) 
+    "%% Function: start_link() -> {ok,Pid} | {error,Error} " n
+    "%% Description: Creates an event manager." n
+    (erlang-skel-separator 2)
     "start_link() ->" n>
     "gen_event:start_link({local, ?SERVER}). " n
     n
     (erlang-skel-separator 2)
-    "%% Function: add_handler/0" n
+    "%% Function: add_handler() -> ok | {'EXIT',Reason} | term()" n
     "%% Description: Adds an event handler" n
-    (erlang-skel-separator 2) 
+    (erlang-skel-separator 2)
     "add_handler() ->" n>
-    "gen_event:add_handler(?SERVER, ?MODULE, [])." n 
+    "gen_event:add_handler(?SERVER, ?MODULE, [])." n
     n
     (erlang-skel-double-separator 2)
-    "%% Server functions" n
+    "%% gen_event callbacks" n
     (erlang-skel-double-separator 2)
     (erlang-skel-separator 2)
-    "%% Func: init/1" n
-    "%% Returns: {ok, State}          |" n
-    "%%          Other" n
+    "%% Function: init(Args) -> {ok, State}" n
+    "%% Description: Whenever a new event handler is added to an event manager,"n
+    "%% this function is called to initialize the event handler." n
     (erlang-skel-separator 2)
     "init([]) ->" n>
     "{ok, #state{}}." n
     n
     (erlang-skel-separator 2)
-    "%% Func: handle_event/2" n
-    "%% Returns: {ok, State}                                |" n
-    "%%          {swap_handler, Args1, State1, Mod2, Args2} |" n
-    "%%          remove_handler                              " n
+    "%% Function:  "n
+    "%% handle_event(Event, State) -> {ok, State} |" n
+    "%%                               {swap_handler, Args1, State1, Mod2, Args2} |"n
+    "%%                               remove_handler" n
+    "%% Description:Whenever an event manager receives an event sent using"n
+    "%% gen_event:notify/2 or gen_event:sync_notify/2, this function is called for"n
+    "%% each installed event handler to handle the event. "n
     (erlang-skel-separator 2)
-    "handle_event(Event, State) ->" n>
+    "handle_event(_Event, State) ->" n>
     "{ok, State}." n
     n
     (erlang-skel-separator 2)
-    "%% Func: handle_call/2" n
-    "%% Returns: {ok, Reply, State}                                |" n
-    "%%          {swap_handler, Reply, Args1, State1, Mod2, Args2} |" n
-    "%%          {remove_handler, Reply}                            " n
+    "%% Function: " n
+    "%% handle_call(Request, State) -> {ok, Reply, State} |" n
+    "%%                                {swap_handler, Reply, Args1, State1, "n
+    "%%                                  Mod2, Args2} |" n
+    "%%                                {remove_handler, Reply}" n
+    "%% Description: Whenever an event manager receives a request sent using"n
+    "%% gen_event:call/3,4, this function is called for the specified event "n
+    "%% handler to handle the request."n
     (erlang-skel-separator 2)
-    "handle_call(Request, State) ->" n>
+    "handle_call(_Request, State) ->" n>
     "Reply = ok," n>
     "{ok, Reply, State}." n
     n
     (erlang-skel-separator 2)
-    "%% Func: handle_info/2" n
-    "%% Returns: {ok, State}                                |" n
-    "%%          {swap_handler, Args1, State1, Mod2, Args2} |" n
-    "%%          remove_handler                              " n
+    "%% Function: " n
+    "%% handle_info(Info, State) -> {ok, State} |" n
+    "%%                             {swap_handler, Args1, State1, Mod2, Args2} |" n
+    "%%                              remove_handler" n
+    "%% Description: This function is called for each installed event handler when"n
+    "%% an event manager receives any other message than an event or a synchronous"n
+    "%% request (or a system message)."n
     (erlang-skel-separator 2)
-    "handle_info(Info, State) ->" n>
+    "handle_info(_Info, State) ->" n>
     "{ok, State}." n
     n
     (erlang-skel-separator 2)
-    "%% Func: terminate/2" n
-    "%% Purpose: Shutdown the server" n
-    "%% Returns: any" n
+    "%% Function: terminate(Reason, State) -> void()" n
+    "%% Description:Whenever an event handler is deleted from an event manager,"n
+    "%% this function is called. It should be the opposite of Module:init/1 and "n
+    "%% do any necessary cleaning up. " n
     (erlang-skel-separator 2)
-    "terminate(Reason, State) ->" n>
+    "terminate(_Reason, _State) ->" n>
     "ok." n
     n
     (erlang-skel-separator 2)
-    "%% Func: code_change/3" n
-    "%% Purpose: Convert process state when code is changed" n
-    "%% Returns: {ok, NewState}" n
+    "%% Function: code_change(OldVsn, State, Extra) -> {ok, NewState} " n
+    "%% Description: Convert process state when code is changed" n
     (erlang-skel-separator 2)
-    "code_change(OldVsn, State, Extra) ->" n>
+    "code_change(_OldVsn, State, _Extra) ->" n>
     "{ok, State}." n
     n
     (erlang-skel-separator 2)
@@ -1145,111 +1140,141 @@ Please see the function `tempo-define-template'.")
 
 (defvar erlang-skel-gen-fsm
   '((erlang-skel-include erlang-skel-large-header)
-    "-behaviour(gen_fsm)." n
-    (erlang-skel-separator 2)
-    "%% Include files" n
-    (erlang-skel-separator 2)
-    n
-    (erlang-skel-separator 2)
-    "%% External exports" n
-    "-export([start_link/0])." n
-    n
+    "-behaviour(gen_fsm)." n n
+
+    "%% API" n
+    "-export([start_link/0])." n n
+
     "%% gen_fsm callbacks" n
     "-export([init/1, state_name/2, state_name/3, handle_event/3," n>
     "handle_sync_event/4, handle_info/3, terminate/3, code_change/4])." n n
-    "-record(state, {})." n 
-    n
+
+    "-record(state, {})." n n
+
     (erlang-skel-double-separator 2)
-    "%% External functions" n
+    "%% API" n
     (erlang-skel-double-separator 2)
     (erlang-skel-separator 2)
-    "%% Function: start_link/0" n
-    "%% Description: Starts the server" n
-    (erlang-skel-separator 2) 
+    "%% Function: start_link() -> ok,Pid} | ignore | {error,Error}" n
+    "%% Description:Creates a gen_fsm process which calls Module:init/1 to"n
+    "%% initialize. To ensure a synchronized start-up procedure, this function" n
+    "%% does not return until Module:init/1 has returned.  " n
+    (erlang-skel-separator 2)
     "start_link() ->" n>
-    "gen_fsm:start_link({local, ?SERVER}, ?MODULE, [], [])." n 
+    "gen_fsm:start_link({local, ?SERVER}, ?MODULE, [], [])." n
     n
     (erlang-skel-double-separator 2)
-    "%% Server functions" n
+    "%% gen_fsm callbacks" n
     (erlang-skel-double-separator 2)
     (erlang-skel-separator 2)
-    "%% Func: init/1" n
-    "%% Returns: {ok, StateName, StateData}          |" n
-    "%%          {ok, StateName, StateData, Timeout} |" n
-    "%%          ignore                              |" n
-    "%%          {stop, StopReason}                   " n
+    "%% Function: init(Args) -> {ok, StateName, State} |" n
+    "%%                         {ok, StateName, State, Timeout} |" n
+    "%%                         ignore                              |" n
+    "%%                         {stop, StopReason}                   " n
+    "%% Description:Whenever a gen_fsm is started using gen_fsm:start/[3,4] or"n
+    "%% gen_fsm:start_link/3,4, this function is called by the new process to "n
+    "%% initialize. " n
     (erlang-skel-separator 2)
     "init([]) ->" n>
     "{ok, state_name, #state{}}." n
     n
     (erlang-skel-separator 2)
-    "%% Func: StateName/2" n
-    "%% Returns: {next_state, NextStateName, NextStateData}          |" n
-    "%%          {next_state, NextStateName, NextStateData, Timeout} |" n
-    "%%          {stop, Reason, NewStateData}                         " n
+    "%% Function: "n
+    "%% state_name(Event, State) -> {next_state, NextStateName, NextState}|" n
+    "%%                             {next_state, NextStateName, " n
+    "%%                                NextState, Timeout} |" n
+    "%%                             {stop, Reason, NewState}" n
+    "%% Description:There should be one instance of this function for each possible"n
+    "%% state name. Whenever a gen_fsm receives an event sent using" n
+    "%% gen_fsm:send_event/2, the instance of this function with the same name as"n
+    "%% the current state name StateName is called to handle the event. It is also "n
+    "%% called if a timeout occurs. " n
     (erlang-skel-separator 2)
-    "state_name(Event, StateData) ->" n>
-    "{next_state, state_name, StateData}." n
+    "state_name(_Event, State) ->" n>
+    "{next_state, state_name, State}." n
     n
     (erlang-skel-separator 2)
-    "%% Func: StateName/3" n
-    "%% Returns: {next_state, NextStateName, NextStateData}            |" n
-    "%%          {next_state, NextStateName, NextStateData, Timeout}   |" n
-    "%%          {reply, Reply, NextStateName, NextStateData}          |" n
-    "%%          {reply, Reply, NextStateName, NextStateData, Timeout} |" n
-    "%%          {stop, Reason, NewStateData}                          |" n
-    "%%          {stop, Reason, Reply, NewStateData}                    " n
+    "%% Function:" n
+    "%% state_name(Event, From, State) -> {next_state, NextStateName, NextState} |"n
+    "%%                                   {next_state, NextStateName, " n
+    "%%                                     NextState, Timeout} |" n
+    "%%                                   {reply, Reply, NextStateName, NextState}|"n
+    "%%                                   {reply, Reply, NextStateName, " n
+    "%%                                    NextState, Timeout} |" n
+    "%%                                   {stop, Reason, NewState}|" n
+    "%%                                   {stop, Reason, Reply, NewState}" n
+    "%% Description: There should be one instance of this function for each" n
+    "%% possible state name. Whenever a gen_fsm receives an event sent using" n
+    "%% gen_fsm:sync_send_event/2,3, the instance of this function with the same"n
+    "%% name as the current state name StateName is called to handle the event." n
     (erlang-skel-separator 2)
-    "state_name(Event, From, StateData) ->" n>
+    "state_name(_Event, _From, State) ->" n>
     "Reply = ok," n>
-    "{reply, Reply, state_name, StateData}." n
+    "{reply, Reply, state_name, State}." n
     n
     (erlang-skel-separator 2)
-    "%% Func: handle_event/3" n
-    "%% Returns: {next_state, NextStateName, NextStateData}          |" n
-    "%%          {next_state, NextStateName, NextStateData, Timeout} |" n
-    "%%          {stop, Reason, NewStateData}                         " n
+    "%% Function: " n
+    "%% handle_event(Event, StateName, State) -> {next_state, NextStateName, "n
+    "%%						  NextState} |" n
+    "%%                                          {next_state, NextStateName, "n
+    "%%					          NextState, Timeout} |" n
+    "%%                                          {stop, Reason, NewState}" n
+    "%% Description: Whenever a gen_fsm receives an event sent using"n
+    "%% gen_fsm:send_all_state_event/2, this function is called to handle"n
+    "%% the event." n
     (erlang-skel-separator 2)
-    "handle_event(Event, StateName, StateData) ->" n>
-    "{next_state, StateName, StateData}." n
+    "handle_event(_Event, StateName, State) ->" n>
+    "{next_state, StateName, State}." n
     n
     (erlang-skel-separator 2)
-    "%% Func: handle_sync_event/4" n
-    "%% Returns: {next_state, NextStateName, NextStateData}            |" n
-    "%%          {next_state, NextStateName, NextStateData, Timeout}   |" n
-    "%%          {reply, Reply, NextStateName, NextStateData}          |" n
-    "%%          {reply, Reply, NextStateName, NextStateData, Timeout} |" n
-    "%%          {stop, Reason, NewStateData}                          |" n
-    "%%          {stop, Reason, Reply, NewStateData}                    " n
+    "%% Function: " n
+    "%% handle_sync_event(Event, From, StateName, "n
+    "%%                   State) -> {next_state, NextStateName, NextState} |" n
+    "%%                             {next_state, NextStateName, NextState, " n
+    "%%                              Timeout} |" n
+    "%%                             {reply, Reply, NextStateName, NextState}|" n
+    "%%                             {reply, Reply, NextStateName, NextState, " n
+    "%%                              Timeout} |" n
+    "%%                             {stop, Reason, NewState} |" n
+    "%%                             {stop, Reason, Reply, NewState}" n
+    "%% Description: Whenever a gen_fsm receives an event sent using"n
+    "%% gen_fsm:sync_send_all_state_event/2,3, this function is called to handle"n
+    "%% the event."n
     (erlang-skel-separator 2)
-    "handle_sync_event(Event, From, StateName, StateData) ->" n>
+    "handle_sync_event(Event, From, StateName, State) ->" n>
     "Reply = ok," n>
-    "{reply, Reply, StateName, StateData}." n
+    "{reply, Reply, StateName, State}." n
     n
     (erlang-skel-separator 2)
-    "%% Func: handle_info/3" n
-    "%% Returns: {next_state, NextStateName, NextStateData}          |" n
-    "%%          {next_state, NextStateName, NextStateData, Timeout} |" n
-    "%%          {stop, Reason, NewStateData}                         " n
+    "%% Function: " n
+    "%% handle_info(Info,StateName,State)-> {next_state, NextStateName, NextState}|" n
+    "%%                                     {next_state, NextStateName, NextState, "n
+    "%%                                       Timeout} |" n
+    "%%                                     {stop, Reason, NewState}" n
+    "%% Description: This function is called by a gen_fsm when it receives any"n
+    "%% other message than a synchronous or asynchronous event"n
+    "%% (or a system message)." n
     (erlang-skel-separator 2)
-    "handle_info(Info, StateName, StateData) ->" n>
-    "{next_state, StateName, StateData}." n
+    "handle_info(_Info, StateName, State) ->" n>
+    "{next_state, StateName, State}." n
     n
     (erlang-skel-separator 2)
-    "%% Func: terminate/3" n
-    "%% Purpose: Shutdown the fsm" n
-    "%% Returns: any" n
+    "%% Function: terminate(Reason, StateName, State) -> void()" n
+    "%% Description:This function is called by a gen_fsm when it is about"n
+    "%% to terminate. It should be the opposite of Module:init/1 and do any"n
+    "%% necessary cleaning up. When it returns, the gen_fsm terminates with"n
+    "%% Reason. The return value is ignored." n
     (erlang-skel-separator 2)
-    "terminate(Reason, StateName, StatData) ->" n>
+    "terminate(_Reason, _StateName, _State) ->" n>
     "ok." n
     n
     (erlang-skel-separator 2)
-    "%% Func: code_change/4" n
-    "%% Purpose: Convert process state when code is changed" n
-    "%% Returns: {ok, NewState, NewStateData}" n
+    "%% Function:" n
+    "%% code_change(OldVsn, StateName, State, Extra) -> {ok, StateName, NewState}" n
+    "%% Description: Convert process state when code is changed" n
     (erlang-skel-separator 2)
-    "code_change(OldVsn, StateName, StateData, Extra) ->" n>
-    "{ok, StateName, StateData}." n
+    "code_change(_OldVsn, StateName, State, _Extra) ->" n>
+    "{ok, StateName, State}." n
     n
     (erlang-skel-separator 2)
     "%%% Internal functions" n
@@ -1260,37 +1285,17 @@ Please see the function `tempo-define-template'.")
 
 (defvar erlang-skel-lib
   '((erlang-skel-include erlang-skel-large-header)
-    (erlang-skel-separator 2)
-    "%% Include files" n
-    (erlang-skel-separator 2)
-    n
-    (erlang-skel-separator 2)
-    "%% External exports" n
-    (erlang-skel-separator 2) 
-    "-export([" n
-    "        ])." n
-    n
-    (erlang-skel-separator 2)
-    "%% Internal exports" n
-    (erlang-skel-separator 2) 
-    "-export([" n
-    "        ])." n
-    n 
-    (erlang-skel-separator 2)
-    "%% Macros" n
-    (erlang-skel-separator 2) 
-    n
-    (erlang-skel-separator 2)
-    "%% Records" n
-    (erlang-skel-separator 2) 
-    n
+
+    "%% API" n
+    "-export([])." n n
+
     (erlang-skel-double-separator 2)
-    "%% External functions" n
+    "%% API" n
     (erlang-skel-double-separator 2)
     (erlang-skel-separator 2)
     "%% Function: " n
     "%% Description:" n
-    (erlang-skel-separator 2) 
+    (erlang-skel-separator 2)
     n
     (erlang-skel-double-separator 2)
     "%% Internal functions" n
@@ -1301,59 +1306,41 @@ Please see the function `tempo-define-template'.")
 
 (defvar erlang-skel-corba-callback
   '((erlang-skel-include erlang-skel-large-header)
-    (erlang-skel-separator 2)
-    "%% Include files" n
-    (erlang-skel-separator 2)
-    n
-    (erlang-skel-separator 2)
-    "%% External exports" n
-    (erlang-skel-separator 2) 
-    "-export([" n> "init/1, " n> "terminate/2," n> "code_change/3" n
-    "        ])." n
-    n
-    (erlang-skel-separator 2)
-    "%% Internal exports" n
-    (erlang-skel-separator 2) 
-    "-export([" n
-    "        ])." n
-    n 
-    (erlang-skel-separator 2)
-    "%% Macros" n
-    (erlang-skel-separator 2) 
-    n
-    (erlang-skel-separator 2)
-    "%% Records" n
-    (erlang-skel-separator 2) 
-    "-record(state, {})." n
-    n
+    "%% Include files" n n
+
+    "%% API" n
+    "-export([])." n n
+
+    "%% Corba callbacks" n
+    "-export([init/1, terminate/2, code_change/3])." n n
+
+    "-record(state, {})." n n
+
     (erlang-skel-double-separator 2)
-    "%% External functions" n
+    "%% Corba callbacks" n
     (erlang-skel-double-separator 2)
     (erlang-skel-separator 2)
-    "%% Function: init/1" n
+    "%% Function: init(Args) -> {ok, State} |" n
+    "%%                         {ok, State, Timeout} |" n
+    "%%                         ignore               |" n
+    "%%                         {stop, Reason}" n
     "%% Description: Initiates the server" n
-    "%% Returns: {ok, State}          |" n
-    "%%          {ok, State, Timeout} |" n
-    "%%          ignore               |" n
-    "%%          {stop, Reason}" n
     (erlang-skel-separator 2)
     "init([]) ->" n>
     "{ok, #state{}}." n
     n
     (erlang-skel-separator 2)
-    "%% Function: terminate/2" n
+    "%% Function: terminate(Reason, State) -> void()" n
     "%% Description: Shutdown the server" n
-    "%% Returns: any (ignored by gen_server)" n
     (erlang-skel-separator 2)
-    "terminate(Reason, State) ->" n>
+    "terminate(_Reason, _State) ->" n>
     "ok." n
     n
     (erlang-skel-separator 2)
-    "%% Function: code_change/3" n
+    "%% Function: code_change(OldVsn, State, Extra) -> {ok, NewState} " n
     "%% Description: Convert process state when code is changed" n
-    "%% Returns: {ok, NewState}" n
     (erlang-skel-separator 2)
-    "code_change(OldVsn, State, Extra) ->" n>
+    "code_change(_OldVsn, State, _Extra) ->" n>
     "{ok, State}." n
     n
     (erlang-skel-double-separator 2)
@@ -1363,8 +1350,459 @@ Please see the function `tempo-define-template'.")
   "*The template of a library module.
 Please see the function `tempo-define-template'.")
 
+(defvar erlang-skel-ts-test-suite
+ '((erlang-skel-include erlang-skel-large-header)
+   "%% Note: This directive should only be used in test suites." n
+    "-compile(export_all)." n n
 
-
+    "-include(\"test_server.hrl\")." n n
+
+    (erlang-skel-separator 2)
+    "%% TEST SERVER CALLBACK FUNCTIONS" n
+    (erlang-skel-separator 2)
+    n
+    (erlang-skel-separator 2)
+    "%% Function: init_per_suite(Config0) -> Config1 | {skip,Reason}" n
+    "%%" n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%%   A list of key/value pairs, holding the test case configuration." n
+    "%% Reason = term()" n
+    "%%   The reason for skipping the suite." n
+    "%%" n
+    "%% Description: Initialization before the suite." n
+    "%%" n
+    "%% Note: This function is free to add any key/value pairs to the Config" n
+    "%% variable, but should NOT alter/remove any existing entries." n
+    (erlang-skel-separator 2)
+    "init_per_suite(Config) ->" n >
+    "Config." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: end_per_suite(Config) -> void()" n
+    "%%" n
+    "%% Config = [tuple()]" n
+    "%%   A list of key/value pairs, holding the test case configuration." n
+    "%%" n
+    "%% Description: Cleanup after the suite." n
+    (erlang-skel-separator 2)
+    "end_per_suite(_Config) ->" n >
+    "ok." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: init_per_testcase(TestCase, Config0) -> Config1 |" n
+    "%%                                                   {skip,Reason}" n
+    "%% TestCase = atom()" n
+    "%%   Name of the test case that is about to run." n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%%   A list of key/value pairs, holding the test case configuration." n
+    "%% Reason = term()" n
+    "%%   The reason for skipping the test case." n
+    "%%" n
+    "%% Description: Initialization before each test case." n
+    "%%" n
+    "%% Note: This function is free to add any key/value pairs to the Config" n
+    "%% variable, but should NOT alter/remove any existing entries." n
+    (erlang-skel-separator 2)
+    "init_per_testcase(_TestCase, Config) ->" n >
+    "Config." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: end_per_testcase(TestCase, Config) -> void()" n
+    "%%" n
+    "%% TestCase = atom()" n
+    "%%   Name of the test case that is finished." n
+    "%% Config = [tuple()]" n
+    "%%   A list of key/value pairs, holding the test case configuration." n
+    "%%" n
+    "%% Description: Cleanup after each test case." n
+    (erlang-skel-separator 2)
+    "end_per_testcase(_TestCase, _Config) ->" n >
+    "ok."n n
+
+    (erlang-skel-separator 2)
+    "%% Function: all(Clause) -> Descr | Spec | {skip,Reason}" n
+    "%%" n
+    "%% Clause = doc | suite" n
+    "%%   Indicates expected return value." n
+    "%% Descr = [string()] | []" n
+    "%%   String that describes the test suite." n
+    "%% Spec = [TestCase]" n
+    "%%   A test specification." n
+    "%% TestCase = ConfCase | atom()" n
+    "%%   Configuration case, or the name of a test case function." n
+    "%% ConfCase = {conf,Init,Spec,End} |" n
+    "%%            {conf,Properties,Init,Spec,End}" n
+    "%% Init = End = {Mod,Func} | Func" n
+    "%%   Initialization and cleanup function." n
+    "%% Mod = Func = atom()" n
+    "%% Properties = [parallel | sequence | Shuffle | {RepeatType,N}]" n
+    "%%   Execution properties of the test cases (may be combined)." n
+    "%% Shuffle = shuffle | {shuffle,Seed}" n
+    "%%   To get cases executed in random order." n
+    "%% Seed = {integer(),integer(),integer()}" n
+    "%% RepeatType = repeat | repeat_until_all_ok | repeat_until_all_fail |" n
+    "%%              repeat_until_any_ok | repeat_until_any_fail" n
+    "%%   To get execution of cases repeated." n
+    "%% N = integer() | forever" n
+    "%% Reason = term()" n
+    "%%   The reason for skipping the test suite." n
+    "%%" n
+    "%% Description: Returns a description of the test suite when" n
+    "%%              Clause == doc, and a test specification (list" n
+    "%%              of the conf and test cases in the suite) when" n
+    "%%              Clause == suite." n
+    (erlang-skel-separator 2)
+    "all(doc) -> " n >
+    "[\"Describe the main purpose of this suite\"];" n n
+    "all(suite) -> " n >
+    "[a_test_case]." n n
+    n
+    (erlang-skel-separator 2)
+    "%% TEST CASES" n
+    (erlang-skel-separator 2)
+    n
+    (erlang-skel-separator 2)
+    "%% Function: TestCase(Arg) -> Descr | Spec | ok | exit() | {skip,Reason}" n
+    "%%" n
+    "%% Arg = doc | suite | Config" n
+    "%%   Indicates expected behaviour and return value." n
+    "%% Config = [tuple()]" n
+    "%%   A list of key/value pairs, holding the test case configuration." n
+    "%% Descr = [string()] | []" n
+    "%%   String that describes the test case." n
+    "%% Spec = [tuple()] | []" n
+    "%%   A test specification, see all/1." n
+    "%% Reason = term()" n
+    "%%   The reason for skipping the test case." n
+    "%%" n
+    "%% Description: Test case function. Returns a description of the test" n
+    "%%              case (doc), then returns a test specification (suite)," n
+    "%%              or performs the actual test (Config)." n
+    (erlang-skel-separator 2)
+    "a_test_case(doc) -> " n >
+    "[\"Describe the main purpose of this test case\"];" n n
+    "a_test_case(suite) -> " n >
+    "[];" n n
+    "a_test_case(Config) when is_list(Config) -> " n >
+    "ok." n
+   )
+ "*The template of a library module.
+Please see the function `tempo-define-template'.")
+
+(defvar erlang-skel-ct-test-suite-l
+ '((erlang-skel-include erlang-skel-large-header)
+   "%% Note: This directive should only be used in test suites." n
+    "-compile(export_all)." n n
+
+    "-include(\"ct.hrl\")." n n
+
+    (erlang-skel-separator 2)
+    "%% COMMON TEST CALLBACK FUNCTIONS" n
+    (erlang-skel-separator 2)
+    n
+    (erlang-skel-separator 2)
+    "%% Function: suite() -> Info" n
+    "%%" n
+    "%% Info = [tuple()]" n
+    "%%   List of key/value pairs." n
+    "%%" n
+    "%% Description: Returns list of tuples to set default properties" n
+    "%%              for the suite." n
+    "%%" n
+    "%% Note: The suite/0 function is only meant to be used to return" n
+    "%% default data values, not perform any other operations." n
+    (erlang-skel-separator 2)
+    "suite() ->" n >
+    "[{timetrap,{minutes,10}}]." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: init_per_suite(Config0) ->" n
+    "%%               Config1 | {skip,Reason} | {skip_and_save,Reason,Config1}" n
+    "%%" n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%%   A list of key/value pairs, holding the test case configuration." n
+    "%% Reason = term()" n
+    "%%   The reason for skipping the suite." n
+    "%%" n
+    "%% Description: Initialization before the suite." n
+    "%%" n
+    "%% Note: This function is free to add any key/value pairs to the Config" n
+    "%% variable, but should NOT alter/remove any existing entries." n
+    (erlang-skel-separator 2)
+    "init_per_suite(Config) ->" n >
+    "Config." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: end_per_suite(Config0) -> void() | {save_config,Config1}" n
+    "%%" n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%%   A list of key/value pairs, holding the test case configuration." n
+    "%%" n
+    "%% Description: Cleanup after the suite." n
+    (erlang-skel-separator 2)
+    "end_per_suite(_Config) ->" n >
+    "ok." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: init_per_group(GroupName, Config0) ->" n
+    "%%               Config1 | {skip,Reason} | {skip_and_save,Reason,Config1}" n
+    "%%" n
+    "%% GroupName = atom()" n
+    "%%   Name of the test case group that is about to run." n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%%   A list of key/value pairs, holding configuration data for the group." n
+    "%% Reason = term()" n
+    "%%   The reason for skipping all test cases and subgroups in the group." n
+    "%%" n
+    "%% Description: Initialization before each test case group." n
+    (erlang-skel-separator 2)
+    "init_per_group(_GroupName, Config) ->" n >
+    "Config." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: end_per_group(GroupName, Config0) ->" n
+    "%%               void() | {save_config,Config1}" n
+    "%%" n
+    "%% GroupName = atom()" n
+    "%%   Name of the test case group that is finished." n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%%   A list of key/value pairs, holding configuration data for the group." n
+    "%%" n
+    "%% Description: Cleanup after each test case group." n
+    (erlang-skel-separator 2)
+    "end_per_group(_GroupName, _Config) ->" n >
+    "ok." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: init_per_testcase(TestCase, Config0) ->" n
+    "%%               Config1 | {skip,Reason} | {skip_and_save,Reason,Config1}" n
+    "%%" n
+    "%% TestCase = atom()" n
+    "%%   Name of the test case that is about to run." n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%%   A list of key/value pairs, holding the test case configuration." n
+    "%% Reason = term()" n
+    "%%   The reason for skipping the test case." n
+    "%%" n
+    "%% Description: Initialization before each test case." n
+    "%%" n
+    "%% Note: This function is free to add any key/value pairs to the Config" n
+    "%% variable, but should NOT alter/remove any existing entries." n
+    (erlang-skel-separator 2)
+    "init_per_testcase(_TestCase, Config) ->" n >
+    "Config." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: end_per_testcase(TestCase, Config0) ->" n
+    "%%               void() | {save_config,Config1}" n
+    "%%" n
+    "%% TestCase = atom()" n
+    "%%   Name of the test case that is finished." n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%%   A list of key/value pairs, holding the test case configuration." n
+    "%%" n
+    "%% Description: Cleanup after each test case." n
+    (erlang-skel-separator 2)
+    "end_per_testcase(_TestCase, _Config) ->" n >
+    "ok." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: groups() -> [Group]" n
+    "%%" n
+    "%% Group = {GroupName,Properties,GroupsAndTestCases}" n
+    "%% GroupName = atom()" n
+    "%%   The name of the group." n
+    "%% Properties = [parallel | sequence | Shuffle | {RepeatType,N}]" n
+    "%%   Group properties that may be combined." n
+    "%% GroupsAndTestCases = [Group | {group,GroupName} | TestCase]" n
+    "%% TestCase = atom()" n
+    "%%   The name of a test case." n
+    "%% Shuffle = shuffle | {shuffle,Seed}" n
+    "%%   To get cases executed in random order." n
+    "%% Seed = {integer(),integer(),integer()}" n
+    "%% RepeatType = repeat | repeat_until_all_ok | repeat_until_all_fail |" n
+    "%%              repeat_until_any_ok | repeat_until_any_fail" n
+    "%%   To get execution of cases repeated." n
+    "%% N = integer() | forever" n
+    "%%" n
+    "%% Description: Returns a list of test case group definitions." n
+    (erlang-skel-separator 2)
+    "groups() ->" n >
+    "[]." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: all() -> GroupsAndTestCases | {skip,Reason}" n
+    "%%" n
+    "%% GroupsAndTestCases = [{group,GroupName} | TestCase]" n
+    "%% GroupName = atom()" n
+    "%%   Name of a test case group." n
+    "%% TestCase = atom()" n
+    "%%   Name of a test case." n
+    "%% Reason = term()" n
+    "%%   The reason for skipping all groups and test cases." n
+    "%%" n
+    "%% Description: Returns the list of groups and test cases that" n
+    "%%              are to be executed." n
+    (erlang-skel-separator 2)
+    "all() -> " n >
+    "[my_test_case]." n n
+
+    n
+    (erlang-skel-separator 2)
+    "%% TEST CASES" n
+    (erlang-skel-separator 2)
+    n
+
+    (erlang-skel-separator 2)
+    "%% Function: TestCase() -> Info" n
+    "%%" n
+    "%% Info = [tuple()]" n
+    "%%   List of key/value pairs." n
+    "%%" n
+    "%% Description: Test case info function - returns list of tuples to set" n
+    "%%              properties for the test case." n
+    "%%" n
+    "%% Note: This function is only meant to be used to return a list of" n
+    "%% values, not perform any other operations." n
+    (erlang-skel-separator 2)
+    "my_test_case() -> " n >
+    "[]." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: TestCase(Config0) ->" n
+    "%%               ok | exit() | {skip,Reason} | {comment,Comment} |" n
+    "%%               {save_config,Config1} | {skip_and_save,Reason,Config1}" n
+    "%%" n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%%   A list of key/value pairs, holding the test case configuration." n
+    "%% Reason = term()" n
+    "%%   The reason for skipping the test case." n
+    "%% Comment = term()" n
+    "%%   A comment about the test case that will be printed in the html log." n
+    "%%" n
+    "%% Description: Test case function. (The name of it must be specified in" n
+    "%%              the all/0 list or in a test case group for the test case" n
+    "%%              to be executed)." n
+    (erlang-skel-separator 2)
+    "my_test_case(_Config) -> " n >
+    "ok." n
+    )
+ "*The template of a library module.
+Please see the function `tempo-define-template'.")
+
+(defvar erlang-skel-ct-test-suite-s
+ '((erlang-skel-include erlang-skel-large-header)
+    "-compile(export_all)." n n
+
+    "-include(\"ct.hrl\")." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: suite() -> Info" n
+    "%% Info = [tuple()]" n
+    (erlang-skel-separator 2)
+    "suite() ->" n >
+    "[{timetrap,{seconds,30}}]." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: init_per_suite(Config0) ->" n
+    "%%               Config1 | {skip,Reason} | {skip_and_save,Reason,Config1}" n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%% Reason = term()" n
+    (erlang-skel-separator 2)
+    "init_per_suite(Config) ->" n >
+    "Config." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: end_per_suite(Config0) -> void() | {save_config,Config1}" n
+    "%% Config0 = Config1 = [tuple()]" n
+    (erlang-skel-separator 2)
+    "end_per_suite(_Config) ->" n >
+    "ok." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: init_per_group(GroupName, Config0) ->" n
+    "%%               Config1 | {skip,Reason} | {skip_and_save,Reason,Config1}" n
+    "%% GroupName = atom()" n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%% Reason = term()" n
+    (erlang-skel-separator 2)
+    "init_per_group(_GroupName, Config) ->" n >
+    "Config." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: end_per_group(GroupName, Config0) ->" n
+    "%%               void() | {save_config,Config1}" n
+    "%% GroupName = atom()" n
+    "%% Config0 = Config1 = [tuple()]" n
+    (erlang-skel-separator 2)
+    "end_per_group(_GroupName, _Config) ->" n >
+    "ok." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: init_per_testcase(TestCase, Config0) ->" n
+    "%%               Config1 | {skip,Reason} | {skip_and_save,Reason,Config1}" n
+    "%% TestCase = atom()" n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%% Reason = term()" n
+    (erlang-skel-separator 2)
+    "init_per_testcase(_TestCase, Config) ->" n >
+    "Config." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: end_per_testcase(TestCase, Config0) ->" n
+    "%%               void() | {save_config,Config1}" n
+    "%% TestCase = atom()" n
+    "%% Config0 = Config1 = [tuple()]" n
+    (erlang-skel-separator 2)
+    "end_per_testcase(_TestCase, _Config) ->" n >
+    "ok." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: groups() -> [Group]" n
+    "%% Group = {GroupName,Properties,GroupsAndTestCases}" n
+    "%% GroupName = atom()" n
+    "%% Properties = [parallel | sequence | Shuffle | {RepeatType,N}]" n
+    "%% GroupsAndTestCases = [Group | {group,GroupName} | TestCase]" n
+    "%% TestCase = atom()" n
+    "%% Shuffle = shuffle | {shuffle,{integer(),integer(),integer()}}" n
+    "%% RepeatType = repeat | repeat_until_all_ok | repeat_until_all_fail |" n
+    "%%              repeat_until_any_ok | repeat_until_any_fail" n
+    "%% N = integer() | forever" n
+    (erlang-skel-separator 2)
+    "groups() ->" n >
+    "[]." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: all() -> GroupsAndTestCases | {skip,Reason}" n
+    "%% GroupsAndTestCases = [{group,GroupName} | TestCase]" n
+    "%% GroupName = atom()" n
+    "%% TestCase = atom()" n
+    "%% Reason = term()" n
+    (erlang-skel-separator 2)
+    "all() -> " n >
+    "[my_test_case]." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: TestCase() -> Info" n
+    "%% Info = [tuple()]" n
+    (erlang-skel-separator 2)
+    "my_test_case() -> " n >
+    "[]." n n
+
+    (erlang-skel-separator 2)
+    "%% Function: TestCase(Config0) ->" n
+    "%%               ok | exit() | {skip,Reason} | {comment,Comment} |" n
+    "%%               {save_config,Config1} | {skip_and_save,Reason,Config1}" n
+    "%% Config0 = Config1 = [tuple()]" n
+    "%% Reason = term()" n
+    "%% Comment = term()" n
+    (erlang-skel-separator 2)
+    "my_test_case(_Config) -> " n >
+    "ok." n
+    )
+ "*The template of a library module.
+Please see the function `tempo-define-template'.")
+
 ;; Font-lock variables
 
 (defvar erlang-font-lock-modern-p
@@ -1374,18 +1812,18 @@ Please see the function `tempo-define-template'.")
 	(t nil))
   "Non-nil when this version of Emacs uses a modern version of Font Lock.
 
-This is determinated by checking the version of Emacs used, the actual
+This is determined by checking the version of Emacs used, the actual
 font-lock code is not loaded.")
 
 
 ;; The next few variables define different Erlang font-lock patterns.
-;; They could be appended to form a custom font-lock appearence.
+;; They could be appended to form a custom font-lock appearance.
 ;;
 ;; The function `erlang-font-lock-set-face' could be used to change
 ;; the face of a pattern.
 ;;
-;; Note that Erlang strings and atoms are hightlighted with using
-;; syntactix analysis.
+;; Note that Erlang strings and atoms are highlighted with using
+;; syntactic analysis.
 
 (defvar erlang-font-lock-keywords-func
   (list
@@ -1397,7 +1835,7 @@ font-lock code is not loaded.")
   (list
    (list "\\(\\$\\([^\\]\\|\\\\\\([^0-7^\n]\\|[0-7]+\\|\\^[a-zA-Z]\\)\\)\\)"
 	 1 'font-lock-string-face))
-  "Font lock keyword highlighting numbers in ascii-form (e.g. $A).")
+  "Font lock keyword highlighting numbers in ASCII form (e.g. $A).")
 
 (defvar erlang-font-lock-keywords-arrow
   (list
@@ -1412,8 +1850,9 @@ font-lock code is not loaded.")
 
 (defvar erlang-font-lock-keywords-keywords
   (list
-   (list (concat "\\<\\(after\\|begin\\|c\\(atch\\|ase\\)\\|end\\|fun\\|if"
-		 "\\|of\\|receive\\|when\\|andalso\\|orelse\\|query\\)\\([^a-zA-Z0-9_]\\|$\\)")
+   (list (concat "\\<\\(a\\(fter\\|ndalso\\)\\|begin\\|c\\(atch\\|ase\\)"
+		 "\\|end\\|fun\\|if\\|o\\(f\\|relse\\)\\|receive\\|try\\|when"
+		 "\\|query\\)\\([^a-zA-Z0-9_]\\|$\\)")
 	 1 'font-lock-keyword-face))
   "Font lock keyword highlighting Erlang keywords.")
 
@@ -1421,7 +1860,7 @@ font-lock code is not loaded.")
   (list
    (list (concat "^\\(-" erlang-atom-regexp "\\)\\s *\\(\\.\\|(\\)")
 	 1 'font-lock-function-name-face))
-  "Font lock keyword highlighting attribues.")
+  "Font lock keyword highlighting attributes.")
 
 (defvar erlang-font-lock-keywords-quotes
   (list
@@ -1433,7 +1872,7 @@ font-lock code is not loaded.")
 	 t))
   "Font lock keyword highlighting words in single quotes in comments.
 
-This is not the keyword hightlighting Erlang strings and atoms, they
+This is not the highlighting of Erlang strings and atoms, which
 are highlighted by syntactic analysis.")
 
 ;; Note: The guard `float' collides with the bif `float'.
@@ -1441,8 +1880,8 @@ are highlighted by syntactic analysis.")
   (list
    (list
     (concat "\\<\\("
-	    "\\(is_\\)*\\(atom\\|function\\|binary\\|constant\\|float"
-	    "\\|integer\\|list\\|number\\|p\\(id\\|ort\\)\\|"
+	    "\\(is_\\)*\\(atom\\|boolean\\|function\\|binary\\|constant"
+	    "\\|float\\|integer\\|list\\|number\\|p\\(id\\|ort\\)\\|"
 	    "re\\(ference\\|cord\\)\\|tuple"
 	    "\\)\\)\\s *(")
 
@@ -1529,7 +1968,7 @@ to work properly.")
 
 There exists three levels of Font Lock keywords for Erlang:
   `erlang-font-lock-keywords-1' - Function headers and reserved keywords.
-  `erlang-font-lock-keywords-2' - Bifs, guards and `singel quotes'.
+  `erlang-font-lock-keywords-2' - Bifs, guards and `single quotes'.
   `erlang-font-lock-keywords-3' - Variables, macros and records.
 
 To use a specific level, please set the variable
@@ -1607,7 +2046,7 @@ The difference between this and the standard Erlang Mode
 syntax table is that `_' is treated as part of words by
 this syntax table.
 
-Unfortuantely, XEmacs hasn't got support for a special Font
+Unfortunately, XEmacs hasn't got support for a special Font
 Lock syntax table.  The effect is that `apply' in the atom
 `foo_apply' will be highlighted as a bif.")
 
@@ -1625,37 +2064,21 @@ Lock syntax table.  The effect is that `apply' in the atom
 (or (fboundp 'unless)
     (defmacro unless (condition &rest body)
       "(unless CONDITION BODY...): If CONDITION is false, do BODY, else return nil."
-      (` (if (, condition) 
-	     nil 
+      (` (if (, condition)
+	     nil
 	   (,@ body)))))
 
 (or (fboundp 'when)
     (defmacro when (condition &rest body)
       "(when CONDITION BODY...): If CONDITION is true, do BODY, else return nil."
       (` (if (, condition)
-	     (progn (,@ body)) 
+	     (progn (,@ body))
 	   nil))))
 
 (or (fboundp 'char-before)
     (defmacro char-before (&optional pos)
       "Return the character in the current buffer just before POS."
       (` (char-after (1- (or (, pos) (point)))))))
-			   
-(or (fboundp 'regexp-opt)
-    (defun regexp-opt (strings &optional paren)
-      "Return a regular expression that matches any string in
-STRINGS. If PAREN is true, it will always enclose the regular
-expression in parentheses. 
-
-Unlike its Emacs-20 namesake, it will not optimize the generated
-expression."
-      ;; This stop-gap definition is taken from
-      ;; _GNU_Emacs_Lisp_Reference_Manual_, ed 2.5, for Emacs 20.3.
-      (let ((open (if paren "\\(" ""))
-	    (close (if paren "\\)" "")))
-	(concat open
-		(mapconcat 'regexp-quote strings "\\|")
-		close))))
 
 (eval-when-compile
   (if (or (featurep 'bytecomp)
@@ -1766,7 +2189,7 @@ Other commands:
 	(modify-syntax-entry ?\n ">" table)
 	(modify-syntax-entry ?\" "\"" table)
 	(modify-syntax-entry ?# "." table)
-	(modify-syntax-entry ?$ "/" table)
+	(modify-syntax-entry ?$ "'" table)
 	(modify-syntax-entry ?% "<" table)
 	(modify-syntax-entry ?& "." table)
 	(modify-syntax-entry ?\' "\"" table)
@@ -1781,7 +2204,7 @@ Other commands:
 	(modify-syntax-entry ?\\ "\\" table)
 	(modify-syntax-entry ?_ "_" table)
 	(modify-syntax-entry ?| "." table)
-	(modify-syntax-entry ?^ "/" table)
+	(modify-syntax-entry ?^ "'" table)
 
 	;; Pseudo bit-syntax: Latin1 double angle quotes as parens.
 	;;(modify-syntax-entry ?\253 "(?\273" table)
@@ -1801,19 +2224,25 @@ Other commands:
 
 
 (defun erlang-mode-commands (map)
-  (define-key map "\t"        'erlang-indent-command)
+  (unless (boundp 'indent-line-function)
+    (define-key map "\t"        'erlang-indent-command))
   (define-key map ";"	      'erlang-electric-semicolon)
   (define-key map ","	      'erlang-electric-comma)
   (define-key map "<"         'erlang-electric-lt)
   (define-key map ">"         'erlang-electric-gt)
   (define-key map "\C-m"      'erlang-electric-newline)
-  (define-key map "\177"      'backward-delete-char-untabify)
+  (if erlang-xemacs-p
+    (define-key map [(backspace)]      'backward-delete-char-untabify)
+    (define-key map "\177"     'backward-delete-char-untabify))
+  ;;(unless (boundp 'fill-paragraph-function)
   (define-key map "\M-q"      'erlang-fill-paragraph)
-  (define-key map "\M-\C-a"   'erlang-beginning-of-function)
-  (define-key map "\M-\C-e"   'erlang-end-of-function)
-  (define-key map "\M-\C-h"   'erlang-mark-function)
+  (unless (boundp 'beginning-of-defun-function)
+    (define-key map "\M-\C-a"   'erlang-beginning-of-function)
+    (define-key map "\M-\C-e"   'erlang-end-of-function)
+    (define-key map "\M-\C-h"   'erlang-mark-function))
   (define-key map "\M-\t"     'erlang-complete-tag)
   (define-key map "\C-c\M-\t" 'tempo-complete-tag)
+  (define-key map "\M-+"      'erlang-find-next-tag)
   (define-key map "\C-c\M-a"  'erlang-beginning-of-clause)
   (define-key map "\C-c\M-b"  'tempo-backward-mark)
   (define-key map "\C-c\M-e"  'erlang-end-of-clause)
@@ -1827,8 +2256,10 @@ Other commands:
   (define-key map "\C-c\C-q"  'erlang-indent-function)
   (define-key map "\C-c\C-u"  'erlang-uncomment-region)
   (define-key map "\C-c\C-y"  'erlang-clone-arguments)
+  (define-key map "\C-c\C-a"  'erlang-align-arrows)
   (define-key map "\C-c\C-z"  'erlang-shell-display)
-  (define-key map "\C-x`"     'erlang-next-error))
+  (unless inferior-erlang-use-cmm
+    (define-key map "\C-x`"    'erlang-next-error)))
 
 
 (defun erlang-electric-init ()
@@ -1848,8 +2279,8 @@ Other commands:
   (put 'bitsyntax-close-inner 'rear-nonsticky '(category))
   (put 'bitsyntax-close-outer 'syntax-table '(5 . ?<))
   (put 'bitsyntax-close-outer 'rear-nonsticky '(category))
+  (make-local-variable 'parse-sexp-lookup-properties)
   (setq parse-sexp-lookup-properties 't))
-
 
 
 (defun erlang-mode-variables ()
@@ -1886,15 +2317,26 @@ Other commands:
   (set (make-local-variable 'imenu-extract-index-name-function)
        'erlang-get-function-name)
   (set (make-local-variable 'tempo-match-finder)
-       "[^-a-zA-Z0-9_]\\([-a-zA-Z0-9_]*\\)\\="))
+       "[^-a-zA-Z0-9_]\\([-a-zA-Z0-9_]*\\)\\=")
+  (set (make-local-variable 'beginning-of-defun-function)
+       'erlang-beginning-of-function)
+  (set (make-local-variable 'end-of-defun-function) 'erlang-end-of-function)
+  (set (make-local-variable 'open-paren-in-column-0-is-defun-start) nil)
+  (set (make-local-variable 'fill-paragraph-function) 'erlang-fill-paragraph)
+  (set (make-local-variable 'comment-add) 1)
+  (set (make-local-variable 'outline-regexp) "[[:lower:]0-9_]+ *(.*) *-> *$")
+  (set (make-local-variable 'outline-level) (lambda () 1))
+  (set (make-local-variable 'add-log-current-defun-function)
+       'erlang-current-defun))
 
 
 ;; Compilation.
 ;;
 ;; The following code is compatible with the standard package `compilation',
-;; making it possible to go to errors using `erlang-next-error'.
+;; making it possible to go to errors using `erlang-next-error' (or just
+;; `next-error' in Emacs 21).
 ;;
-;; The normal `compile' command works ofcourse.  For best result, please
+;; The normal `compile' command works of course.  For best result, please
 ;; execute `make' with the `-w' flag.
 ;;
 ;; Please see the variables named `compiling-..' above.
@@ -1945,7 +2387,7 @@ Other commands:
 	  (t
 	   (set 'font-lock-keywords erlang-font-lock-keywords-3))))
 
-  ;; Modern font-locks can handle the above much more elegant:
+  ;; Modern font-locks can handle the above much more elegantly:
   (set (make-local-variable 'font-lock-defaults)
        '((erlang-font-lock-keywords erlang-font-lock-keywords-1
 				    erlang-font-lock-keywords-2 erlang-font-lock-keywords-3)
@@ -1954,7 +2396,7 @@ Other commands:
 
 
 
-;; Useful when definig yout own keywords.
+;; Useful when defining your own keywords.
 (defun erlang-font-lock-set-face (ks &rest faces)
   "Replace the face components in a list of keywords.
 
@@ -1973,7 +2415,7 @@ Normally, the expressions are just atoms representing the new face.
 They could however be more complex, returning different faces in
 different situations.
 
-This function does only handle keywords with elements on the forms:
+This function only handles keywords with elements on the forms:
   (REGEXP NUMBER FACE)
   (REGEXP NUMBER FACE OVERWRITE)
 
@@ -2009,44 +2451,15 @@ For a more elaborate example, please see the beginning of the file
 
 (defun erlang-font-lock-level-0 ()
   ;; DocStringOrig: font-cmd
-  "Fontify current buffer. Level ranges from 0 (off) to 3 (Christmas Tree).
-
-The following fontification level exists:
-  0 - No fontification
-  1 - Function headers, reserved keywords, strings and comments.
-  2 - Bifs, guards and `single quotes'.
-  3 - Variables, macros and records.
-
-To automatically activate font lock mode, place the following lines
-in your ~/.emacs file:
-
-\(defun my-erlang-mode-hook ()
-  (cond (window-system
-	 (font-lock-mode 1))))
-\(add-hook 'erlang-mode-hook 'my-erlang-mode-hook)
-\(setq font-lock-maximum-decoration t)"
+  "Unfontify current buffer."
   (interactive)
   (font-lock-mode 0))
 
 
 (defun erlang-font-lock-level-1 ()
   ;; DocStringCopy: font-cmd
-  "Fontify current buffer. Level ranges from 0 (off) to 3 (Christmas Tree).
-
-The following fontification level exists:
-  0 - No fontification
-  1 - Function headers, reserved keywords, strings and comments.
-  2 - Bifs, guards and `single quotes'.
-  3 - Variables, macros and records.
-
-To automatically activate font lock mode, place the following lines
-in your ~/.emacs file:
-
-\(defun my-erlang-mode-hook ()
-  (cond (window-system
-	 (font-lock-mode 1))))
-\(add-hook 'erlang-mode-hook 'my-erlang-mode-hook)
-\(setq font-lock-maximum-decoration t)"
+  "Fontify current buffer at level 1.
+This highlights function headers, reserved keywords, strings and comments."
   (interactive)
   (require 'font-lock)
   (set 'font-lock-keywords erlang-font-lock-keywords-1)
@@ -2056,22 +2469,9 @@ in your ~/.emacs file:
 
 (defun erlang-font-lock-level-2 ()
   ;; DocStringCopy: font-cmd
-  "Fontify current buffer. Level ranges from 0 (off) to 3 (Christmas Tree).
-
-The following fontification level exists:
-  0 - No fontification
-  1 - Function headers, reserved keywords, strings and comments.
-  2 - Bifs, guards and `single quotes'.
-  3 - Variables, macros and records.
-
-To automatically activate font lock mode, place the following lines
-in your ~/.emacs file:
-
-\(defun my-erlang-mode-hook ()
-  (cond (window-system
-	 (font-lock-mode 1))))
-\(add-hook 'erlang-mode-hook 'my-erlang-mode-hook)
-\(setq font-lock-maximum-decoration t)"
+  "Fontify current buffer at level 2.
+This highlights level 1 features (see `erlang-font-lock-level-1')
+plus bifs, guards and `single quotes'."
   (interactive)
   (require 'font-lock)
   (set 'font-lock-keywords erlang-font-lock-keywords-2)
@@ -2081,22 +2481,9 @@ in your ~/.emacs file:
 
 (defun erlang-font-lock-level-3 ()
   ;; DocStringCopy: font-cmd
-  "Fontify current buffer. Level ranges from 0 (off) to 3 (Christmas Tree).
-
-The following fontification level exists:
-  0 - No fontification
-  1 - Function headers, reserved keywords, strings and comments.
-  2 - Bifs, guards and `single quotes'.
-  3 - Variables, macros and records.
-
-To automatically activate font lock mode, place the following lines
-in your ~/.emacs file:
-
-\(defun my-erlang-mode-hook ()
-  (cond (window-system
-	 (font-lock-mode 1))))
-\(add-hook 'erlang-mode-hook 'my-erlang-mode-hook)
-\(setq font-lock-maximum-decoration t)"
+  "Fontify current buffer at level 3.
+This highlights level 2 features (see `erlang-font-lock-level-2')
+plus variables, macros and records."
   (interactive)
   (require 'font-lock)
   (set 'font-lock-keywords erlang-font-lock-keywords-3)
@@ -2111,19 +2498,19 @@ The variable `erlang-menu-items' contain a description of the Erlang
 mode menu.  Normally, the list contains atoms, representing variables
 bound to pieces of the menu.
 
-Personal extentions could be added to `erlang-menu-personal-items'.
+Personal extensions could be added to `erlang-menu-personal-items'.
 
-Should any variable describing the menu configuration, this function
-should be called."
+This function should be called if any variable describing the
+menu configuration is changed."
   (erlang-menu-install "Erlang" erlang-menu-items erlang-mode-map t))
 
 
 (defun erlang-menu-install (name items keymap &optional popup)
-  "Install a menu on Emacs 19 or XEmacs based on an abstract description.
+  "Install a menu in Emacs or XEmacs based on an abstract description.
 
 NAME is the name of the menu.
 
-ITEMS is a list. The elements are either nil representing a horisontal
+ITEMS is a list.  The elements are either nil representing a horizontal
 line or a list with two or three elements.  The first is the name of
 the menu item, the second the function to call, or a submenu, on the
 same same form as ITEMS.  The third optional element is an expression
@@ -2131,8 +2518,8 @@ which is evaluated every time the menu is displayed.  Should the
 expression evaluate to nil the menu item is ghosted.
 
 KEYMAP is the keymap to add to menu to.  (When using XEmacs, the menu
-will only be visible when this meny is the global, the local, or an
-activated minor mode keymap.)
+will only be visible when this menu is the global, the local, or an
+activate minor mode keymap.)
 
 If POPUP is non-nil, the menu is bound to the XEmacs `mode-popup-menu'
 variable, i.e. it will popup when pressing the right mouse button.
@@ -2162,7 +2549,7 @@ Please see the variable `erlang-menu-base-items'."
 	id def first second third)
     (setq items (reverse items))
     (while items
-      ;; Replace any occurence of atoms by their value.
+      ;; Replace any occurrence of atoms by their value.
       (while (and items (atom (car items)) (not (null (car items))))
 	(if (and (boundp (car items))
 		 (listp (symbol-value (car items))))
@@ -2199,7 +2586,7 @@ Please see the variable `erlang-menu-base-items'."
   (let ((res '())
 	first second third entry)
     (while items
-      ;; Replace any occurence of atoms by their value.
+      ;; Replace any occurrence of atoms by their value.
       (while (and items (atom (car items)) (not (null (car items))))
 	(if (and (boundp (car items))
 		 (listp (symbol-value (car items))))
@@ -2223,7 +2610,7 @@ Please see the variable `erlang-menu-base-items'."
 			     res))))
       (setq items (cdr items)))
     (setq res (reverse res))
-    ;; When adding a menu to a minor-mode keymap under Emacs 19,
+    ;; When adding a menu to a minor-mode keymap under Emacs,
     ;; it disappears when the mode is disabled.  The expression
     ;; generated below imitates this behaviour.
     ;; (This could be expressed much clearer using backquotes,
@@ -2390,7 +2777,7 @@ The format is described in the documentation of `erlang-man-dirs'."
 
 
 ;; Should the menu be to long, let's split it into a number of
-;; smaller menus.  Warning, this code contains beatiful
+;; smaller menus.  Warning, this code contains beautiful
 ;; destructive operations!
 (defun erlang-man-make-middle-menu (filelist)
   "Create the second level menu from FILELIST.
@@ -2463,7 +2850,7 @@ This function is aware of imported functions."
   (if (or (null module) (string= module ""))
       (error "No Erlang module name given"))
   (let ((dir-list erlang-man-dirs)
-	(pat (concat "\\b" (regexp-quote module) "\\.[^.]$"))
+	(pat (concat "/" (regexp-quote module) "\\.[^.]$"))
 	(file nil)
 	file-list)
     (while (and dir-list (null file))
@@ -2478,18 +2865,18 @@ This function is aware of imported functions."
       (setq dir-list (cdr dir-list)))
     (if file
 	(funcall erlang-man-display-function file)
-      (error "No manual page for module %s found." module))))
+      (error "No manual page for module %s found" module))))
 
 
 ;; Warning, the function `erlang-man-function' is a hack!
 ;; It links itself into the man code in a non-clean way.  I have
-;; choosed to keep it since it provides a very useful functionality
-;; which is not possible to achive using a clean approach.
+;; chosen to keep it since it provides a very useful functionality
+;; which is not possible to achieve using a clean approach.
 ;;   / AndersL
 
 (defvar erlang-man-function-name nil
   "Name of function for last `erlang-man-function' call.
-Used for commnication between `erlang-man-function' and the
+Used for communication between `erlang-man-function' and the
 patch to `Man-notify-when-ready'.")
 
 (defun erlang-man-function (&optional name)
@@ -2531,7 +2918,7 @@ This function is aware of imported functions."
 	(error "No Erlang module name given"))
     (cond ((fboundp 'Man-notify-when-ready)
 	   ;; Emacs 19:  The man command could possibly start an
-	   ;; asyncronous process, i.e. we must hook ourselves into
+	   ;; asynchronous process, i.e. we must hook ourselves into
 	   ;; the system to be activated when the man-process
 	   ;; terminates.
 	   (if (null funcname)
@@ -2562,15 +2949,15 @@ The reason for patching a function is that under Emacs 19, the man
 command is executed asynchronously."
   (condition-case nil
       (require 'advice)
-    ;; This should never happend since this is only called when
+    ;; This should never happened since this is only called when
     ;; running under Emacs 19.
-    (error (error (concat "This commands needs the package `advice', "
+    (error (error (concat "This command needs the package `advice', "
 			  "please upgrade your Emacs."))))
   (require 'man)
   (defadvice Man-notify-when-ready
     (after erlang-Man-notify-when-ready activate)
-    "Sets point at the documentation of the function name in
-erlang-man-function-name when the man-page is displayed."
+    "Set point at the documentation of the function name in
+`erlang-man-function-name' when the man page is displayed."
     (if erlang-man-function-name
 	(erlang-man-find-function (ad-get-arg 0) erlang-man-function-name))
     (setq erlang-man-function-name nil)))
@@ -2595,7 +2982,7 @@ erlang-man-function-name when the man-page is displayed."
 
 (defun erlang-man-display (file)
   "Display FILE as a `man' file.
-This is de default manual page display function.
+This is the default manual page display function.
 The variables `erlang-man-display-function' contains the function
 to be used."
   ;; Emacs 18 doesn't `provide' man.
@@ -2727,7 +3114,7 @@ Example of use, assuming that `erlang-skel-func' is defined:
  (defvar foo-skeleton '(\"%%% New function:\"
                         (erlang-skel-include erlang-skel-func)))
 
-Techically, this function returns the `tempo' attribute`(l ...)' which
+Technically, this function returns the `tempo' attribute`(l ...)' which
 can contain other `tempo' attributes.  Please see the function
 `tempo-define-template' for a description of the `(l ...)' attribute."
   (let ((res '())
@@ -2743,15 +3130,15 @@ can contain other `tempo' attributes.  Please see the function
 (defun erlang-skel-separator (&optional percent)
   "Return a comment separator."
   (let ((percent (or percent 3)))
-    (concat (make-string percent ?%) 
-	    (make-string (- 70 percent) ?-) 
+    (concat (make-string percent ?%)
+	    (make-string (- 70 percent) ?-)
 	    "\n")))
 
 (defun erlang-skel-double-separator (&optional percent)
   "Return a comment separator."
   (let ((percent (or percent 3)))
-    (concat (make-string percent ?%) 
-	    (make-string (- 70 percent) ?=) 
+    (concat (make-string percent ?%)
+	    (make-string (- 70 percent) ?=)
 	    "\n")))
 
 (defun erlang-skel-dd-mmm-yyyy ()
@@ -2828,7 +3215,7 @@ Return the amount the indentation changed by."
 
 
 (defun erlang-indent-region (beg end)
-  "Indent region of erlang code.
+  "Indent region of Erlang code.
 
 This is automagically called by the user level function `indent-region'."
   (interactive "r")
@@ -2956,8 +3343,8 @@ Value is list (stack token-start token-type in-what)."
 	(stack (car state))
 	(token (point))
 	in-what)
-    (cond 
-     
+    (cond
+
      ;; Done: Return previous state.
      ((>= token to)
       (setq token (nth 1 state))
@@ -2966,20 +3353,36 @@ Value is list (stack token-start token-type in-what)."
 
      ;; Word constituent: check and handle keywords.
      ((= cs ?w)
-      (if (looking-at "\\(end\\|after\\)[^_a-zA-Z0-9]")
-	  ;; Must pop top icr layer, `after' will push a new
-	  ;; layer next.
-	  (progn
-	    (while (and stack (eq (car (car stack)) '->))
-	      (erlang-pop stack))
-	    (if (and stack (memq (car (car stack)) '(icr begin)))
-		(erlang-pop stack))))
-      (cond ((looking-at
-	      "\\(if\\|case\\|receive\\|after\\)[^_a-zA-Z0-9]")
+      (cond ((looking-at "\\(end\\|after\\)[^_a-zA-Z0-9]")
+	     ;; Must pop top icr layer, `after' will push a new
+	     ;; layer next.
+	     (progn
+	       (while (and stack (eq (car (car stack)) '->))
+		 (erlang-pop stack))
+	       (if (and stack (memq (car (car stack)) '(icr begin)))
+		   (erlang-pop stack))))
+	    ((looking-at "catch[^,\n\\of]*\n")
+	     ;; Must pop top icr layer, `catch' in try/catch
+	     ;;will push a new layer next.
+	     (progn
+	       (while (and stack (eq (car (car stack)) '->))
+		 (erlang-pop stack))
+	       (if (and stack (memq (car (car stack)) '(icr begin)))
+		   (erlang-pop stack))))
+	    ;;((looking-at "^of$")
+	    ;; Must pop top icr layer, `of' in try/catch
+	    ;;will push a new layer next.
+	    ;; (progn
+	    ;; (while (and stack (eq (car (car stack)) '->))
+	    ;;	 (erlang-pop stack))
+	    ;;     (if (and stack (memq (car (car stack)) '(icr begin)))
+	    ;;   (erlang-pop stack))))
+	    )
+      (cond ((looking-at "\\(if\\|case\\|receive\\|try\\)[^_a-zA-Z0-9]")
 	     ;; Must push a new icr (if/case/receive) layer.
 	     (erlang-push (list 'icr token (current-column)) stack))
 	    ((looking-at "\\(fun\\)[^_a-zA-Z0-9]")
-	     ;; Puch a new icr layer if we are defining a `fun'
+	     ;; Push a new icr layer if we are defining a `fun'
 	     ;; expression, not when we are refering an existing
 	     ;; function.
 	     (if (save-excursion
@@ -2989,14 +3392,40 @@ Value is list (stack token-start token-type in-what)."
 		 (erlang-push (list 'icr token (current-column)) stack)))
 	    ((looking-at "\\(begin\\|query\\)[^_a-zA-Z0-9]")
 	     (erlang-push (list 'begin token (current-column)) stack))
-	    ((looking-at "when[^_a-zA-Z0-9][^->\.]*->")
-	     (erlang-push (list 'when token (current-column)) stack)))
+	    ;; In test suites you may want to do something like
+	    ;; ?match(Mem when integer(Mem), mnesia:table_info(Tab,
+	    ;; memory)), and then the following if/case/receive
+	    ;; statement will mess up the indentation by fooling the
+	    ;; erlang mode to think the 'when' in the argument is a
+	    ;; "real" when. The following three clauses will avoid
+	    ;; this problem.
+	    ((looking-at "when[^->\.]*if[^->\.]*->"))
+	    ((looking-at "when[^->\.]*case[^->\.]*->"))
+	    ((looking-at "when[^->\.]*receive[^->\.]*->"))
+	    ;; Normal when case
+	    ((looking-at "when [^->\.]*->")
+	     (erlang-push (list 'when token (current-column)) stack))
+	    ((looking-at "after[.]+->")
+	     (erlang-push (list 'icr token (current-column)) stack))
+	    ((looking-at "after[^_a-zA-Z0-9->]")
+	     ;; Probably in try-statment, fake "->" to get right
+	     ;; indentation in erlang-calculate-stack-indent. If it
+	     ;; was an ordinary catch without try, these entries will
+	     ;; be popped of the stack at a later ocaccion.
+	     (erlang-push (list 'icr token (current-column)) stack)
+	     (erlang-push (list '-> token (current-column)) stack))
+	    ((looking-at "catch[^,\n\\of]*\n")
+	     (erlang-push (list 'icr token (current-column)) stack)
+	     (erlang-push (list '-> token (current-column)) stack))
+	    ;;((looking-at "^of$")
+	    ;; (erlang-push (list 'icr token (current-column)) stack)
+	     ;;(erlang-push (list '-> token (current-column)) stack))
+	    )
       (forward-sexp 1))
-     
-     ;; String: Try to skip over it. (Catch error if not complete.)
-     ((= cs ?\")
-      (condition-case nil
-	  (progn
+      ;; String: Try to skip over it. (Catch error if not complete.)
+      ((= cs ?\")
+       (condition-case nil
+	   (progn
 	    (forward-sexp 1)
 	    (if (> (point) to)
 		(progn
@@ -3006,42 +3435,71 @@ Value is list (stack token-start token-type in-what)."
 	 (setq in-what 'string)
 	 (goto-char to))))
 
-     ;; Symbol constituent, punctuation, or expression prefix?
-     ((memq cs '(?. ?_ ?'))
-      (cond 
-       
+     ;; Expression prefix e.i. $ or ^ (Note ^ can be in the character
+     ;; literal $^ or part of string and $ outside of a string denotes
+     ;; a character literal)
+     ((= cs ?')
+      (cond
+       ((= (following-char) ?\") ;; $ or ^ was the last char in a string
+	(forward-char 1))
+       (t
+	;; Maybe a character literal, quote the next char to avoid
+	;; situations as $" being seen as the begining of a string.
+	;; Note the quoting something in the middle of a string is harmless.
+	(quote (following-char))
+	(forward-char 1))))
+
+     ;; Symbol constituent or punctuation
+
+     ((memq cs '(?. ?_))
+      (cond
+
        ;; Clause end
        ((= (following-char) ?\;)
 	(if (and stack (eq (car (car stack)) '->))
 	    (erlang-pop stack))
 	(forward-char 1))
-       
+
        ;; Function end
        ((looking-at "\\.\\(\\s \\|\n\\|\\s<\\)")
 	(setq stack nil)
 	(forward-char 1))
-       
+
        ;; Function head
        ((looking-at "->\\|:-")
+	(save-excursion
+	  (back-to-indentation)
+	  (cond ((looking-at "after[^_a-zA-Z0-9]")
+		 (erlang-pop stack))))
 	(if (and stack (eq (car (car stack)) 'when))
 	    (erlang-pop stack))
 	(erlang-push (list '-> token (current-column)) stack)
 	(forward-char 2))
-       
+
        ;; List-comprehension divider
        ((looking-at "||")
 	(erlang-push (list '|| token (current-column)) stack)
 	(forward-char 2))
-       
+
+       ;;((looking-at ",$")
+	;; Normal catch not try-catch have caused icr
+	;; and then incr and faked "->" should be removed
+;;	(save-excursion
+	;;  (back-to-indentation)
+	 ;; (cond ((looking-at "catch[^_a-zA-Z0-9]")
+		;; (erlang-pop stack)
+		;; (erlang-pop stack))))
+	;;(forward-char 1))
+
        ;; Parameter separator
        ((looking-at ",")
 	(forward-char 1))
-       
+
        ;; Bit-syntax open paren
        ((looking-at "<<")
 	(erlang-push (list '\( token (current-column)) stack)
 	(forward-char 2))
-       
+
        ;; Bbit-syntax close paren
        ((looking-at ">>")
 	(while (memq (car (car stack)) '(|| ->))
@@ -3053,52 +3511,58 @@ Value is list (stack token-start token-type in-what)."
 	      (t
 	       (error "Unbalanced parentheses")))
 	(forward-char 2))
-       
+
        ;; Macro
        ((= (following-char) ??)
-	;; Skip over macro name and any following whitespace.
-	(forward-word 1)
-	(skip-syntax-forward "-" to)
-	;; Macro might have an argument list. Should be handled like
-	;; an ordinary function argument list in consecutive calls
-	;; to erlang-partial-parse.
+	;; Skip over the ?
+	(forward-char 1)
 	)
-	
+
        ;; Other punctuation: Skip over it and any following punctuation
        ((= cs ?.)
 	;; Skip over all characters in the operand.
 	(skip-syntax-forward "."))
-       
+
        ;; Other char: Skip over it.
        (t
 	(forward-char 1))))
-     
+
      ;; Open parenthesis
      ((= cs ?\()
       (erlang-push (list '\( token (current-column)) stack)
       (forward-char 1))
-     
+
      ;; Close parenthesis
      ((= cs ?\))
       (while (memq (car (car stack)) '(|| ->))
 	(erlang-pop stack))
       (cond ((eq (car (car stack)) '\()
 	     (erlang-pop stack))
-	    ((memq (car (car stack)) '(icr begin))
-	     (error "Missing `end'"))
-	    (t
-	     (error "Unbalanced parenthesis")))
+	    ((eq (car (car stack)) 'icr)
+	     (erlang-pop stack)
+	     ;; Normal catch not try-catch might have caused icr
+	     ;; and then incr should be removed and is not an error.
+	     (if (eq (car (car stack)) '\()
+	     	 (erlang-pop stack)
+	     (else
+	       (error "Missing `end'"))
+	     ))
+	    ((eq (car (car stack)) 'begin)
+	     (error "Missing `end'")
+	     (t
+	      (error "Unbalanced parenthesis"))
+	     ))
       (forward-char 1))
-     
+
      ;; Character quote: Skip it and the quoted char.
      ((= cs ?/)
       (forward-char 2))
-     
+
      ;; Character escape: Skip it and the escape sequence.
      ((= cs ?\\)
       (forward-char 1)
       (skip-syntax-forward "w"))
-     
+
      ;; Everything else
      (t
       (forward-char 1)))
@@ -3142,7 +3606,7 @@ Return nil if inside string, t if in a comment."
 	   ;; indentation is the indentation of the keyword +
 	   ;; `erlang-indent-level'.
 	   ;;
-	   ;; `after' should be indentated to the save level as the
+	   ;; `after' should be indented to the save level as the
 	   ;; corresponding receive.
 	   (if (looking-at "after[^_a-zA-Z0-9]")
 	       (nth 2 stack-top)
@@ -3154,7 +3618,19 @@ Return nil if inside string, t if in a comment."
 		 (skip-chars-forward " \t")
 		 (if (memq (following-char) '(?% ?\n))
 		     (+ (nth 2 stack-top) erlang-indent-level)
-		   (current-column))))))
+		   (current-column)))))
+	   (if (looking-at "catch[^_a-zA-Z0-9]")
+	       (nth 2 stack-top)
+	     (save-excursion
+	       (goto-char (nth 1 stack-top))
+	       (if (looking-at "case[^_a-zA-Z0-9]")
+		   (+ (nth 2 stack-top) erlang-indent-level)
+		 (skip-chars-forward "a-z")
+		 (skip-chars-forward " \t")
+		 (if (memq (following-char) '(?% ?\n))
+		     (+ (nth 2 stack-top) erlang-indent-level)
+		   (current-column)))))
+	   )
 	  ;; Real indentation, where operators create extra indentation etc.
 	  ((memq (car stack-top) '(-> || begin))
 	   (goto-char (nth 1 stack-top))
@@ -3189,18 +3665,19 @@ Return nil if inside string, t if in a comment."
 			    ;; the block.  (Here we have a choice: should
 			    ;; the user be forced to reindent continued
 			    ;; lines, or should the "end" be reindented?)
-			    ((looking-at "\\(end\\|after\\)[^_a-zA-Z0-9]\\|$")
+			    ((looking-at "\\(end\\|after\\|catch\\)[^_a-zA-Z0-9]\\|$")
 			     (if (eq (car (car stack)) '->)
 				 (erlang-pop stack))
 			     (if stack
 				 (erlang-caddr (car stack))
 			       0))
-			    ;; Avoid trating comments a continued line.
+			    ;; Avoid treating comments a continued line.
 			    ((= (following-char) ?%)
 			     base)
 			    ;; Continued line (e.g. line beginning
 			    ;; with an operator.)
-			    (t (+ base erlang-indent-level))))))))
+			    (t (+ base erlang-indent-level)))))))
+	   )
 	  ((eq (car stack-top) 'when)
 	   (goto-char (nth 1 stack-top))
 	   (if (looking-at "when\\s *\\($\\|%\\)")
@@ -3289,9 +3766,9 @@ This assumes that the preceding expression is either simple
    "\\(bnot\\|div\\|mod\\|band\\|bor\\|bxor\\|bsl\\|bsr\\)[^_a-zA-Z0-9]"))
 
 (defun erlang-comment-indent ()
-  "Compute erlang comment indentation.
+  "Compute Erlang comment indentation.
 
-Used both by `indent-for-comment' and the erlang specific indentation
+Used both by `indent-for-comment' and the Erlang specific indentation
 commands."
   (cond ((looking-at "%%%") 0)
 	((looking-at "%%")
@@ -3366,7 +3843,7 @@ With argument, do this that many times."
   (interactive)
   (push-mark (point))
   (erlang-end-of-clause 1)
-  ;; Sets the region. In Emacs 19 and XEmacs, we wants to activate
+  ;; Sets the region. In Emacs 19 and XEmacs, we want to activate
   ;; the region.
   (condition-case nil
       (push-mark (point) nil t)
@@ -3470,20 +3947,23 @@ With negative argument go towards the beginning of the buffer."
 	      (goto-char (point-min)))))
       (setq arg (1+ arg)))))
 
-(defun erlang-mark-function ()
-  "Put mark at end of function, point at beginning."
-  (interactive)
-  (push-mark (point))
-  (erlang-end-of-function 1)
-  ;; Sets the region. In Emacs 19 and XEmacs, we wants to activate
-  ;; the region.
-  (condition-case nil
-      (push-mark (point) nil t)
-    (error (push-mark (point))))
-  (erlang-beginning-of-function 1)
-  ;; The above function deactivates the mark.
-  (if (boundp 'deactivate-mark)
-      (funcall (symbol-function 'set) 'deactivate-mark nil)))
+(eval-and-compile
+  (if (default-boundp 'beginning-of-defun-function)
+      (defalias 'erlang-mark-function 'mark-defun)
+    (defun erlang-mark-function ()
+      "Put mark at end of function, point at beginning."
+      (interactive)
+      (push-mark (point))
+      (erlang-end-of-function 1)
+      ;; Sets the region. In Emacs 19 and XEmacs, we want to activate
+      ;; the region.
+      (condition-case nil
+	  (push-mark (point) nil t)
+	(error (push-mark (point))))
+      (erlang-beginning-of-function 1)
+      ;; The above function deactivates the mark.
+      (if (boundp 'deactivate-mark)
+	  (funcall (symbol-function 'set) 'deactivate-mark nil)))))
 
 (defun erlang-pass-over-function ()
   (while (progn
@@ -3585,14 +4065,14 @@ the parentheses."
 		 (and (erlang-beginning-of-clause)
 		      (erlang-get-function-arrow)))))
     (if (or (null arrow) (null name))
-	(error "Can't find name of current Erlang function."))
+	(error "Can't find name of current Erlang function"))
     (if (and (bolp) (eolp))
 	nil
       (end-of-line)
       (newline))
     (insert name)
     (save-excursion
-      (insert (concat ") " arrow)))
+      (insert ") " arrow))
     (if erlang-new-clause-with-arguments
 	(erlang-clone-arguments))))
 
@@ -3609,11 +4089,11 @@ at the end."
 		     (erlang-get-function-arguments))))
 	(p (point)))
     (if (null args)
-	(error "Can't clone argument list."))
+	(error "Can't clone argument list"))
     (insert args)
     (set-mark p)))
 
-;;; Information retreival functions.
+;;; Information retrieval functions.
 
 (defun erlang-buffer-substring (beg end)
   "Like `buffer-substring-no-properties'.
@@ -3634,9 +4114,10 @@ Return nil if file contains no `-module' attribute."
       (let ((md (match-data)))
 	(unwind-protect
 	    (if (re-search-forward
-		 (concat "^-module\\s *(\\s *\\(\\("
-			 erlang-atom-regexp
-			 "\\)?\\)\\s *)\\s *\\.")
+		 (eval-when-compile
+		   (concat "^-module\\s *(\\s *\\(\\("
+			   erlang-atom-regexp
+			   "\\)?\\)\\s *)\\s *\\."))
 		 (point-max) t)
 		(erlang-remove-quotes
 		 (erlang-buffer-substring (match-beginning 1)
@@ -3669,9 +4150,9 @@ tags system could be used by files written in other languages."
 ;; Used by `erlang-get-export' and `erlang-get-import'.
 
 (defun erlang-get-function-arity-list ()
-  "Parses list of `function/arity' as used by `-import' and `-export'.
+  "Parse list of `function/arity' as used by `-import' and `-export'.
 
-The point must be placed at before the opening bracket.  When the
+Point must be before the opening bracket.  When the
 function returns the point will be placed after the closing bracket.
 
 The function does not return an error if the list is incorrectly
@@ -3687,8 +4168,8 @@ corresponds to the order of the parsed Erlang list."
       (while				; Note: `while' has no body.
 	  (progn
 	    (erlang-skip-blank)
-	    (and (looking-at (concat erlang-atom-regexp
-				     "/\\([0-9]+\\)\\>"))
+	    (and (looking-at (eval-when-compile
+			       (concat erlang-atom-regexp "/\\([0-9]+\\)\\>")))
 		 (progn
 		   (setq res (cons
 			      (cons
@@ -3768,13 +4249,14 @@ function and arity as cdr part."
 If optional argument is non-nil, everything up to and including
 the first `(' is returned.
 
-Normally used in conjuction with `erlang-beginning-of-clause', e.g.:
+Normally used in conjunction with `erlang-beginning-of-clause', e.g.:
               (save-excursion
                 (if (not (eobp)) (forward-char 1))
 		(and (erlang-beginning-of-clause)
 		     (erlang-get-function-name t)))"
   (let ((n (if arg 0 1)))
-    (and (looking-at (concat "^" erlang-atom-regexp "\\s *("))
+    (and (looking-at (eval-when-compile
+		       (concat "^" erlang-atom-regexp "\\s *(")))
 	 (erlang-buffer-substring (match-beginning n) (match-end n)))))
 
 
@@ -3783,19 +4265,20 @@ Normally used in conjuction with `erlang-beginning-of-clause', e.g.:
 
 The \":-\" arrow is used by mnesia queries.
 
-Normally used in conjuction with `erlang-beginning-of-clause', e.g.:
+Normally used in conjunction with `erlang-beginning-of-clause', e.g.:
               (save-excursion
                 (if (not (eobp)) (forward-char 1))
 		(and (erlang-beginning-of-clause)
 		     (erlang-get-function-arrow)))"
-  (and 
+  (and
    (save-excursion
      (re-search-forward "[^-:]*-\\|:" (point-max) t)
      (erlang-buffer-substring (- (point) 1) (+ (point) 1)))))
 
 (defun erlang-get-function-arity ()
   "Return the number of arguments of function at point, or nil."
-  (and (looking-at (concat "^" erlang-atom-regexp "\\s *("))
+  (and (looking-at (eval-when-compile
+		     (concat "^" erlang-atom-regexp "\\s *(")))
        (save-excursion
 	 (goto-char (match-end 0))
 	 (condition-case nil
@@ -3821,7 +4304,8 @@ Normally used in conjuction with `erlang-beginning-of-clause', e.g.:
 
 (defun erlang-get-function-arguments ()
   "Return arguments of current function, or nil."
-  (if (not (looking-at (concat "^" erlang-atom-regexp "\\s *(")))
+  (if (not (looking-at (eval-when-compile
+			 (concat "^" erlang-atom-regexp "\\s *("))))
       nil
     (save-excursion
       (condition-case nil
@@ -3838,7 +4322,7 @@ Normally used in conjuction with `erlang-beginning-of-clause', e.g.:
 Should no explicit module name be present at the point, the
 list of imported functions is searched.
 
-The following could be retured:
+The following could be returned:
    (\"module\"  \"function\")    -- Both module and function name found.
    (nil       \"function\")    -- No module name was found.
    nil                       -- No function name found
@@ -3850,7 +4334,8 @@ In the future the list may contain more elements."
       (if (eq (char-syntax (following-char)) ? )
 	  (skip-chars-backward " \t"))
       (skip-chars-backward "a-zA-Z0-9_:'")
-      (cond ((looking-at (concat erlang-atom-regexp ":" erlang-atom-regexp))
+      (cond ((looking-at (eval-when-compile
+			   (concat erlang-atom-regexp ":" erlang-atom-regexp)))
 	     (setq res (list
 			(erlang-remove-quotes
 			 (erlang-buffer-substring
@@ -3874,12 +4359,16 @@ In the future the list may contain more elements."
       res)))
 
 
-;; TODO: Escape single quotes inside the string.
+;; TODO: Escape single quotes inside the string without
+;; replace-regexp-in-string.
 (defun erlang-add-quotes-if-needed (str)
   "Return STR, possibly with quotes."
   (if (and (stringp str)
-	   (not (string-match (concat "\\`" erlang-atom-regexp "\\'") str)))
-      (concat "'" str "'")
+	   (not (string-match (eval-when-compile
+				(concat "\\`" erlang-atom-regexp "\\'")) str)))
+      (progn (if (fboundp 'replace-regexp-in-string)
+		 (setq str (replace-regexp-in-string "'" "\\'" str t t )))
+	     (concat "'" str "'"))
     str))
 
 
@@ -3888,36 +4377,34 @@ In the future the list may contain more elements."
   (let ((md (match-data)))
     (prog1
 	(if (string-match "\\`'\\(.*\\)'\\'" str)
-	    (substring str (match-beginning 1) (match-end 1))
+	    (substring str 1 -1)
 	  str)
       (store-match-data md))))
 
 
 ;;; Check module name
 
-;; I don't want to use `advice' since it is not part of Emacs 18.
-;;
 ;; The function `write-file', bound to C-x C-w, calls
 ;; `set-visited-file-name' which clears the hook.  :-(
-;; To make sure that the hook always is present, we add a piece of
-;; code to the function `set-visited-file-name'.
+;; To make sure that the hook always is present, we advise
+;; `set-visited-file-name'.
 (defun erlang-check-module-name-init ()
   "Initialize the functionality to compare file and module names.
 
-We redefines the function `set-visited-file-name' since it clears
-the variable `local-write-file-hooks'.  The original function definition
-is stored in `erlang-orig-set-visited-file-name'."
-  (if (fboundp 'erlang-orig-set-visited-file-name)
-      ()
-    (fset 'erlang-orig-set-visited-file-name
-	  (symbol-function 'set-visited-file-name))
-    (defun set-visited-file-name (&rest args)
-      "Please see the function `erlang-orig-set-visited-file-name'."
-      (interactive "FSet visited file name: ")
-      (apply (symbol-function 'erlang-orig-set-visited-file-name) args)
-      (if (eq major-mode 'erlang-mode)
-	  (add-hook 'local-write-file-hooks 'erlang-check-module-name))))
-  (add-hook 'local-write-file-hooks 'erlang-check-module-name))
+Unless we have `before-save-hook', we redefine the function
+`set-visited-file-name' since it clears the variable
+`local-write-file-hooks'.  The original function definition is
+stored in `erlang-orig-set-visited-file-name'."
+  (if (boundp 'before-save-hook)
+      ;; If we have that, `make-local-hook' is obsolete.
+      (add-hook 'before-save-hook 'erlang-check-module-name nil t)
+    (require 'advice)
+    (unless (ad-advised-definition-p 'set-visited-file-name)
+      (defadvice set-visited-file-name (after erlang-set-visited-file-name
+					      activate)
+	(if (eq major-mode 'erlang-mode)
+	    (add-hook 'local-write-file-hooks 'erlang-check-module-name))))
+    (add-hook 'local-write-file-hooks 'erlang-check-module-name)))
 
 
 (defun erlang-check-module-name ()
@@ -3928,7 +4415,7 @@ function.  It it is nil, this function does nothing.  If it is t, the
 source is silently changed.  If it is set to the atom `ask', the user
 is prompted.
 
-This function is normally placed in the hook `local-write-file-hook'."
+This function is normally placed in the hook `local-write-file-hooks'."
   (if erlang-check-module-name
       (let ((mn (erlang-get-module))
 	    (fn (erlang-get-module-from-file-name (buffer-file-name))))
@@ -3942,9 +4429,10 @@ This function is normally placed in the hook `local-write-file-hook'."
 			(widen)
 			(goto-char (point-min))
 			(if (re-search-forward
-			     (concat "^-module\\s *(\\s *\\(\\("
-				     erlang-atom-regexp
-				     "\\)?\\)\\s *)\\s *\\.")
+			     (eval-when-compile
+			       (concat "^-module\\s *(\\s *\\(\\("
+				       erlang-atom-regexp
+				       "\\)?\\)\\s *)\\s *\\."))
 			     (point-max) t)
 			    (progn
 			      (goto-char (match-beginning 1))
@@ -3960,7 +4448,7 @@ This function is normally placed in the hook `local-write-file-hook'."
 (defun erlang-electric-semicolon (&optional arg)
   "Insert a semicolon character and possibly a prototype for the next line.
 
-The variable `erlang-electric-semicolon-criteria' states a critera,
+The variable `erlang-electric-semicolon-criteria' states a criterion,
 when fulfilled a newline is inserted, the next line is indented and a
 prototype for the next line is inserted.  Normally the prototype
 consists of \" ->\".  Should the semicolon end the clause a new clause
@@ -4007,8 +4495,8 @@ non-whitespace characters following the point on the current line."
 
 (defun erlang-electric-comma (&optional arg)
   "Insert a comma character and possibly a new indented line.
-The variable `erlang-electric-comma-criteria' states a critera,
-when fulfilled a newline is inserted and the next line is indeted.
+The variable `erlang-electric-comma-criteria' states a criterion,
+when fulfilled a newline is inserted and the next line is indented.
 
 Behaves just like the normal comma when supplied with a
 numerical arg, point is inside string or comment, or when there are
@@ -4035,7 +4523,7 @@ non-whitespace characters following the point on the current line."
 
 (defun erlang-electric-lt (&optional arg)
   "Insert a less-than sign, and optionally mark it as an open paren."
-  
+
   (interactive "p")
 
   (self-insert-command arg)
@@ -4048,7 +4536,7 @@ non-whitespace characters following the point on the current line."
 		 (not (eq (get-text-property (point) 'category)
 			  'bitsyntax-open-inner)))
 	;; Then mark the two chars...
-	(put-text-property (point) (1+ (point)) 
+	(put-text-property (point) (1+ (point))
 			   'category 'bitsyntax-open-outer)
 	(forward-char 1)
 	(put-text-property (point) (1+ (point))
@@ -4061,18 +4549,18 @@ non-whitespace characters following the point on the current line."
 	  (forward-char 1))))))
 
 (defun erlang-after-bitsyntax-close ()
-  "Returns true if point is placed immediately after a bit-syntax close parenthesis (`>>')."
+  "Return t if point is immediately after a bit-syntax close parenthesis (`>>')."
   (and (>= (point) 2)
        (save-excursion
 	 (backward-char 2)
 	 (and (eq (char-after (point)) ?>)
 	      (not (eq (get-text-property (point) 'category)
 		       'bitsyntax-close-outer))))))
-	 
+
 (defun erlang-after-arrow ()
-  "Returns true if point is placed immediately after a function arrow (`->')."
+  "Return true if point is immediately after a function arrow (`->')."
   (and (>= (point) 2)
-       (and 
+       (and
 	(save-excursion
 	  (backward-char)
 	  (eq (char-before (point)) ?-))
@@ -4086,7 +4574,7 @@ non-whitespace characters following the point on the current line."
 
 (defun erlang-electric-gt (&optional arg)
   "Insert a greater-than sign, and optionally mark it as a close paren."
-  
+
   (interactive "p")
 
   (self-insert-command arg)
@@ -4097,7 +4585,7 @@ non-whitespace characters following the point on the current line."
     (save-excursion
       ;; Then mark the two chars...
       (backward-char 2)
-      (put-text-property (point) (1+ (point)) 
+      (put-text-property (point) (1+ (point))
 			 'category 'bitsyntax-close-inner)
       (forward-char)
       (put-text-property (point) (1+ (point))
@@ -4122,10 +4610,10 @@ non-whitespace characters following the point on the current line."
    ;; Then it's just a plain greater-than.
    (t
     nil)))
-    
+
 
 (defun erlang-electric-arrow\ off (&optional arg)
-  "Insert a '>'-sign and possible a new indented line.
+  "Insert a '>'-sign and possibly a new indented line.
 
 This command is only `electric' when the `>' is part of an `->' arrow.
 The variable `erlang-electric-arrow-criteria' states a sequence of
@@ -4136,8 +4624,8 @@ It behaves just like the normal greater than sign when supplied with a
 numerical arg, point is inside string or comment, or when there are
 non-whitespace characters following the point on the current line.
 
-After being split/merged into erlang-after-arrow and
-erlang-electric-gt, it is now unused and disabled."
+After being split/merged into `erlang-after-arrow' and
+`erlang-electric-gt', it is now unused and disabled."
   (interactive "P")
   (let ((prec (preceding-char)))
     (self-insert-command (prefix-numeric-value arg))
@@ -4162,8 +4650,8 @@ erlang-electric-gt, it is now unused and disabled."
 
 (defun erlang-electric-newline (&optional arg)
   "Break line at point and indent, continuing comment if within one.
-The variable `erlang-electric-newline-criteria' states a critera,
-when fulfilled a newline is inserted and the next line is indeted.
+The variable `erlang-electric-newline-criteria' states a criterion,
+when fulfilled a newline is inserted and the next line is indented.
 
 Should the current line begin with a comment, and the variable
 `comment-multi-line' be non-nil, a new comment start is inserted.
@@ -4199,20 +4687,20 @@ the user pressed newline out of old habit, hence we will do nothing."
 
 
 (defun erlang-test-criteria-list (criteria)
-  "Given a list of criteria functions, test if criteria is fulfilled.
+  "Given a list of criterion functions, test if criteria are fulfilled.
 
 Each element in the criteria list can a function returning nil, t or
-the atom `stop'.  t means that the criteria is fulfilled, `stop' means
-that it the criteria isn't fulfilled and that the search should stop,
+the atom `stop'.  t means that the criterion is fulfilled, `stop' means
+that it isn't fulfilled and that the search should stop,
 and nil means continue searching.
 
-Should the list contain the atom t the criteria is assumed to be
+Should the list contain the atom t the criterion is assumed to be
 fulfilled, unless preceded by a function returning `stop', of course.
 
-Should the argument be the atom t instead of a list, the criteria is
+Should the argument be the atom t instead of a list, the criterion is
 assumed to be trivially true.
 
-Should all function return nil, the criteria is assumed not to be
+Should all functions return nil, the criteria are assumed not to be
 fulfilled.
 
 Return t if criteria fulfilled, nil otherwise."
@@ -4240,7 +4728,9 @@ context, nil is returned."
     (let* ((lim (or lim (save-excursion
 			  (erlang-beginning-of-clause)
 			  (point))))
-	   (state (parse-partial-sexp lim (point))))
+	   (state (if (fboundp 'syntax-ppss) ; post Emacs 21.3
+		      (syntax-ppss)
+		    (parse-partial-sexp lim (point)))))
       (cond
        ((eq (nth 3 state) ?') 'atom)
        ((nth 3 state) 'string)
@@ -4272,13 +4762,13 @@ This function is designed to be a member of a criteria list."
 	  (if (not (eq (following-char) ?\[))
 	      'stop
 	    ;; Do not return `stop' when inside a list comprehension
-	    ;; construnction.  (The point must be after `||').
+	    ;; construction.  (The point must be after `||').
 	    (while (< (point) orig-point)
 	      (setq state (erlang-partial-parse (point) orig-point state)))
 	    (if (and (car state) (eq (car (car (car state))) '||))
 		nil
 	      'stop)))
-      (error 
+      (error
        nil))))
 
 
@@ -4288,9 +4778,11 @@ This function is designed to be a member of a criteria list."
 This function is designed to be a member of a criteria list."
   (save-excursion
     (beginning-of-line)
-    (if (and (looking-at (concat "^" erlang-atom-regexp "\\s *("))
+    (if (and (looking-at (eval-when-compile
+			   (concat "^" erlang-atom-regexp "\\s *(")))
 	     (not (looking-at
-		   (concat "^" erlang-atom-regexp ".*\\(->\\|:-\\)"))))
+		   (eval-when-compile
+		     (concat "^" erlang-atom-regexp ".*\\(->\\|:-\\)")))))
 	'stop
       nil)))
 
@@ -4327,7 +4819,7 @@ This function is designed to be a member of a criteria list."
 ;; Erlang tags support which is aware of erlang modules.
 ;;
 ;; Not yet implemented under XEmacs.  (Hint:  The Emacs 19 etags
-;; package work under XEmacs.)
+;; package works under XEmacs.)
 
 (eval-when-compile
   (if (or (featurep 'bytecomp)
@@ -4352,7 +4844,7 @@ This function is designed to be a member of a criteria list."
 (defvar erlang-tags-completion-table nil
   "Like `tags-completion-table', this table contains `tag' and `module:tag'.")
 (defvar erlang-tags-buffer-installed-p nil
-  "Non-nil when erlang module recognising functions installed.")
+  "Non-nil when Erlang module recognising functions installed.")
 (defvar erlang-tags-buffer-list '()
   "Temporary list of buffers.")
 (defvar erlang-tags-orig-completion-table nil
@@ -4366,13 +4858,15 @@ This function is designed to be a member of a criteria list."
 (defvar erlang-tags-orig-regexp-search-function nil
   "Temporary storage for `find-tag-regexp-search-function'.")
 (defvar erlang-tags-orig-format-hooks nil
-  "Temporary storage for `tags-table-format-hooks'.")
+  "Temporary storage for `tags-table-format-hooks'.") ;v19
+(defvar erlang-tags-orig-format-functions nil
+  "Temporary storage for `tags-table-format-functions'.") ;v > 19
 
 (defun erlang-tags-init ()
   "Install an alternate version of tags, aware of Erlang modules.
 
 After calling this function, the tags functions are aware of
-Erlang modules.  Tags can be entered on the for `module:tag' aswell
+Erlang modules.  Tags can be entered on the for `module:tag' as well
 as on the old form `tag'.
 
 In the completion list, `module:tag' and `module:' shows up.
@@ -4424,11 +4918,12 @@ works under XEmacs.)"
 
 ;; There exists a variable `find-tag-default-function'.  It is not used
 ;; since `complete-tag' uses it to get current word under point.  In that
-;; situation we doesn't want the module to be prepended.
+;; situation we don't want the module to be prepended.
 
 (defun erlang-find-tag-default ()
-  "Return the default tag, searches `-import' list of imported functions.
-Single quotes has been stripped away."
+  "Return the default tag.
+Search `-import' list of imported functions.
+Single quotes are been stripped away."
   (let ((mod-func (erlang-get-function-under-point)))
     (cond ((null mod-func)
 	   nil)
@@ -4441,7 +4936,7 @@ Single quotes has been stripped away."
 ;; Return `t' since it is used inside `tags-loop-form'.
 ;;;###autoload
 (defun erlang-find-tag (modtagname &optional next-p regexp-p)
-  "Like `find-tag'.  Capable of retreiving Erlang modules.
+  "Like `find-tag'.  Capable of retrieving Erlang modules.
 
 Tags can be given on the forms `tag', `module:', `module:tag'."
   (interactive (erlang-tag-interactive "Find `module:tag' or `tag': "))
@@ -4488,7 +4983,7 @@ Tags can be given on the forms `tag', `module:', `module:tag'."
   (interactive (if (fboundp 'find-tag-regexp)
 		   (erlang-tag-interactive
 		    "Find `module:regexp' or `regexp': ")
-		 (error "This version of Emacs can't find tags by regexps.")))
+		 (error "This version of Emacs can't find tags by regexps")))
   (funcall (if other-window
 	       'erlang-find-tag-other-window
 	     'erlang-find-tag)
@@ -4497,6 +4992,7 @@ Tags can be given on the forms `tag', `module:', `module:tag'."
 
 ;; Just like C-u M-.  This could be added to the menu.
 (defun erlang-find-next-tag ()
+  "Find next tag, like \\[find-tag] with prefix arg."
   (interactive)
   (let ((current-prefix-arg '(4)))
     (if erlang-tags-installed
@@ -4508,11 +5004,11 @@ Tags can be given on the forms `tag', `module:', `module:tag'."
 ;; be compatible with `tags.el'.
 ;;
 ;; Handles three cases:
-;; * `module:'  Loop over all possible filen-ames.  Stop if a file-name
+;; * `module:'  Loop over all possible file names.  Stop if a file-name
 ;;              without extension and directory matches the module.
 ;;
 ;; * `module:tag'
-;;		Emacs 19: Replace testfunctions with functions aware of
+;;		Emacs 19: Replace test functions with functions aware of
 ;;	        Erlang modules.  Tricky because the etags system wasn't
 ;;		built for these kind of operations...
 ;;
@@ -4631,23 +5127,34 @@ Tags can be given on the forms `tag', `module:', `module:tag'."
 
 
 ;; Search tag functions which are aware of Erlang modules.  The tactic
-;; is to store new search functions into the local variabels of the
+;; is to store new search functions into the local variables of the
 ;; TAGS buffers.  The variables are restored directly after the
 ;; search.  The situation is complicated by the fact that new TAGS
 ;; files can be loaded during the search.
 ;;
-;; This code is Emacs 19 `etags' specific.
 
 (defun erlang-tags-install-module-check ()
   "Install our own tag search functions."
   ;; Make sure our functions are installed in TAGS files loaded
   ;; into Emacs while searching.
-  (setq erlang-tags-orig-format-hooks
-	(symbol-value 'tags-table-format-hooks))
-  (funcall (symbol-function 'set) 'tags-table-format-hooks
-	   (cons 'erlang-tags-recognize-tags-table
-		 erlang-tags-orig-format-hooks))
-  (setq erlang-tags-buffer-list '())
+  (cond
+   (( >= erlang-emacs-major-version 20)
+    (setq erlang-tags-orig-format-functions
+	  (symbol-value 'tags-table-format-functions))
+    (funcall (symbol-function 'set) 'tags-table-format-functions
+	     (cons 'erlang-tags-recognize-tags-table
+		   erlang-tags-orig-format-functions))
+    (setq erlang-tags-buffer-list '())
+    )
+   (t
+    (setq erlang-tags-orig-format-hooks
+	  (symbol-value 'tags-table-format-hooks)))
+   (funcall (symbol-function 'set) 'tags-table-format-hooks
+	    (cons 'erlang-tags-recognize-tags-table
+		  erlang-tags-orig-format-hooks))
+   (setq erlang-tags-buffer-list '())
+   )
+
   ;; Install our functions in the TAGS files already resident.
   (save-excursion
     (let ((files (symbol-value 'tags-table-computed-list)))
@@ -4692,9 +5199,18 @@ Tags can be given on the forms `tag', `module:', `module:tag'."
 
 (defun erlang-tags-remove-module-check ()
   "Remove our own tags search functions."
-  (funcall (symbol-function 'set)
-	   'tags-table-format-hooks
-	   erlang-tags-orig-format-hooks)
+  (cond
+   ((>= erlang-emacs-major-version 20)
+    (funcall (symbol-function 'set)
+	     'tags-table-format-functions
+	     erlang-tags-orig-format-functions)
+    )
+   (t
+    (funcall (symbol-function 'set)
+	     'tags-table-format-hooks
+	     erlang-tags-orig-format-hooks)
+    ))
+
   ;; Remove our functions from the TAGS files.  (Note that
   ;; `tags-table-computed-list' need not be the same list as when
   ;; the search was started.)
@@ -4727,7 +5243,7 @@ Tags can be given on the forms `tag', `module:', `module:tag'."
 (defun erlang-tags-recognize-tags-table ()
   "Install our functions in all loaded TAGS files.
 
-This function is added to `tags-table-format-hooks' when searching
+This function is added to `tags-table-format-hooks/functions' when searching
 for a tag on the form `module:tag'."
   (if (null (funcall (symbol-function 'etags-recognize-tags-table)))
       nil
@@ -4739,7 +5255,7 @@ for a tag on the form `module:tag'."
   "Forward search function, aware of Erlang module prefix."
   (if (string-match ":" tag)
       (setq tag (substring tag (match-end 0) nil)))
-  ;; Avoid uninteded recursion.
+  ;; Avoid unintended recursion.
   (if (eq erlang-tags-orig-search-function 'erlang-tags-search-forward)
       (search-forward tag bound noerror count)
     (funcall erlang-tags-orig-search-function tag bound noerror count)))
@@ -4807,7 +5323,7 @@ about Erlang modules."
 	      (fboundp 'complete-tag))	; Emacs 19
 	 (let ((orig-tags-complete-tag (symbol-function 'tags-complete-tag)))
 	   (fset 'tags-complete-tag
-		 (symbol-function 'erlang-tags-complete-tag))
+	     (symbol-function 'erlang-tags-complete-tag))
 	   (unwind-protect
 	       (funcall (symbol-function 'complete-tag))
 	     (fset 'tags-complete-tag orig-tags-complete-tag))))
@@ -4816,11 +5332,11 @@ about Erlang modules."
 	((fboundp 'tag-complete-symbol)	; XEmacs
 	 (funcall (symbol-function 'tag-complete-symbol)))
 	(t
-	 (error "This version of Emacs can't complete tags."))))
+	 (error "This version of Emacs can't complete tags"))))
 
 
 ;; Based on `tags-complete-tag', but this one uses
-;; `erlang-tag-completion-table' instead of `tag-completion-table'.
+;; `erlang-tags-completion-table' instead of `tags-completion-table'.
 ;;
 ;; This is the entry-point called by system function `completing-read'.
 (defun erlang-tags-complete-tag (string predicate what)
@@ -4860,7 +5376,7 @@ about Erlang modules."
 
 
 ;; Based on `etags-tags-completion-table'.  The difference is that we
-;; adds three symbols to the vector, the tag, module: and module:tag.
+;; add three symbols to the vector, the tag, module: and module:tag.
 ;; The module is extracted from the file name of a tag.  (This one
 ;; only works if we are looking at an `etags' file. However, this is
 ;; the only format supported by Emacs, so far.)
@@ -4936,8 +5452,8 @@ Erlang compilation package.")
 (defvar erlang-next-error-function 'inferior-erlang-next-error
   "Command to execute to go to the next error.
 
-Change this variable to use your favorite
-Erlang compilation package.")
+Change this variable to use your favorite Erlang compilation
+package.  Not used in Emacs 21.")
 
 
 ;;;###autoload
@@ -4955,7 +5471,7 @@ future, a new shell on an already running host will be started."
 
 ;; It is customary for Emacs packages to supply a function on this
 ;; form, even though it violates the `erlang-*' name convention.
-(fset 'run-erlang 'erlang-shell)
+(defalias 'run-erlang 'erlang-shell)
 
 
 (defun erlang-shell-display ()
@@ -4994,11 +5510,15 @@ future, a new shell on an already running host will be started."
 
 
 (defvar erlang-shell-buffer-name "*erlang*"
-  "*The name of the Erlang link shell buffer.")
+  "The name of the Erlang link shell buffer.")
+
+;;(when (boundp 'same-window-buffer-names)
+ ;; (unless (member "*Python*" same-window-buffer-names)
+   ;; (push "*Python*" same-window-buffer-names)))
 
 
 (defvar erlang-shell-mode-map nil
-  "*Keymap used by Erlang shells.")
+  "Keymap used by Erlang shells.")
 
 
 (defvar erlang-shell-mode-hook nil
@@ -5009,22 +5529,22 @@ normally used by the user to personalise the programming environment.
 When used in a site init file, it could be used to customise Erlang
 mode for all users on the system.
 
-The functioned added to this hook is runed every time a new Erlang
+The function added to this hook is run every time a new Erlang
 shell is started.
 
-See also `erlang-load-hook', a hook which is runed once, when Erlang
-mode is loaded, and `erlang-mode-hook' which is runed every time a new
+See also `erlang-load-hook', a hook which is run once, when Erlang
+mode is loaded, and `erlang-mode-hook' which is run every time a new
 Erlang source file is loaded into Emacs.")
 
 
 (defvar erlang-input-ring-file-name "~/.erlang_history"
-  "*When non-nil, file name used to store erlang shell history information.")
+  "*When non-nil, file name used to store Erlang shell history information.")
 
 
 (defun erlang-shell-mode ()
   "Major mode for interacting with an Erlang shell.
 
-We assume that we already are in comint-mode.
+We assume that we already are in Comint mode.
 
 The following special commands are available:
 \\{erlang-shell-mode-map}"
@@ -5037,9 +5557,14 @@ The following special commands are available:
     (setq erlang-shell-mode-map (copy-keymap comint-mode-map))
     (erlang-shell-mode-commands erlang-shell-mode-map))
   (use-local-map erlang-shell-mode-map)
-  (set (make-local-variable 'compilation-parsing-end) 1)
-  (set (make-local-variable 'compilation-error-list) nil)
-  (set (make-local-variable 'compilation-old-error-list) nil)
+  (unless inferior-erlang-use-cmm
+    ;; This was originally not a marker, but it needs to be, at least
+    ;; in Emacs 21, and should be backwards-compatible.  Otherwise,
+    ;; would need to test whether compilation-parsing-end is a marker
+    ;; after requiring `compile'.
+    (set (make-local-variable 'compilation-parsing-end) (copy-marker 1))
+    (set (make-local-variable 'compilation-error-list) nil)
+    (set (make-local-variable 'compilation-old-error-list) nil))
   ;; Needed when compiling directly from the Erlang shell.
   (setq compilation-last-buffer (current-buffer))
   (erlang-add-compilation-alist erlang-error-regexp-alist)
@@ -5052,29 +5577,69 @@ The following special commands are available:
   ;; the call fails, just call the normal `add-hook'.
   (condition-case nil
       (progn
-	(funcall (symbol-function 'add-hook) 'comint-output-filter-functions
+	(make-local-hook 'comint-output-filter-functions) ; obsolete after Emacs 21.3
+	(add-hook 'comint-output-filter-functions
 		 'inferior-erlang-strip-delete nil t)
-	(funcall (symbol-function 'add-hook) 'comint-output-filter-functions
+	(add-hook 'comint-output-filter-functions
 		 'inferior-erlang-strip-ctrl-m nil t))
     (error
      (add-hook 'comint-output-filter-functions 'inferior-erlang-strip-delete)
      (add-hook 'comint-output-filter-functions 'inferior-erlang-strip-ctrl-m)))
-  ;; Some older versions of comint doesn't have an input ring.
+  ;; Some older versions of comint don't have an input ring.
   (if (fboundp 'comint-read-input-ring)
       (progn
 	(setq comint-input-ring-file-name erlang-input-ring-file-name)
 	(comint-read-input-ring t)
 	(make-local-variable 'kill-buffer-hook)
 	(add-hook 'kill-buffer-hook 'comint-write-input-ring)))
+  ;; At least in Emacs 21, we need to be in `compilation-minor-mode'
+  ;; for `next-error' to work.  We can avoid it clobbering the shell
+  ;; keys thus.
+  (when inferior-erlang-use-cmm
+    (compilation-minor-mode 1)
+    (set (make-local-variable 'minor-mode-overriding-map-alist)
+	 `((compilation-minor-mode
+	    . ,(let ((map (make-sparse-keymap)))
+		 ;; It would be useful to put keymap properties on the
+		 ;; error lines so that we could use RET and mouse-2
+		 ;; on them directly.
+		 (when (boundp 'compilation-skip-threshold) ; new compile.el
+		   (define-key map [mouse-2] #'erlang-mouse-2-command)
+		   (define-key map "\C-m" #'erlang-RET-command))
+		 (if (boundp 'compilation-menu-map)
+		     (define-key map [menu-bar compilation]
+		       (cons "Errors" compilation-menu-map)))
+		 map)))))
   (run-hooks 'erlang-shell-mode-hook))
 
+
+(defun erlang-mouse-2-command (event)
+  "Command bound to `mouse-2' in inferior Erlang buffer.
+Selects Comint or Compilation mode command as appropriate."
+  (interactive "e")
+  (if (save-window-excursion
+	(save-excursion
+	  (mouse-set-point event)
+	  (consp (get-text-property (line-beginning-position) 'message))))
+      (call-interactively (lookup-key compilation-mode-map [mouse-2]))
+    (call-interactively (lookup-key comint-mode-map [mouse-2]))))
+
+(defun erlang-RET-command ()
+  "Command bound to `RET' in inferior Erlang buffer.
+Selects Comint or Compilation mode command as appropriate."
+  (interactive)
+  (if (consp (get-text-property (line-beginning-position) 'message))
+      (call-interactively (lookup-key compilation-mode-map "\C-m"))
+    (call-interactively (lookup-key comint-mode-map "\C-m"))))
 
 (defun erlang-shell-mode-commands (map)
   (define-key map "\M-\t"    'erlang-complete-tag)
   (define-key map "\C-a"     'comint-bol) ; Normally the other way around.
   (define-key map "\C-c\C-a" 'beginning-of-line)
   (define-key map "\C-d"     nil)	; Was `comint-delchar-or-maybe-eof'
-  (define-key map "\C-x`"    'erlang-next-error))
+  (define-key map "\M-\C-m"  'compile-goto-error)
+  (unless inferior-erlang-use-cmm
+    (define-key map "\C-x`"    'erlang-next-error)))
 
 ;;;
 ;;; Inferior Erlang -- Run an Erlang shell as a subprocess.
@@ -5102,17 +5667,17 @@ This variable influence the setting of other variables.")
 This must be a list of strings.")
 
 (defvar inferior-erlang-process-name "inferior-erlang"
-  "*The name of the inferior Erlang process.")
+  "The name of the inferior Erlang process.")
 
 (defvar inferior-erlang-buffer-name erlang-shell-buffer-name
-  "*The name of the inferior erlang buffer.")
+  "The name of the inferior Erlang buffer.")
 
 (defvar inferior-erlang-prompt-timeout 60
   "*Number of seconds before `inferior-erlang-wait-prompt' timeouts.
 
 The time specified is waited after every output made by the inferior
 Erlang shell.  When this variable is t, we assume that we always have
-a prompt.  When nil, we will wait forever, or until C-g.")
+a prompt.  When nil, we will wait forever, or until \\[keyboard-quit].")
 
 (defvar inferior-erlang-process nil
   "Process of last invoked inferior Erlang, or nil.")
@@ -5126,8 +5691,8 @@ a prompt.  When nil, we will wait forever, or until C-g.")
 
 This is just like running Erlang in a normal shell, except that
 an Emacs buffer is used for input and output.
-
-The command line history can be accessed with  M-p  and  M-n.
+\\<comint-mode-map>
+The command line history can be accessed with  \\[comint-previous-input]  and  \\[comint-next-input].
 The history is saved between sessions.
 
 Entry to this mode calls the functions in the variables
@@ -5186,7 +5751,7 @@ Note, should the mouse pointer be places outside the raised frame, that
 frame will become deselected before the next command."
   (interactive)
   (or (inferior-erlang-running-p)
-      (error "No inferior Erlang process is running."))
+      (error "No inferior Erlang process is running"))
   (let ((win (inferior-erlang-window
 	      inferior-erlang-display-buffer-any-frame))
 	(frames-p (fboundp 'selected-frame)))
@@ -5225,11 +5790,11 @@ frame will become deselected before the next command."
 
 
 (defun inferior-erlang-wait-prompt ()
-  "Wait until the inferior Erlang shell prompt appear."
+  "Wait until the inferior Erlang shell prompt appears."
   (if (eq inferior-erlang-prompt-timeout t)
       ()
     (or (inferior-erlang-running-p)
-	(error "No inferior Erlang shell is running."))
+	(error "No inferior Erlang shell is running"))
     (save-excursion
       (set-buffer inferior-erlang-buffer)
       (let ((msg nil))
@@ -5243,9 +5808,10 @@ frame will become deselected before the next command."
 	    (message "Waiting for Erlang shell prompt (press C-g to abort)."))
 	  (or (accept-process-output inferior-erlang-process
 				     inferior-erlang-prompt-timeout)
-	      (error "No Erlang shell prompt before timeout.")))
+	      (error "No Erlang shell prompt before timeout")))
 	(if msg (message ""))))))
 
+(autoload 'comint-send-input "comint")
 
 (defun inferior-erlang-send-command (cmd &optional hist)
   "Send command CMD to the inferior Erlang.
@@ -5258,21 +5824,23 @@ the history list.
 
 Return the position after the newly inserted command."
   (or (inferior-erlang-running-p)
-      (error "No inferior Erlang process is running."))
+      (error "No inferior Erlang process is running"))
   (let ((old-buffer (current-buffer))
-	(insert-point (marker-position
-		       (process-mark inferior-erlang-process)))
+	(insert-point (marker-position (process-mark inferior-erlang-process)))
 	(insert-length (if comint-process-echoes
 			   0
 			 (1+ (length cmd)))))
     (set-buffer inferior-erlang-buffer)
     (goto-char insert-point)
     (insert cmd)
-    ;; Strange things happend if `comint-eol-on-send' is declared
+    ;; Strange things happened if `comint-eol-on-send' is declared
     ;; in the `let' expression above, but setq:d here. The
     ;; `set-buffer' statement obviously makes the buffer local
     ;; instance of `comint-eol-on-send' shadow this one.
     ;; I'm considering this a bug in Elisp.
+    ;;
+    ;; This was previously cautioned against in the Lisp manual.  It
+    ;; has been sorted out in Emacs 21.  -- fx
     (let ((comint-eol-on-send nil)
 	  (comint-input-filter (if hist comint-input-filter 'ignore)))
       (comint-send-input))
@@ -5282,7 +5850,7 @@ Return the position after the newly inserted command."
 	 (function
 	  (lambda (window)
 	    (if (and (eq (window-buffer window) inferior-erlang-buffer)
-		     (eq (window-point window) insert-point))
+		     (= (window-point window) insert-point))
 		(set-window-point window
 				  (+ insert-point insert-length)))))
 	 nil t))
@@ -5323,8 +5891,10 @@ Return the position after the newly inserted command."
 	    (replace-match "" t t))))))
 
 
-(defun inferior-erlang-compile ()
+(defun inferior-erlang-compile (arg)
   "Compile the file in the current buffer.
+
+With prefix arg, compiles for debug.
 
 Should Erlang return `{error, nofile}' it could not load the object
 module after completing the compilation.  This is due to a bug in the
@@ -5337,15 +5907,15 @@ There exists two workarounds for this bug:
   2) Set the Emacs variable `erlang-compile-use-outdir' to nil.
      To do so, place the following line in your `~/.emacs'-file:
         (setq erlang-compile-use-outdir nil)"
-  (interactive)
+  (interactive "P")
   (save-some-buffers)
   (or (inferior-erlang-running-p)
       (save-excursion
 	(inferior-erlang)))
   (or (inferior-erlang-running-p)
-      (error "Error starting inferior Erlang shell."))
+      (error "Error starting inferior Erlang shell"))
   (let ((dir (file-name-directory (buffer-file-name)))
-	;;; (file (file-name-nondirectory (buffer-file-name)))
+;;; (file (file-name-nondirectory (buffer-file-name)))
 	(noext (substring (buffer-file-name) 0 -4))
 	;; Hopefully, noone else will ever use these...
 	(tmpvar "Tmp7236")
@@ -5355,20 +5925,25 @@ There exists two workarounds for this bug:
     (inferior-erlang-wait-prompt)
     (setq end (inferior-erlang-send-command
 	       (if erlang-compile-use-outdir
-		   (format "c(\"%s\", [{outdir, \"%s\"}])." noext dir)
+		   (if current-prefix-arg
+		       (format "c(\"%s\", [{outdir, \"%s\"}, debug_info, export_all])." noext dir)
+		     (format "c(\"%s\", [{outdir, \"%s\"}])." noext dir))
 		 (format
 		  (concat
 		   "f(%s), {ok, %s} = file:get_cwd(), "
 		   "file:set_cwd(\"%s\"), "
-		   "%s = c(\"%s\"), file:set_cwd(%s), f(%s), %s.")
+		   (if current-prefix-arg
+		       "%s = c(\"%s\", [debug_info, export_all]), file:set_cwd(%s), f(%s), %s."
+		     "%s = c(\"%s\"), file:set_cwd(%s), f(%s), %s."))
 		  tmpvar2 tmpvar
 		  dir
 		  tmpvar2 noext tmpvar tmpvar tmpvar2))
 	       nil))
+    (inferior-erlang-wait-prompt)
     (save-excursion
       (set-buffer inferior-erlang-buffer)
       (setq compilation-error-list nil)
-      (setq compilation-parsing-end end))
+      (set-marker compilation-parsing-end end))
     (setq compilation-last-buffer inferior-erlang-buffer)))
 
 
@@ -5376,6 +5951,7 @@ There exists two workarounds for this bug:
 ;; or with the minor mode `compilation-minor-mode' activated.
 ;; (To activate the minor mode is out of the question, since it will
 ;; ruin the inferior Erlang keymap.)
+;; This is done differently in Emacs 21.
 (defun inferior-erlang-next-error (&optional argp)
   "Just like `next-error'.
 Capable of finding error messages in an inferior Erlang buffer."
@@ -5400,16 +5976,89 @@ Capable of finding error messages in an inferior Erlang buffer."
 
 
 (defun inferior-erlang-change-directory (&optional dir)
-  "Make the inferior erlang change directory.
+  "Make the inferior Erlang change directory.
 The default is to go to the directory of the current buffer."
   (interactive)
   (or dir (setq dir (file-name-directory (buffer-file-name))))
   (or (inferior-erlang-running-p)
-      (error "No inferior Erlang is running."))
+      (error "No inferior Erlang is running"))
   (inferior-erlang-display-buffer)
   (inferior-erlang-wait-prompt)
   (inferior-erlang-send-command (format "cd('%s')." dir) nil))
-
+
+(defun erlang-align-arrows (start end)
+  "Align arrows (\"->\") in function clauses from START to END.
+When called interactively, aligns arrows after function clauses inside
+the region.
+
+With a prefix argument, aligns all arrows, not just those in function
+clauses.
+
+Example:
+
+sum(L) -> sum(L, 0).
+sum([H|T], Sum) -> sum(T, Sum + H);
+sum([], Sum) -> Sum.
+
+becomes:
+
+sum(L)          -> sum(L, 0).
+sum([H|T], Sum) -> sum(T, Sum + H);
+sum([], Sum)    -> Sum."
+  (interactive "r")
+  (save-excursion
+    (let (;; regexp for matching arrows. without a prefix argument,
+	  ;; the regexp matches function heads. With a prefix, it
+	  ;; matches any arrow.
+	  (re (if current-prefix-arg
+		  "^.*\\(\\)->"
+		(eval-when-compile
+		  (concat "^" erlang-atom-regexp ".*\\(\\)->"))))
+	  ;; part of regexp matching directly before the arrow
+	  (arrow-match-pos (if current-prefix-arg
+			       1
+			     (1+ erlang-atom-regexp-matches)))
+	  ;; accumulator for positions where arrows are found, ordered
+	  ;; by buffer position (from greatest to smallest)
+	  (arrow-positions '())
+	  ;; accumulator for longest distance from start of line to arrow
+	  (most-indent 0)
+	  ;; marker to track the end of the region we're aligning
+	  (end-marker (progn (goto-char end)
+			     (point-marker))))
+      ;; Pass 1: Find the arrow positions, adjust the whitespace
+      ;; before each arrow to one space, and find the greatest
+      ;; indentation level.
+      (goto-char start)
+      (while (re-search-forward re end-marker t)
+	(goto-char (match-beginning arrow-match-pos))
+	(just-one-space)		; adjust whitespace
+	(setq arrow-positions (cons (point) arrow-positions))
+	(setq most-indent (max most-indent (erlang-column-number))))
+      (set-marker end-marker nil)	; free the marker
+      ;; Pass 2: Insert extra padding so that all arrow indentation is
+      ;; equal. This is done last-to-first by buffer position, so that
+      ;; inserting spaces before one arrow doesn't change the
+      ;; positions of the next ones.
+      (mapcar (lambda (arrow-pos)
+		(goto-char arrow-pos)
+		(let* ((pad (- most-indent (erlang-column-number))))
+		  (when (> pad 0)
+		    (insert-char ?\  pad))))
+	      arrow-positions))))
+
+(defun erlang-column-number ()
+  "Return the column number of the current position in the buffer.
+Tab characters are counted by their visual width."
+  (string-width (buffer-substring (line-beginning-position) (point))))
+
+(defun erlang-current-defun ()
+  "`add-log-current-defun-function' for Erlang."
+  (save-excursion
+    (erlang-beginning-of-function)
+    (if (looking-at "[a-z0-9_]+")
+	(match-string 0))))
+
 ;; Aliases for backward compatibility with older versions of Erlang Mode.
 ;;
 ;; Unfortuantely, older versions of Emacs doesn't have `defalias' and
@@ -5420,7 +6069,7 @@ The default is to go to the directory of the current buffer."
 
 Simplified version of a combination `defalias' and `make-obsolete',
 it assumes that NEWDEF is loaded."
-  (fset sym (symbol-function newdef))
+  (defalias sym (symbol-function newdef))
   (if (fboundp 'make-obsolete)
       (make-obsolete sym newdef)))
 
@@ -5440,10 +6089,23 @@ it assumes that NEWDEF is loaded."
 (erlang-obsolete 'name-of-erlang-function 'erlang-name-of-function)
 
 
+;; Fixme: shouldn't redefine `set-visited-file-name' anyhow -- see above.
+(defconst erlang-unload-hook
+  (list (lambda ()
+	  (defalias 'set-visited-file-name
+	    'erlang-orig-set-visited-file-name)
+	  (when (featurep 'advice)
+	    (ad-unadvise 'Man-notify-when-ready)
+	    (ad-unadvise 'set-visited-file-name)))))
+
 ;; The end...
 
 (provide 'erlang)
 
 (run-hooks 'erlang-load-hook)
+
+;; Local variables:
+;; coding: iso-8859-1
+;; End:
 
 ;;; erlang.el ends here
