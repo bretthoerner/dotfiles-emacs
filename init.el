@@ -302,10 +302,6 @@ makes)."
 ;; revert changed files automatically
 (global-auto-revert-mode t)
 
-;; use battery mode if we have it
-;; (if (fboundp 'display-battery-mode)
-;;   (display-battery-mode t))
-
 ;; example of .dir-locals.el
 ;; ((js2-mode . ((indent-tabs-mode . t))))
 
@@ -684,33 +680,6 @@ buffer-local variable `show-trailing-whitespace'."
     ;; fix something that is overriding my region background
     (set-face-background 'region "#253B76")
 
-    ;; theme
-    ;; (set-background-color "black")
-    ;; (set-foreground-color "white")
-    ;; (set-border-color "black")
-    ;; (set-cursor-color "yellow")
-    ;; (set-mouse-color "white")
-    ;; (set-face-background 'hl-line "gray4")
-    ;; (set-face-background 'region "DarkSlateGray")
-    ;; (set-face-foreground 'font-lock-builtin-face "SteelBlue")
-    ;; (set-face-foreground 'font-lock-comment-face "AntiqueWhite3")
-    ;; (make-face-italic 'font-lock-comment-face)
-    ;; (set-face-foreground 'font-lock-constant-face "Gold")
-    ;; (make-face-bold 'font-lock-constant-face)
-    ;; (set-face-foreground 'font-lock-doc-face "BurlyWood")
-    ;; (make-face-italic 'font-lock-doc-face)
-    ;; (set-face-foreground 'font-lock-function-name-face "LightSkyBlue")
-    ;; (make-face-bold 'font-lock-function-name-face)
-    ;; (set-face-foreground 'font-lock-keyword-face "LightSkyBlue")
-    ;; (set-face-foreground 'font-lock-preprocessor-face "Gold")
-    ;; (make-face-bold 'font-lock-preprocessor-face)
-    ;; (set-face-foreground 'font-lock-string-face "BurlyWood")
-    ;; (set-face-foreground 'font-lock-type-face "PaleGreen")
-    ;; (make-face-bold 'font-lock-type-face)
-    ;; (set-face-foreground 'font-lock-variable-name-face "Aquamarine")
-    ;; (set-face-foreground 'font-lock-warning-face "chocolate")
-    ;; (make-face-bold 'font-lock-warning-face)
-
     ;; mac-specific
     (if (or (string= "mac" window-system) (string= "ns" window-system))
      (progn
@@ -731,13 +700,4 @@ buffer-local variable `show-trailing-whitespace'."
 
   ;; disable menu bar in terminal
   (menu-bar-mode -1))
-
-;; ----------------
-;; custom config
-;; ----------------
-
-
-;; ----------------
-;; end
-;; ----------------
 
