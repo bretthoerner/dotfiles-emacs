@@ -55,28 +55,34 @@
 (add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
 ;;(load-file (concat dotfiles-dir "misc/cljdb.el"))
 ;;
-;;(defun clojure-project (path)
-;;  "Sets up classpath for a clojure project and starts a new SLIME session."
-;;  (interactive (list
-;;                (ido-read-directory-name
-;;                 'Project root: '
-;;                 (locate-dominating-file default-directory 'src'))))
-;;  (when (get-buffer '*inferior-lisp*')
-;;    (kill-buffer '*inferior-lisp*'))
-;;  (setq swank-clojure-binary nil
-;;        swank-clojure-jar-path (expand-file-name 'target/dependency/' path)
-;;        swank-clojure-extra-classpaths
-;;        (mapcar (lambda (d) (expand-file-name d path))
-;;                '('src/' 'target/classes/' 'test/'))
-;;        swank-clojure-extra-vm-args
-;;        (list (format '-Dclojure.compile.path=%s'
-;;                      (expand-file-name 'target/classes/' path)))
-;;        slime-lisp-implementations
-;;        (cons `(clojure ,(swank-clojure-cmd) :init swank-clojure-init)
-;;              (remove-if '(lambda (x) (eq (car x) 'clojure))
-;;                         slime-lisp-implementations)))
-;;  (save-window-excursion
-;;    (slime)))
+(defun clojure-project (path)
+  "Setup classpaths for a clojure project and starts a new SLIME session.
+  Kills existing SLIME session, if any."
+  (interactive (list
+                (ido-read-directory-name
+                 "Project root: "
+                 (locate-dominating-file default-directory "pom.xml"))))
+  (when (get-buffer "*inferior-lisp*")
+    (kill-buffer "*inferior-lisp*"))
+  (defvar swank-clojure-extra-vm-args nil)
+  (defvar slime-lisp-implementations nil)
+  (add-to-list 'swank-clojure-extra-vm-args
+               (format "-Dclojure.compile.path=%s"
+                       (expand-file-name "target/classes/" path)))
+  (setq swank-clojure-binary nil
+        swank-clojure-jar-path (expand-file-name "target/dependency/" path)
+        swank-clojure-extra-classpaths
+        (append (mapcar (lambda (d) (expand-file-name d path))
+                        '("src/" "target/classes/" "test/"))
+                (let ((lib (expand-file-name "lib" path)))
+                  (if (file-exists-p lib)
+                      (directory-files lib t ".jar$"))))
+        slime-lisp-implementations
+        (cons `(clojure ,(swank-clojure-cmd) :init swank-clojure-init)
+              (remove-if #'(lambda (x) (eq (car x) 'clojure))
+                         slime-lisp-implementations)))
+  (save-window-excursion
+    (slime)))
 
 ;; cua-mode
 (cua-mode t)
@@ -129,7 +135,7 @@
 (require 'project)
 (require 'find-file-in-project)
 (setq ffip-patterns
-  '("*.rb" "*.html" "*.el" "*.js" "*.py" "*.css" "*.sass"))
+  '("*.rb" "*.html" "*.el" "*.js" "*.py" "*.css" "*.sass" "*.clj"))
 
 ;; flymake
 (setq-default flymake-gui-warnings-enabled nil)
