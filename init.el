@@ -296,22 +296,6 @@ makes)."
 ;; --------------
 
 
-;; add some directories to PATH if they exist and haven't been added
-(defun add-to-path (path)
-  "Add to path"
-  (let ((path-to-add path)
-        (current-path (getenv "PATH")))
-    (if (file-directory-p path-to-add)
-      (if (not (string-match path-to-add current-path))
-        (progn
-          (push path-to-add exec-path)
-          (setenv "PATH" (concat path-to-add ":" current-path))))))
-)
-
-(add-to-path "/opt/local/bin")
-(add-to-path "/opt/local/Library/Frameworks/Python.framework/Versions/2.6/bin")
-(add-to-path (expand-file-name "~/bin"))
-
 ;; show time, just 'cause
 (display-time-mode t)
 
