@@ -53,8 +53,18 @@
 (font-lock-add-keywords 'clojure-mode
                         '(("(\\|)" . 'esk-paren-face)))
 (add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
-;;(load-file (concat dotfiles-dir "misc/cljdb.el"))
-;;
+
+(defface paren-face
+   '((((class color) (background dark))
+      (:foreground "grey50"))
+     (((class color) (background light))
+      (:foreground "grey55")))
+   "Face used to dim parentheses."
+   :group 'starter-kit-faces)
+
+;; dim the parens
+(font-lock-add-keywords "clojure-mode" '(("(\\|)" . 'paren-face)))
+
 (defun clojure-project (path)
   "Setup classpaths for a clojure project and starts a new SLIME session.
   Kills existing SLIME session, if any."
