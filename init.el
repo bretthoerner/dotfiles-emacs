@@ -196,6 +196,9 @@ makes)."
   (cons '("could not compile '\\([^']+\\)':\\([0-9]+\\):\\(\n.*\\)" 1 2 nil nil)
     flymake-err-line-patterns))
 
+;; haskell
+(load (concat dotfiles-dir "haskell/haskell-site-file"))
+
 ;; idle-highlight
 (require 'idle-highlight)
 
