@@ -151,7 +151,8 @@
 (setq-default flymake-gui-warnings-enabled nil)
 (require 'flymake)
 (load-library "flymake-cursor")
-(add-hook 'find-file-hook 'flymake-find-file-hook)
+;; (add-hook 'find-file-hook 'flymake-find-file-hook)
+(add-hook 'python-mode-hook 'flymake-mode)
 
 (defun flymake-create-temp-intemp (file-name prefix)
   "Return file name in temporary directory for checking FILE-NAME.
