@@ -197,6 +197,9 @@ makes)."
   (cons '("could not compile '\\([^']+\\)':\\([0-9]+\\):\\(\n.*\\)" 1 2 nil nil)
     flymake-err-line-patterns))
 
+;; goto-last-change
+(require 'goto-last-change)
+
 ;; haskell
 (load (concat dotfiles-dir "haskell/haskell-site-file"))
 
@@ -309,6 +312,13 @@ makes)."
 ;; general config
 ;; --------------
 
+
+;; cold turkey
+
+;; (global-unset-key (kbd "<left>"))
+;; (global-unset-key (kbd "<right>"))
+;; (global-unset-key (kbd "<up>"))
+;; (global-unset-key (kbd "<down>"))
 
 ;; show time, just 'cause
 (display-time-mode t)
