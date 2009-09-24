@@ -375,6 +375,12 @@ to select the appropriate python interpreter mode for a file.")
   :type 'boolean
   :group 'python)
 
+(defcustom py-handle-triple-quoted-strings t
+  "If non-nil, then color triple-quoted strings correctly.
+This may be slow, depending on your system."
+  :type 'boolean
+  :group 'python)
+
 
 ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ;; NO USER DEFINABLE VARIABLES BEYOND THIS POINT
@@ -505,6 +511,17 @@ support for features needed by `python-mode'.")
      '("XXX\\|TODO\\|FIXME" 0 py-XXX-tag-face t)
      ))
   "Additional expressions to highlight in Python mode.")
+
+;; When py-handle-triple-quoted-strings is set, add a special matcher
+;; to python-font-lock-keywords, that will match strings and comments
+;; (including correct matching of triple-quoted strings).  When this
+;; is used, we *remove* quote and comment from the syntax table,
+;; because otherwise they would interfere.
+(when py-handle-triple-quoted-strings
+  (push '(py-syntax-matcher (1 'font-lock-string-face t t)
+			    (2 'font-lock-comment-face t t))
+	python-font-lock-keywords))
+
 (put 'python-mode 'font-lock-defaults '(python-font-lock-keywords))
 
 ;; have to bind py-file-queue before installing the kill-emacs-hook
@@ -516,6 +533,232 @@ Currently-active file is at the head of the list.")
 
 (defvar py-pychecker-history nil)
 
+
+;; py-syntax-matcher
+(defun py-syntax-matcher (limit)
+  "A font-lock keyword matcher that matches python strings & comments.
+
+This matcher can be used instead of font-lock's syntactic
+highlighting, to find python strings and comments.  It is slower
+than the font-lock's syntactic highlighting, but it handles
+triple-quoted strings correctly.
+
+It works by maintaining a text property called `py-syntax-type',
+which indicates the syntax type of each character in the buffer,
+and uses that property to decide which spans to color.  See
+`py-update-py-syntax-type' for more information about the
+`py-syntax-type' property.
+"
+  ;; Update the py-syntax-type text property between point & limit.
+  (py-update-py-syntax-type limit)
+
+  ;; Find the first char after point that has a non-nil syntax type
+  ;; (i.e., the first char inside a string or comment).
+  (let ((beg (text-property-not-all (point) limit 'py-syntax-type nil)))
+    (if beg
+	;; Find the first char after beg where syntax-type changes:
+	(let* ((syntax-type (get-text-property beg 'py-syntax-type))
+	       (end (or (text-property-not-all beg limit 'py-syntax-type
+					       syntax-type)
+			limit)))
+	  ;; Update the regexp match data manually.  Use group 1 for
+	  ;; strings, and group 2 for comments.
+	  (if (eq syntax-type 'comment)
+	      (set-match-data (list beg end nil nil beg end))
+	    (set-match-data (list beg end beg end nil nil)))
+	  ;; Move to the end of the match.
+	  (goto-char end)
+	  ;; Return true.
+      t))))
+
+(defun py-update-py-syntax-type (limit)
+  "Update the `py-syntax-type' text-property.
+
+Verify and update the value of the `py-syntax-type' text-property
+between the point and the given limit.  This text-property
+describes the syntactic context of each character, and has six
+possible values:
+  - `py-single-quote-tqs': Inside a single-quote triple-quoted string
+  - `py-double-quote-tqs': Inside a double-quote triple-quoted string
+  - `single-quote': Inside a single-quote string
+  - `double-quote': Inside a double-quote string
+  - `comment': Inside a comment
+  - `nil': Not inside a comment or string.
+
+This property is used by `py-syntax-matcher' to perform syntax
+highlighting for Python (including correct handling of
+triple-quoted strings).
+"
+  (save-excursion
+    (let (old-syntax-type ;; The syntax type before point.
+	  new-syntax-type ;; The syntax type starting at point.
+	  beg             ;; Where old-syntax-type starts.
+	  end             ;; Where old-syntax-type ends.
+	  changed)        ;; Did the last loop modify py-syntax-type?
+
+      ;; Find an initial value for old-syntax-type.  To do this, we
+      ;; move backwards to the first non-special character we can
+      ;; find, and check its py-syntax-type text property.  Special
+      ;; characters are quotes, backslashes, and newlines.
+      (cond
+       ((search-backward-regexp "[^'\"\\\n]" nil t)
+	(setq old-syntax-type (get-text-property (point) 'py-syntax-type)))
+       (t
+	;; If we don't find any such character, go to the beginning of
+	;; the buffer and start with a syntax-type of nil.
+	(goto-char (point-min))
+	(setq old-syntax-type nil)))
+
+      ;; Repeatedly scan for the next change in syntax type, and
+      ;; update the py-syntax-type text property, until we're done.
+      ;; We're done when we're past the limit, *and* we're no longer
+      ;; making changes to py-syntax-type.  This ensures that
+      ;; changes to py-syntax-type propagate forward correctly.
+      (setq beg (point))
+      (while (and (not (eobp)) (or changed (< (point) limit)))
+	;; Find the next syntax change, and update "end",
+	;; "new-syntax-type", and the point.
+	(cond
+	 (old-syntax-type
+          ;; For debugging:
+          ;; (warn "Looking for the end of a %s, starting at %s"
+          ;;     old-syntax-type (point))
+	  (cond
+	   ((looking-at (py-syntax-type-end-re old-syntax-type))
+	    ;; We found the end of a string/comment:
+	    (setq end (match-end 0))
+	    (setq new-syntax-type nil)
+	    (goto-char end))
+	   (t
+	    ;; We found an unterminated string/comment:
+	    (setq end (point-max))
+	    (setq new-syntax-type 'end-of-buffer)
+	    (goto-char end))))
+	 (t
+          ;; For debugging:
+          ;; (warn "Looking for a string or comment, starting at %s" (point))
+	  (cond
+	   ((search-forward-regexp py-syntax-begin-re nil t)
+	    ;; We found the start of a string/comment:
+	    (setq end (match-beginning 0))
+	    (setq new-syntax-type (py-syntax-begin-type))
+            ;; For debugging:
+            ;; (warn "Found %s at %s" new-syntax-type (match-end 0))
+	    (goto-char (match-end 0)))
+	   (t
+	    ;; No more strings/comments in buffer:
+	    (setq end (point-max))
+	    (setq new-syntax-type 'end-of-buffer)
+	    (goto-char end)))))
+
+	;; Update the py-syntax-type text property between beg & end.
+	(setq changed (add-text-properties beg end (list 'py-syntax-type
+							 old-syntax-type)))
+
+	;; Update old-syntax-type and beg for the next loop iteration.
+	(setq old-syntax-type new-syntax-type)
+	(setq beg end)))))
+
+
+;; Regexps for py-syntax-matcher
+(defconst py-syntax-begin-re
+  (concat
+   "\\(" "\'\'\'" "\\)" "\\|"    ;; single-quote-tqs
+   "\\(" "\"\"\"" "\\)" "\\|"    ;; double-quote-tqs
+   "\\(" "\'"     "\\)" "\\|"    ;; single-quote
+   "\\(" "\""     "\\)" "\\|"    ;; double-quote
+   "\\(" "#"      "\\)"          ;; comment
+   )
+  "A regexp that matches the beginning of python strings and comments.
+The type of syntax matched can be determined by checking which group
+matched:
+  - group 1: single-quote triple-quoted string literal
+  - group 2: double-quote triple-quoted string literal
+  - group 3: single-quote string literal
+  - group 4: double-quote string literal
+  - group 5: comment
+Use `py-syntax-begin-type' to check which group matched.
+")
+
+;; Adapted from: <http://www.python.org/tim_one/000422.html>
+(defconst py-single-quote-tqs-end-re
+  (concat
+   "[^'\\\\]*"                   ; text (not quote, not backslash)
+   "\\("                         ; followed 0+ times by one of...
+     "\\("
+       "\\\\" "\\(\n\\|.\\)"     ;     backslash+anything
+       "\\|"
+       "'\\("                    ;     quote, followed by one of...
+         "\\\\" "\\(\n\\|.\\)"   ;       backslash+anything
+         "\\|"
+           "[^']"                ;       nonquote
+         "\\|"
+           "'\\("                ;       quote, followed by one of...
+           "\\\\" "\\(\n\\|.\\)" ;         backslash+anything
+           "\\|"
+             "[^']"              ;         nonquote
+           "\\)"
+       "\\)"
+     "\\)"
+     "[^'\\\\]*"                 ;   ...followed by more text.
+   "\\)*"
+   "'''")                        ; and finally the close quote
+  "A regexp that matches the end of single-quote triple-quoted strings.")
+
+(defconst py-single-quote-end-re
+  (concat
+   "[^'\\\\]*"                   ; text (not quote, not backslash)
+   "\\("                         ; followed 0+ times by...
+     "\\\\" "\\(\n\\|.\\)"       ;     backslash+anything
+     "[^'\\\\]*"                 ;   followed by more text.
+   "\\)*"
+   "'")                          ; and finally the close quote
+  "A regexp that matches the end of single-quote strings.")
+
+(defun py-replace-regexp-in-string (regexp replacement text)
+  "Return the result of replacing all mtaches of REGEXP with
+REPLACEMENT in TEXT.  (Since replace-regexp-in-string is not available
+under all versions of emacs, and is called different names in
+different versions, this compatibility function will emulate it if
+it's not available."
+  (let ((start 0))
+    (while (string-match regexp text start)
+      (setq start (- (match-end 0) 1))
+      (setq text (replace-match replacement t nil text)))
+    text))
+
+(defconst py-double-quote-tqs-end-re
+  (py-replace-regexp-in-string "'" "\"" py-single-quote-tqs-end-re)
+  "A regexp that matches the end of double-quote triple-quoted strings.")
+
+(defconst py-double-quote-end-re
+  (py-replace-regexp-in-string "'" "\"" py-single-quote-end-re)
+  "A regexp that matches the end of double-quote strings.")
+
+(defconst py-comment-end-re
+  "[^\n]*\n"
+  "A regexp that matches the end of comments.")
+
+(defun py-syntax-type-end-re (py-syntax-type)
+  "Return a regexp that matches the end of the given syntax."
+  (cond
+   ((eq py-syntax-type 'single-quote-tqs) py-single-quote-tqs-end-re)
+   ((eq py-syntax-type 'double-quote-tqs) py-double-quote-tqs-end-re)
+   ((eq py-syntax-type 'single-quote)     py-single-quote-end-re)
+   ((eq py-syntax-type 'double-quote)     py-double-quote-end-re)
+   ((eq py-syntax-type 'comment)          py-comment-end-re)
+   (t (error "Bad end-re type"))))
+
+(defun py-syntax-begin-type ()
+  "Return the py-syntax-type matched by `py-syntax-begin-re'.
+This function assumes that the most recently matched regexp was
+`py-syntax-begin-re'."
+  (cond
+   ((match-beginning 1) 'single-quote-tqs)
+   ((match-beginning 2) 'double-quote-tqs)
+   ((match-beginning 3) 'single-quote)
+   ((match-beginning 4) 'double-quote)
+   ((match-beginning 5) 'comment)))
 
 
 ;; Constants
@@ -760,14 +1003,25 @@ Currently-active file is at the head of the list.")
   ;; situations where you'd want the different behavior
   ;; (e.g. backward-kill-word).
   (modify-syntax-entry ?\_ "w"  py-mode-syntax-table)
-  ;; Both single quote and double quote are string delimiters
-  (modify-syntax-entry ?\' "\"" py-mode-syntax-table)
-  (modify-syntax-entry ?\" "\"" py-mode-syntax-table)
   ;; backquote is open and close paren
   (modify-syntax-entry ?\` "$"  py-mode-syntax-table)
-  ;; comment delimiters
-  (modify-syntax-entry ?\# "<"  py-mode-syntax-table)
-  (modify-syntax-entry ?\n ">"  py-mode-syntax-table)
+  ;; Handling of quotes and comments depends on whether we're
+  ;; using py-handle-triple-quoted-strings.
+  (cond (py-handle-triple-quoted-strings
+	 ;; Using py-handle-triple-quoted-strings: Treat quotes and
+	 ;; comment markers as ordinary punctuation, and mark them
+	 ;; using py-syntax-matcher instead.
+	 (modify-syntax-entry ?\' "." py-mode-syntax-table)
+	 (modify-syntax-entry ?\" "." py-mode-syntax-table)
+	 (modify-syntax-entry ?\# "."  py-mode-syntax-table))
+	(t
+	 ;; Not using py-handle-triple-quoted strings:
+	 ;; Both single quote and double quote are string delimiters
+	 (modify-syntax-entry ?\' "\"" py-mode-syntax-table)
+	 (modify-syntax-entry ?\" "\"" py-mode-syntax-table)
+	 ;; comment delimiters
+	 (modify-syntax-entry ?\# "<"  py-mode-syntax-table)
+	 (modify-syntax-entry ?\n ">"  py-mode-syntax-table)))
   )
 
 ;; An auxiliary syntax table which places underscore and dot in the
