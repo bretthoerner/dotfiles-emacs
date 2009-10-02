@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 EMACS_HOME="${HOME}/.emacs.d"
 EMACS23="/Applications/Emacs.app/Contents/MacOS/"
 EMACS=${EMACS23}Emacs
@@ -15,14 +17,20 @@ cd ${EMACS_HOME}/magit
 make
 
 echo "MISC"
-for filename in erlang paredit python-mode
+for filename in "color-theme/color-theme" "misc/erlang" "misc/js2-mode" "misc/paredit" "misc/python-mode"
 do
-    emacs -batch -q -eval "(byte-compile-file \"${EMACS_HOME}/misc/${filename}.el\")"
+    emacs -batch -q -eval "(byte-compile-file \"${EMACS_HOME}/${filename}.el\")"
 done
 
 echo "ORG-MODE"
 cd ${EMACS_HOME}/org-mode
 make cleanall
 make
+
+echo "SWANK-CLOJURE"
+cd ${EMACS_HOME}/submodules/swank-clojure/
+mvn clean
+mvn install
+cp target/swank-clojure-1.0-SNAPSHOT.jar ${HOME}/Development/java/jars-dev/swank-clojure.jar
 
 cd ${EMACS_HOME}
