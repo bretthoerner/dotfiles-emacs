@@ -12,20 +12,17 @@ fi
 
 echo "MAGIT"
 cd ${EMACS_HOME}/magit
+if [ -f "Makefile" ]; then
+    make clean
+fi
 ./autogen.sh
 ./configure
 make
 
-echo "MISC"
-for filename in "color-theme/color-theme" "misc/erlang" "misc/js2-mode" "misc/paredit" "misc/python-mode"
-do
-    emacs -batch -q -eval "(byte-compile-file \"${EMACS_HOME}/${filename}.el\")"
-done
-
 echo "ORG-MODE"
 cd ${EMACS_HOME}/org-mode
 make cleanall
-make
+make all
 
 echo "SWANK-CLOJURE"
 cd ${EMACS_HOME}/submodules/swank-clojure/
