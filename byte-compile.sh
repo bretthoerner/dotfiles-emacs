@@ -19,11 +19,6 @@ fi
 ./configure
 make
 
-echo "ORG-MODE"
-cd ${EMACS_HOME}/org-mode
-make cleanall
-make all
-
 echo "SWANK-CLOJURE"
 cd ${EMACS_HOME}/submodules/swank-clojure/
 mvn clean
