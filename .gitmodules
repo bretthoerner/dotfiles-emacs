@@ -10,9 +10,6 @@
 [submodule "submodules/slime"]
 	path = submodules/slime
 	url = git://github.com/nablaone/slime.git
-[submodule "submodules/find-file-in-project"]
-	path = submodules/find-file-in-project
-	url = git://github.com/technomancy/find-file-in-project.git
 [submodule "submodules/eproject"]
 	path = submodules/eproject
 	url = git://github.com/jrockway/eproject.git

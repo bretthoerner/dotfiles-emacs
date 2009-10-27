@@ -142,6 +142,7 @@
 (require 'eproject-extras)
 
 ;; ffip
+;; TODO: look into replacing this with eproject http://github.com/jrockway/eproject
 (require 'project)
 (require 'find-file-in-project)
 (setq ffip-patterns
