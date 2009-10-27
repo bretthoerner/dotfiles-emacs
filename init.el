@@ -136,17 +136,11 @@
       (setq exec-path (cons (concat erlang-path "bin") exec-path))
       (require 'erlang-start))))
 
-;; eproject
-(add-to-list 'load-path (concat dotfiles-dir "eproject"))
-(require 'eproject)
-(require 'eproject-extras)
-
 ;; ffip
-;; TODO: look into replacing this with eproject http://github.com/jrockway/eproject
 (require 'project)
 (require 'find-file-in-project)
 (setq ffip-patterns
-  '("*.rb" "*.html" "*.el" "*.js" "*.py" "*.css" "*.sass" "*.clj"))
+  '("*.clj" "*.css" "*.el" "*.html" "*.js" "*.py" "*.rb" "*.sass"))
 
 ;; flymake
 (setq-default flymake-gui-warnings-enabled nil)

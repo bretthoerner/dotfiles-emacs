@@ -4,12 +4,6 @@
 [submodule "submodules/swank-clojure"]
 	path = submodules/swank-clojure
 	url = git://github.com/jochu/swank-clojure.git
-[submodule "submodules/magit"]
-	path = submodules/magit
-	url = git://gitorious.org/magit/mainline.git
 [submodule "submodules/slime"]
 	path = submodules/slime
 	url = git://github.com/nablaone/slime.git
-[submodule "submodules/eproject"]
-	path = submodules/eproject
-	url = git://github.com/jrockway/eproject.git
