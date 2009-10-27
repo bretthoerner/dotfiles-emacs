@@ -221,11 +221,6 @@ makes)."
     (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
     (setq js2-highlight-level 3)))
 
-;; magit
-(add-to-list 'load-path (concat dotfiles-dir "magit"))
-(require 'magit)
-(global-set-key [(control ?x) (?g)] 'magit-status)
-
 ;; markdown-mode
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.mkd$" . markdown-mode))
@@ -239,9 +234,11 @@ makes)."
           auto-mode-alist)))
 
 ;; org-mode
-(add-to-list 'load-path (concat dotfiles-dir "org-mode/lisp"))
-(add-to-list 'auto-mode-alist '("\\.\\(org\\|txt\\)$" . org-mode))
-(require 'org-install)
+(when (> emacs-major-version 22)
+  (progn
+    (add-to-list 'load-path (concat dotfiles-dir "org-mode/lisp"))
+    (add-to-list 'auto-mode-alist '("\\.\\(org\\|txt\\)$" . org-mode))
+    (require 'org-install)))
 
 (add-hook 'org-mode-hook
   (lambda ()
