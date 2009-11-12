@@ -49,10 +49,9 @@
 ;; clojure
 (add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
 (require 'clojure-mode)
-(add-hook 'clojure-mode-hook 'idle-highlight)
-(font-lock-add-keywords 'clojure-mode
-                        '(("(\\|)" . 'esk-paren-face)))
+;(add-hook 'clojure-mode-hook 'idle-highlight)
 (add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
+(add-hook 'lisp-mode-hook 'lisp-enable-paredit-hook)
 
 (defface paren-face
    '((((class color) (background dark))
@@ -238,7 +237,9 @@ makes)."
   (progn
     (add-to-list 'load-path (concat dotfiles-dir "org-mode/lisp"))
     (add-to-list 'auto-mode-alist '("\\.\\(org\\|txt\\)$" . org-mode))
-    (require 'org-install)))
+    (require 'org-install)
+    (setq org-mobile-directory "/scpc:brett@bretthoerner.com:/a/bretthoerner.com/dav/org/")
+    (setq org-mobile-inbox-for-pull (expand-file-name "~/Documents/org-mode/mobile.org"))))
 
 (add-hook 'org-mode-hook
   (lambda ()
@@ -285,6 +286,8 @@ makes)."
 (eval-after-load "slime"
   '(progn (slime-setup '(slime-repl))))
 (require 'slime)
+(global-set-key "\C-cs" 'slime-selector)
+(add-to-list 'slime-lisp-implementations '(allegro ("alisp")))
 (slime-setup)
 
 ;; tramp
@@ -350,8 +353,8 @@ makes)."
 (setq mouse-drag-copy-region nil)
 
 ;; scroll one line at a time
-(setq-default scroll-conservatively 10000)
-;; (setq-default scroll-step 1)
+;(setq-default scroll-conservatively 10000)
+(setq-default scroll-step 1)
 
 ;; don't split horizontally without me asking
 (setq-default split-width-threshold nil)
@@ -684,7 +687,7 @@ buffer-local variable `show-trailing-whitespace'."
     (setq show-paren-style 'expression)
 
     ;; darker background color for expression
-    (set-face-background 'show-paren-match-face "#333333")
+    (set-face-background 'show-paren-match-face "#0f142a")
 
     ;; color-theme
     (add-to-list 'load-path (concat dotfiles-dir "color-theme"))
@@ -694,7 +697,7 @@ buffer-local variable `show-trailing-whitespace'."
     (color-theme-blackboard)
 
     ;; fix something that is overriding my region background
-    (set-face-background 'region "#253B76")
+    (set-face-background 'region "#162248")
 
     ;; mac-specific
     (if (or (string= "mac" window-system) (string= "ns" window-system))
