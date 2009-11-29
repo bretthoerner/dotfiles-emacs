@@ -191,6 +191,21 @@ makes)."
   (cons '("could not compile '\\([^']+\\)':\\([0-9]+\\):\\(\n.*\\)" 1 2 nil nil)
     flymake-err-line-patterns))
 
+;; flymake + pylint
+;; (when (load "flymake" t)
+;;   (defun flymake-pylint-init ()
+;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                        'flymake-create-temp-inplace))
+;;            (local-file (file-relative-name
+;;                         temp-file
+;;                         (file-name-directory buffer-file-name))))
+;;       (list "epylint" (list local-file))))
+;;
+;;   (add-to-list 'flymake-allowed-file-name-masks
+;;                '("\\.py\\'" flymake-pylint-init)))
+;;
+;; (add-hook 'find-file-hook 'flymake-find-file-hook)
+
 ;; goto-last-change
 (require 'goto-last-change)
 
@@ -416,6 +431,10 @@ makes)."
 
 ;; C-x C-u for undo (a common typo of mine)
 (global-set-key [(control ?x) (control ?u)] 'undo)
+
+;; shortcuts to resize fonts
+(global-set-key [(alt ?=)] 'text-scale-increase)
+(global-set-key [(alt ?-)] 'text-scale-decrease)
 
 ;; ido-recentf
 (defun recentf-ido-find-file ()
