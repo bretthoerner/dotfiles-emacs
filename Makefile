@@ -26,6 +26,7 @@ MISCF = browse-kill-ring.el \
 		flymake-cursor.el \
 		full-ack.el \
 		goto-last-change.el \
+		growl.el \
 		haml-mode.el \
 		hl-line+.el \
 		idle-highlight.el \
