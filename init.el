@@ -688,7 +688,7 @@ buffer-local variable `show-trailing-whitespace'."
 
 ;; switch buffers by scrolling on modeline
 (global-set-key (kbd "<mode-line> <wheel-up>") 'next-buffer)
-(global-set-key (kbd "<mode-line> <wheel-up>") 'prev-buffer)
+(global-set-key (kbd "<mode-line> <wheel-down>") 'previous-buffer)
 
 
 ;; ----------
