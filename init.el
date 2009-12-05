@@ -733,3 +733,4 @@ buffer-local variable `show-trailing-whitespace'."
 
   ;; disable menu bar in terminal
   (menu-bar-mode -1))
+
