@@ -233,8 +233,6 @@ makes)."
 ;; markdown-mode
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.mkd$" . markdown-mode))
-(add-hook 'markdown-mode-hook '(lambda() ;; rebind yas over markdown-visibility-cycle
-                                 (define-key markdown-mode-map [(tab)] 'yas/expand)))
 
 ;; nxml-mode
 (when (> emacs-major-version 22)
@@ -247,9 +245,7 @@ makes)."
   (progn
     (add-to-list 'load-path (concat dotfiles-dir "org-mode/lisp"))
     (add-to-list 'auto-mode-alist '("\\.\\(org\\|txt\\)$" . org-mode))
-    (require 'org-install)
-    (setq org-mobile-directory "/scpc:brett@bretthoerner.com:/a/bretthoerner.com/dav/org/")
-    (setq org-mobile-inbox-for-pull (expand-file-name "~/Documents/org-mode/mobile.org"))))
+    (require 'org-install)))
 
 (add-hook 'org-mode-hook
   (lambda ()
