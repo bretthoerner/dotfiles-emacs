@@ -37,7 +37,8 @@ MISCF = ack.el \
 		python-mode.el \
 		redo.el \
 		revbufs.el \
-		sass-mode.el
+		sass-mode.el \
+		smooth-scrolling.el
 
 OTHERF = color-theme/color-theme.el
 

@@ -53,17 +53,6 @@
 (add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
 (add-hook 'lisp-mode-hook 'lisp-enable-paredit-hook)
 
-(defface paren-face
-   '((((class color) (background dark))
-      (:foreground "grey50"))
-     (((class color) (background light))
-      (:foreground "grey55")))
-   "Face used to dim parentheses."
-   :group 'starter-kit-faces)
-
-;; dim the parens
-(font-lock-add-keywords "clojure-mode" '(("(\\|)" . 'paren-face)))
-
 (defun clojure-project (path)
   "Setup classpaths for a clojure project and starts a new SLIME session.
   Kills existing SLIME session, if any."
@@ -135,6 +124,10 @@
       (setq exec-path (cons (concat erlang-path "bin") exec-path))
       (require 'erlang-start))))
 
+;; ffap
+(when (fboundp 'find-file-at-point)
+  (global-set-key (kbd "C-c F") 'find-file-at-point))
+
 ;; ffip
 (require 'project)
 (require 'find-file-in-project)
@@ -145,7 +138,6 @@
 (setq-default flymake-gui-warnings-enabled nil)
 (require 'flymake)
 (load-library "flymake-cursor")
-;; (add-hook 'find-file-hook 'flymake-find-file-hook)
 (add-hook 'python-mode-hook 'flymake-mode)
 
 (defun flymake-create-temp-intemp (file-name prefix)
@@ -305,6 +297,19 @@ makes)."
 (add-to-list 'slime-lisp-implementations '(allegro ("alisp")))
 (slime-setup)
 
+;; smooth-scrolling for keyboard
+;; below are previous 'solution' to scroll one line at a time,
+;; replaced by smooth-scrolling.el
+;(setq-default scroll-conservatively 10000)
+;(setq-default scroll-step 1)
+(require 'smooth-scrolling)
+
+;; mouse-wheel scroll one line at a time
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+
+;; but accelerate
+(setq mouse-wheel-progressive-speed t)
+
 ;; tramp
 (setq tramp-default-method "ssh")
 (setq tramp-persistency-file-name nil)
@@ -331,7 +336,10 @@ makes)."
 ;; (global-unset-key (kbd "<down>"))
 
 ;; show time, just 'cause
-(display-time-mode t)
+;(display-time-mode t)
+
+;; final newlines are good
+(setq require-final-newline t)
 
 ;; revert changed files automatically
 (global-auto-revert-mode t)
@@ -344,11 +352,24 @@ makes)."
 ;;   (lambda ()
 ;;     (setq tab-width 2)))
 
+;; tell apropos to do more
+(setq apropos-do-all t)
+
+;; case-insensitive completion
+(setq completion-ignore-case t)
+
 ;; use text-mode not fundamental-mode
 (setq default-major-mode 'text-mode)
 
+;; http://article.gmane.org/gmane.emacs.devel/64807
+(setq parse-sexp-ignore-comments t)
+
 ;; always show trailing whitespace
 (setq-default show-trailing-whitespace t)
+
+;; completion in M-:
+(when (keymapp read-expression-map)
+  (define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol))
 
 ;; but not for some modes
 (defun hide-trailing-whitespace ()
@@ -366,10 +387,6 @@ makes)."
 
 ;; don't copy selected text to kill-ring automatically
 (setq mouse-drag-copy-region nil)
-
-;; scroll one line at a time
-;(setq-default scroll-conservatively 10000)
-(setq-default scroll-step 1)
 
 ;; don't split horizontally without me asking
 (setq-default split-width-threshold nil)
@@ -669,6 +686,10 @@ buffer-local variable `show-trailing-whitespace'."
 ;; C-M-h to kill word like in readline
 (global-set-key [(control meta ?h)] 'backward-kill-word)
 
+;; switch buffers by scrolling on modeline
+(global-set-key (kbd "<mode-line> <wheel-up>") 'next-buffer)
+(global-set-key (kbd "<mode-line> <wheel-up>") 'prev-buffer)
+
 
 ;; ----------
 ;; GUI config
@@ -738,4 +759,3 @@ buffer-local variable `show-trailing-whitespace'."
 
   ;; disable menu bar in terminal
   (menu-bar-mode -1))
-
