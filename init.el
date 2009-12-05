@@ -37,7 +37,7 @@
 (add-to-list 'load-path (concat dotfiles-dir "misc"))
 
 ;; ack
-(require 'ack)
+(require 'full-ack)
 
 ;; ansi-color
 (require 'ansi-color)
@@ -202,6 +202,10 @@ makes)."
 
 ;; haskell
 (load (concat dotfiles-dir "haskell/haskell-site-file"))
+
+;; hl-line+
+(require 'hl-line+)
+(global-set-key [(meta alt ?l)] 'flash-line-highlight)
 
 ;; idle-highlight
 (require 'idle-highlight)
@@ -682,9 +686,6 @@ buffer-local variable `show-trailing-whitespace'."
 
     ;; disable scroll-bar
     (scroll-bar-mode -1)
-
-    ;; highlight current line
-    (global-hl-line-mode 1)
 
     ;; don't blink cursor
     (blink-cursor-mode -1)
