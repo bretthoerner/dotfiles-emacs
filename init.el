@@ -50,8 +50,6 @@
 (add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
 (require 'clojure-mode)
 ;(add-hook 'clojure-mode-hook 'idle-highlight)
-(add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
-(add-hook 'lisp-mode-hook 'lisp-enable-paredit-hook)
 
 (defun clojure-project (path)
   "Setup classpaths for a clojure project and starts a new SLIME session.
@@ -84,6 +82,7 @@
 
 ;; cua-mode
 (cua-mode t)
+;; only use cua-mode for rectangle-edit
 (setq cua-enable-cua-keys nil)
 
 ;; dired
@@ -119,7 +118,7 @@
 (let ((erlang-path "/opt/local/lib/erlang/"))
   (if (file-directory-p erlang-path)
     (progn
-      (setq load-path (cons (concat erlang-path "lib/tools-2.6.2/") load-path))
+      (setq load-path (cons (concat erlang-path "lib/tools-2.6.4/emacs/") load-path))
       (setq erlang-root-dir erlang-path)
       (setq exec-path (cons (concat erlang-path "bin") exec-path))
       (require 'erlang-start))))
@@ -260,7 +259,11 @@ makes)."
 ;; paredit
 (autoload 'paredit-mode "paredit" "Minor mode for pseudo-structurally editing Lisp code." t)
 (defun lisp-enable-paredit-hook () (paredit-mode 1))
-(add-hook 'slime-repl-mode-hook 'paredit-mode)
+(mapc (lambda (mode-hook)
+        (add-hook mode-hook 'lisp-enable-paredit-hook))
+      '(clojure-mode-hook
+        lisp-mode-hook
+        slime-repl-mode-hook))
 
 ;; php
 (require 'php-mode)
@@ -329,7 +332,6 @@ makes)."
 
 
 ;; cold turkey
-
 ;; (global-unset-key (kbd "<left>"))
 ;; (global-unset-key (kbd "<right>"))
 ;; (global-unset-key (kbd "<up>"))
@@ -338,11 +340,9 @@ makes)."
 ;; show time, just 'cause
 ;(display-time-mode t)
 
-;; final newlines are good
-(setq require-final-newline t)
-
-;; revert changed files automatically
-(global-auto-revert-mode t)
+;; show line numbers
+;;(require 'linum)
+;;(global-linum-mode 1)
 
 ;; example of .dir-locals.el
 ;; ((js2-mode . ((indent-tabs-mode . t))))
@@ -351,6 +351,12 @@ makes)."
 ;; (add-hook 'sgml-mode-hook
 ;;   (lambda ()
 ;;     (setq tab-width 2)))
+
+;; final newlines are good
+(setq require-final-newline t)
+
+;; revert changed files automatically
+(global-auto-revert-mode t)
 
 ;; tell apropos to do more
 (setq apropos-do-all t)
@@ -374,12 +380,10 @@ makes)."
 ;; but not for some modes
 (defun hide-trailing-whitespace ()
   (setq show-trailing-whitespace nil))
-(add-hook 'help-mode-hook 'hide-trailing-whitespace)
-(add-hook 'slime-repl-mode-hook 'hide-trailing-whitespace)
-
-;; show line numbers
-;;(require 'linum)
-;;(global-linum-mode 1)
+(mapc (lambda (mode-hook)
+        (add-hook mode-hook 'hide-trailing-whitespace))
+      '(help-mode-hook
+        slime-repl-mode-hook))
 
 ;; no startup message or splash screen
 (setq inhibit-splash-screen t)
@@ -470,37 +474,6 @@ makes)."
 (global-set-key (kbd "C-c r") 'revert-buffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
-;; eshell
-(setq eshell-cmpl-cycle-completions nil
-      eshell-save-history-on-exit t
-      eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|CVS\\|\\.svn\\|\\.git\\)/\\'")
-
-(eval-after-load 'esh-opt
-  '(progn
-     (require 'em-prompt)
-     (require 'em-term)
-     (require 'em-cmpl)
-     ;; TODO: for some reason requiring this here breaks it, but
-     ;; requiring it after an eshell session is started works fine.
-     ;; (require 'eshell-vc)
-     (setenv "PAGER" "cat")
-     (set-face-attribute 'eshell-prompt nil :foreground "turquoise1")
-     (add-hook 'eshell-mode-hook ;; for some reason this needs to be a hook
-           '(lambda () (define-key eshell-mode-map "\C-a" 'eshell-bol)))
-     (add-to-list 'eshell-visual-commands "ssh")
-     (add-to-list 'eshell-visual-commands "tail")
-     (add-to-list 'eshell-command-completions-alist
-                  '("gunzip" "gz\\'"))
-     (add-to-list 'eshell-command-completions-alist
-                  '("tar" "\\(\\.tar|\\.tgz\\|\\.tar\\.gz\\)\\'"))
-     (add-to-list 'eshell-output-filter-functions 'eshell-handle-ansi-color)))
-
-;; start eshell or switch to it if it's active
-(global-set-key (kbd "C-x m") 'eshell)
-
-;; start a new eshell even if one is active
-(global-set-key (kbd "C-x M") (lambda () (interactive) (eshell t)))
-
 ;; define my own keyboard-escape-quit that doesn't delete other windows
 (defun keyboard-escape-quit-no-delete-other-windows ()
   "Exit the current \"mode\" (in a generalized sense of the word).
@@ -568,7 +541,7 @@ Symbols matching the text at point are put first in the completion list."
            (position (cdr (assoc selected-symbol name-and-pos))))
       (goto-char position))))
 
-(global-set-key "\C-x\C-i" 'ido-imenu)
+(global-set-key [(control ?x) (tab)] 'ido-imenu)
 
 ;; define and bind textmate-like shift-right and shift-left
 (defun textmate-shift-right (&optional arg)
