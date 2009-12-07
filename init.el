@@ -227,6 +227,12 @@ makes)."
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 
+;; package (ELPA)
+(when
+    (load
+     (expand-file-name "~/.emacs.d/elpa/package.el"))
+  (package-initialize))
+
 ;; paredit
 (autoload 'paredit-mode "paredit" "Minor mode for pseudo-structurally editing Lisp code." t)
 (defun lisp-enable-paredit-hook () (paredit-mode 1))
@@ -700,4 +706,3 @@ buffer-local variable `show-trailing-whitespace'."
 
   ;; disable menu bar in terminal
   (menu-bar-mode -1))
-
