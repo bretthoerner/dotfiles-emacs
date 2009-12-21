@@ -289,7 +289,6 @@ makes)."
   '(progn (slime-setup '(slime-repl))))
 (require 'slime)
 (global-set-key "\C-cs" 'slime-selector)
-(add-to-list 'slime-lisp-implementations '(allegro ("alisp")))
 (add-to-list 'slime-lisp-implementations '(sbcl ("sbcl")))
 (slime-setup)
 
