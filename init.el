@@ -230,7 +230,7 @@ makes)."
 (when (> emacs-major-version 22)
   (progn
     (add-to-list 'load-path (concat dotfiles-dir "org-mode/lisp"))
-    (add-to-list 'auto-mode-alist '("\\.\\(org\\|txt\\)$" . org-mode))
+    (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
     (require 'org-install)))
 
 (add-hook 'org-mode-hook
