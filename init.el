@@ -183,6 +183,10 @@ makes)."
 ;;
 ;; (add-hook 'find-file-hook 'flymake-find-file-hook)
 
+;; flyspell-mode
+(setq ispell-program-name "aspell"
+      ispell-extra-args '("--sug-mode=ultra"))
+
 ;; goto-last-change
 (require 'goto-last-change)
 
