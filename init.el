@@ -27,6 +27,15 @@
 (if (file-exists-p user-specific-dir)
   (mapc #'load (directory-files user-specific-dir nil ".*el$")))
 
+;; ----
+;; elpa
+;; ----
+
+(when
+    (load
+     (expand-file-name "~/.emacs.d/elpa/package.el"))
+  (package-initialize))
+
 
 ;; -------------
 ;; plugin config
@@ -62,7 +71,6 @@
 (browse-kill-ring-default-keybindings)
 
 ;; clojure
-(add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
 (require 'clojure-mode)
 ;(add-hook 'clojure-mode-hook 'idle-highlight)
 
@@ -246,12 +254,6 @@ makes)."
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 
-;; package (ELPA)
-(when
-    (load
-     (expand-file-name "~/.emacs.d/elpa/package.el"))
-  (package-initialize))
-
 ;; paredit
 (autoload 'paredit-mode "paredit" "Minor mode for pseudo-structurally editing Lisp code." t)
 (defun lisp-enable-paredit-hook () (paredit-mode 1))
@@ -285,9 +287,7 @@ makes)."
 (require 'saveplace)
 
 ;; slime and swank
-(add-to-list 'load-path (concat dotfiles-dir "slime"))
-(add-to-list 'load-path (concat dotfiles-dir "swank-clojure"))
-(require 'swank-clojure-autoload)
+(require 'swank-clojure-autoloads)
 (setq swank-clojure-binary (expand-file-name "~/bin/clojure"))
 (eval-after-load "slime"
   '(progn (slime-setup '(slime-repl))))
