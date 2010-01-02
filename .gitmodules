@@ -1,9 +1,6 @@
 [submodule "submodules/clojure-mode"]
 	path = submodules/clojure-mode
 	url = git://github.com/technomancy/clojure-mode.git
-[submodule "submodules/swank-clojure"]
-	path = submodules/swank-clojure
-	url = git://github.com/jochu/swank-clojure.git
 [submodule "submodules/slime"]
 	path = submodules/slime
 	url = git://github.com/nablaone/slime.git
