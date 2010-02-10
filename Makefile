@@ -19,27 +19,19 @@ ELC = $(BATCH) -f batch-byte-compile
 # The following variables need to be defined by the maintainer
 MISCF = browse-kill-ring.el \
 		dired-single.el \
-		doctest-mode.el \
-		erlang-start.el \
-		erlang.el \
 		find-file-in-project.el \
 		flymake-cursor.el \
 		full-ack.el \
 		goto-last-change.el \
 		growl.el \
-		haml-mode.el \
 		hl-line+.el \
 		idle-highlight.el \
 		js2-mode.el \
 		mac-key-mode.el \
 		markdown-mode.el \
 		paredit.el \
-		php-mode.el \
 		project.el \
-		python-mode.el \
 		redo.el \
-		revbufs.el \
-		sass-mode.el \
 		smooth-scrolling.el
 
 OTHERF = color-theme/color-theme.el
