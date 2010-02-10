@@ -198,9 +198,6 @@ makes)."
 ;; goto-last-change
 (require 'goto-last-change)
 
-;; haskell
-(load (concat dotfiles-dir "haskell/haskell-site-file"))
-
 ;; hl-line+
 (require 'hl-line+)
 (global-set-key [(meta alt ?l)] 'flash-line-highlight)
