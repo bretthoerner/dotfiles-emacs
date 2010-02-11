@@ -99,23 +99,10 @@
   ;; it's not loaded yet, so add our bindings to the load-hook
   (add-hook 'dired-load-hook 'my-dired-init))
 
-;; django
-(require 'django-html-mode)
-(add-to-list 'auto-mode-alist '("\\.html$" . django-html-mode))
-
 ;; erc
 (let ((erc-config-file (expand-file-name "~/.erc.el")))
   (when (file-regular-p erc-config-file)
     (load erc-config-file)))
-
-;; erlang
-(let ((erlang-path "/opt/local/lib/erlang/"))
-  (if (file-directory-p erlang-path)
-    (progn
-      (setq load-path (cons (concat erlang-path "lib/tools-2.6.4/emacs/") load-path))
-      (setq erlang-root-dir erlang-path)
-      (setq exec-path (cons (concat erlang-path "bin") exec-path))
-      (require 'erlang-start))))
 
 ;; ffap
 (when (fboundp 'find-file-at-point)
@@ -260,24 +247,12 @@ makes)."
         lisp-mode-hook
         slime-repl-mode-hook))
 
-;; php
-(require 'php-mode)
-(add-to-list 'auto-mode-alist
-             '("\\.php[34]?\\'\\|\\.phtml\\'" . php-mode))
-
 ;; python-mode
 (require 'python-mode)
 (setq interpreter-mode-alist (cons '("python" . python-mode) interpreter-mode-alist))
 
 ;; redo
 (require 'redo)
-
-;; revbufs
-(require 'revbufs)
-
-;; sass
-(when (> emacs-major-version 22)
-  (require 'sass-mode))
 
 ;; saveplace
 (setq-default save-place t)

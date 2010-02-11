@@ -31,6 +31,7 @@ MISCF = browse-kill-ring.el \
 		markdown-mode.el \
 		paredit.el \
 		project.el \
+		python-mode.el \
 		redo.el \
 		smooth-scrolling.el
 
