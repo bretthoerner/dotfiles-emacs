@@ -163,21 +163,6 @@ makes)."
   (cons '("could not compile '\\([^']+\\)':\\([0-9]+\\):\\(\n.*\\)" 1 2 nil nil)
     flymake-err-line-patterns))
 
-;; flymake + pylint
-;; (when (load "flymake" t)
-;;   (defun flymake-pylint-init ()
-;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;;                        'flymake-create-temp-inplace))
-;;            (local-file (file-relative-name
-;;                         temp-file
-;;                         (file-name-directory buffer-file-name))))
-;;       (list "epylint" (list local-file))))
-;;
-;;   (add-to-list 'flymake-allowed-file-name-masks
-;;                '("\\.py\\'" flymake-pylint-init)))
-;;
-;; (add-hook 'find-file-hook 'flymake-find-file-hook)
-
 ;; flyspell-mode
 (setq ispell-program-name "aspell"
       ispell-extra-args '("--sug-mode=ultra"))
@@ -246,10 +231,6 @@ makes)."
       '(clojure-mode-hook
         lisp-mode-hook
         slime-repl-mode-hook))
-
-;; python-mode
-(require 'python-mode)
-(setq interpreter-mode-alist (cons '("python" . python-mode) interpreter-mode-alist))
 
 ;; redo
 (require 'redo)
@@ -344,6 +325,9 @@ makes)."
 ;; completion in M-:
 (when (keymapp read-expression-map)
   (define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol))
+
+;; always try to indent on newline
+(define-key global-map (kbd "RET") 'newline-and-indent)
 
 ;; but not for some modes
 (defun hide-trailing-whitespace ()
