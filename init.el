@@ -170,6 +170,9 @@ makes)."
 ;; goto-last-change
 (require 'goto-last-change)
 
+;; haskell-mode
+(load (concat dotfiles-dir "haskell-mode/haskell-site-file"))
+
 ;; hl-line+
 (require 'hl-line+)
 (global-set-key [(meta alt ?l)] 'flash-line-highlight)
