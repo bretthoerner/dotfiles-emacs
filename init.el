@@ -32,8 +32,8 @@
 ;; ----
 
 (when
-    (load
-     (expand-file-name "~/.emacs.d/elpa/package.el"))
+  (load
+    (expand-file-name "~/.emacs.d/elpa/package.el"))
   (package-initialize))
 
 
@@ -72,7 +72,6 @@
 
 ;; clojure
 (require 'clojure-mode)
-;(add-hook 'clojure-mode-hook 'idle-highlight)
 
 ;; cua-mode
 (cua-mode t)
@@ -178,7 +177,8 @@ makes)."
 (global-set-key [(meta alt ?l)] 'flash-line-highlight)
 
 ;; idle-highlight
-(require 'idle-highlight)
+;(require 'idle-highlight)
+;(add-hook 'clojure-mode-hook 'idle-highlight)
 
 ;; ido
 (setq ido-auto-merge-work-directories-length -1)
@@ -377,6 +377,11 @@ makes)."
 ;; show column number in status bar
 (column-number-mode 1)
 
+;; highlight characters after 80 columns
+(setq whitespace-style '(lines-tail)
+      whitespace-line-column 80)
+(global-whitespace-mode 1)
+
 ;; use UTF-8
 (prefer-coding-system 'utf-8)
 
@@ -411,6 +416,38 @@ makes)."
 ;; shortcuts to resize fonts
 (global-set-key [(alt ?=)] 'text-scale-increase)
 (global-set-key [(alt ?-)] 'text-scale-decrease)
+
+;; autofill comments
+(defun local-comment-auto-fill ()
+  (set (make-local-variable 'comment-auto-fill-only-comments) t)
+  (auto-fill-mode t))
+
+;; highlight special words
+(defun add-watchwords ()
+  (font-lock-add-keywords
+   nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
+          1 font-lock-warning-face t))))
+
+;; handy coding-hook to reuse
+(add-hook 'coding-hook 'local-comment-auto-fill)
+(add-hook 'coding-hook 'add-watchwords)
+(defun run-coding-hook ()
+  "Enable things that are convenient across all coding buffers."
+  (run-hooks 'coding-hook))
+
+(add-hook 'python-mode-hook 'run-coding-hook)
+
+;; untabify
+(defun untabify-buffer ()
+  (interactive)
+  (untabify (point-min) (point-max)))
+
+;; edit as root
+(defun sudo-edit (&optional arg)
+  (interactive "p")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
 ;; ido-recentf
 (defun recentf-ido-find-file ()
