@@ -71,7 +71,7 @@
 (browse-kill-ring-default-keybindings)
 
 ;; clojure
-(require 'clojure-mode)
+(require 'clojure-mode nil t)
 
 ;; cua-mode
 (cua-mode t)
@@ -243,14 +243,16 @@ makes)."
 (require 'saveplace)
 
 ;; slime and swank
-(require 'swank-clojure-autoloads)
+(require 'swank-clojure-autoloads nil t)
 (setq swank-clojure-binary (expand-file-name "~/bin/clojure"))
 (eval-after-load "slime"
   '(progn (slime-setup '(slime-repl))))
-(require 'slime)
-(global-set-key "\C-cs" 'slime-selector)
-(add-to-list 'slime-lisp-implementations '(sbcl ("sbcl")))
-(slime-setup)
+(require 'slime nil t)
+(if (fboundp 'slime)
+  (progn
+    (global-set-key "\C-cs" 'slime-selector)
+    (add-to-list 'slime-lisp-implementations '(sbcl ("sbcl")))
+    (slime-setup)))
 
 ;; smooth-scrolling for keyboard
 ;; below are previous 'solution' to scroll one line at a time,
