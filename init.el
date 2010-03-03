@@ -431,7 +431,7 @@ makes)."
           1 font-lock-warning-face t))))
 
 ;; handy coding-hook to reuse
-(add-hook 'coding-hook 'local-comment-auto-fill)
+;(add-hook 'coding-hook 'local-comment-auto-fill)
 (add-hook 'coding-hook 'add-watchwords)
 (defun run-coding-hook ()
   "Enable things that are convenient across all coding buffers."
