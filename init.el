@@ -176,10 +176,6 @@ makes)."
 (require 'hl-line+)
 (global-set-key [(meta alt ?l)] 'flash-line-highlight)
 
-;; idle-highlight
-;(require 'idle-highlight)
-;(add-hook 'clojure-mode-hook 'idle-highlight)
-
 ;; ido
 (setq ido-auto-merge-work-directories-length -1)
 (setq ido-case-fold t)
@@ -430,9 +426,13 @@ makes)."
    nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
           1 font-lock-warning-face t))))
 
+;; idle-highlight
+;(require 'idle-highlight)
+
 ;; handy coding-hook to reuse
 ;(add-hook 'coding-hook 'local-comment-auto-fill)
 (add-hook 'coding-hook 'add-watchwords)
+;(add-hook 'coding-hook 'idle-highlight)
 (defun run-coding-hook ()
   "Enable things that are convenient across all coding buffers."
   (run-hooks 'coding-hook))
