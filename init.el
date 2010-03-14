@@ -352,7 +352,8 @@ makes)."
 (setq-default indent-tabs-mode nil)
 
 ;; tab = 4 spaces
-(setq-default default-tab-width 4)
+;(setq-default default-tab-width 4)
+(setq tab-width 4)
 
 ;; set C indent to 4 spaces
 (setq-default c-basic-offset 4)
