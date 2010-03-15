@@ -352,8 +352,8 @@ makes)."
 (setq-default indent-tabs-mode nil)
 
 ;; tab = 4 spaces
-;(setq-default default-tab-width 4)
-(setq tab-width 4)
+(setq-default default-tab-width 4)
+(setq-default tab-width 4)
 
 ;; set C indent to 4 spaces
 (setq-default c-basic-offset 4)
@@ -408,6 +408,14 @@ makes)."
 ;; C-x C-m as replacement for M-x
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
+
+;; arrows to switch windows
+(defun other-other-window ()
+  (interactive)
+  (other-window -1))
+
+(global-set-key [(control right)] 'other-window)
+(global-set-key [(control left)] 'other-other-window)
 
 ;; C-x C-u for undo (a common typo of mine)
 (global-set-key [(control ?x) (control ?u)] 'undo)
