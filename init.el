@@ -247,7 +247,6 @@ makes)."
 (if (fboundp 'slime)
   (progn
     (global-set-key "\C-cs" 'slime-selector)
-    (add-to-list 'slime-lisp-implementations '(sbcl ("sbcl")))
     (slime-setup)))
 
 ;; smooth-scrolling for keyboard
@@ -409,14 +408,6 @@ makes)."
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
 
-;; arrows to switch windows
-(defun other-other-window ()
-  (interactive)
-  (other-window -1))
-
-(global-set-key [(control right)] 'other-window)
-(global-set-key [(control left)] 'other-other-window)
-
 ;; C-x C-u for undo (a common typo of mine)
 (global-set-key [(control ?x) (control ?u)] 'undo)
 
@@ -447,6 +438,9 @@ makes)."
   (run-hooks 'coding-hook))
 
 (add-hook 'python-mode-hook 'run-coding-hook)
+(add-hook 'python-mode-hook
+          (lambda ()
+             (set (make-local-variable 'tab-width) 4)))
 
 ;; untabify
 (defun untabify-buffer ()
@@ -692,6 +686,14 @@ buffer-local variable `show-trailing-whitespace'."
     ;; shift+cursor to select text
     (setq pc-select-selection-keys-only t)
     (pc-selection-mode 1)
+
+    ;; arrows to switch windows, overrides pc-select keys
+    (defun other-other-window ()
+      (interactive)
+      (other-window -1))
+
+    (global-set-key [(control right)] 'other-window)
+    (global-set-key [(control left)] 'other-other-window)
 
     ;; make frame larger
     (setq initial-frame-alist '((width . 140) (height . 40)))

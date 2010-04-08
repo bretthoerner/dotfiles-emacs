@@ -1,3 +1,2 @@
 *.elc
-elpa/archive-contents
-elpa/builtin-packages
+elpa/
