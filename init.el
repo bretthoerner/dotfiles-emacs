@@ -344,8 +344,9 @@ makes)."
 ;; don't copy selected text to kill-ring automatically
 (setq mouse-drag-copy-region nil)
 
-;; don't split horizontally without me asking
+;; don't split without me asking
 (setq-default split-width-threshold nil)
+(setq-default split-height-threshold nil)
 
 ;; indent via spaces not tabs
 (setq-default indent-tabs-mode nil)
