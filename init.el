@@ -58,7 +58,7 @@
  '(
    ("^#.*" . 'font-lock-comment-face) ;; comments at start of line
    ("^<[^ \t\n]*?>" . 'font-lock-function-name-face) ;; LHS nonterminals
-   ("<[^ \t\n]*?>" . 'font-lock-builtin-face) ;; other nonterminals
+   ("<[^ \T\n]*?>" . 'font-lock-builtin-face) ;; other nonterminals
    ("::=" . 'font-lock-const-face) ;; "goes-to" symbol
    ("\|" . 'font-lock-warning-face) ;; "OR" symbol
    )
@@ -69,6 +69,7 @@
 ;; browse-kill-ring
 (require 'browse-kill-ring)
 (browse-kill-ring-default-keybindings)
+(setq browse-kill-ring-quit-action 'save-and-restore)
 
 ;; clojure
 (require 'clojure-mode nil t)
@@ -173,8 +174,8 @@ makes)."
 (load (concat dotfiles-dir "haskell-mode/haskell-site-file"))
 
 ;; hl-line+
-(require 'hl-line+)
-(global-set-key [(meta alt ?l)] 'flash-line-highlight)
+;(require 'hl-line+)
+;(global-set-key [(meta alt ?l)] 'flash-line-highlight)
 
 ;; ido
 (setq ido-auto-merge-work-directories-length -1)
@@ -306,6 +307,10 @@ makes)."
 
 ;; revert changed files automatically
 (global-auto-revert-mode t)
+
+;; kill out to clipboard
+(setq x-select-enable-clipboard t)
+(setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
 
 ;; tell apropos to do more
 (setq apropos-do-all t)
@@ -693,8 +698,9 @@ buffer-local variable `show-trailing-whitespace'."
       (interactive)
       (other-window -1))
 
-    (global-set-key [(control right)] 'other-window)
-    (global-set-key [(control left)] 'other-other-window)
+    ;; TODO: pick better key bindings for these
+    ;(global-set-key [(control right)] 'other-window)
+    ;(global-set-key [(control left)] 'other-other-window)
 
     ;; make frame larger
     (setq initial-frame-alist '((width . 140) (height . 40)))
