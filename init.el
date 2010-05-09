@@ -1,3 +1,6 @@
+(set-language-environment "utf-8")
+
+
 ;; -------------
 ;; debug config
 ;; -------------
@@ -72,6 +75,7 @@
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
 ;; clojure
+(add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
 (require 'clojure-mode nil t)
 
 ;; cua-mode
@@ -210,7 +214,6 @@ makes)."
 ;; org-mode
 (when (> emacs-major-version 22)
   (progn
-    (add-to-list 'load-path (concat dotfiles-dir "org-mode/lisp"))
     (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
     (require 'org-install)))
 
@@ -240,6 +243,7 @@ makes)."
 (require 'saveplace)
 
 ;; slime and swank
+(add-to-list 'load-path (concat dotfiles-dir "slime"))
 (require 'swank-clojure-autoloads nil t)
 (setq swank-clojure-binary (expand-file-name "~/bin/clojure"))
 (eval-after-load "slime"
@@ -247,8 +251,10 @@ makes)."
 (require 'slime nil t)
 (if (fboundp 'slime)
   (progn
+    (add-to-list 'slime-lisp-implementations '(clozure ("/usr/local/ccl/dx86cl" "-K" "utf-8")))
+    (setq slime-net-coding-system 'utf-8-unix)
     (global-set-key "\C-cs" 'slime-selector)
-    (slime-setup)))
+    (slime-setup '(slime-fancy))))
 
 ;; smooth-scrolling for keyboard
 ;; below are previous 'solution' to scroll one line at a time,
