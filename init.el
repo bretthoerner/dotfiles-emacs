@@ -231,8 +231,10 @@ makes)."
 (defun lisp-enable-paredit-hook () (paredit-mode 1))
 (mapc (lambda (mode-hook)
         (add-hook mode-hook 'lisp-enable-paredit-hook))
-      '(clojure-mode-hook
+      '(emacs-lisp-mode-hook
+        clojure-mode-hook
         lisp-mode-hook
+        scheme-mode-hook
         slime-repl-mode-hook))
 
 ;; redo
