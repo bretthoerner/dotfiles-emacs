@@ -248,6 +248,7 @@ makes)."
 (add-to-list 'load-path (concat dotfiles-dir "slime"))
 (require 'swank-clojure-autoloads nil t)
 (setq swank-clojure-binary (expand-file-name "~/bin/clojure"))
+(setq swank-clojure-classpath "-") ; stop asking me to install Clojure
 (eval-after-load "slime"
   '(progn (slime-setup '(slime-repl))))
 (require 'slime nil t)
@@ -553,6 +554,12 @@ Symbols matching the text at point are put first in the completion list."
       (goto-char position))))
 
 (global-set-key [(control ?x) (tab)] 'ido-imenu)
+
+;; don't deactivate my mark on kill-ring-save!
+(defun kill-ring-save-keep-region (beg end)
+  (interactive "r")
+  (let ((deactivate-mark nil))
+    (save-excursion (kill-ring-save beg end))))
 
 ;; define and bind textmate-like shift-right and shift-left
 (defun textmate-shift-right (&optional arg)

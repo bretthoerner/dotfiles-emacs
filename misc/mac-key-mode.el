@@ -113,7 +113,7 @@ when `mac-key-mode' is on.")
     (define-key map [(alt z)] 'undo)
     (define-key map [(alt shift z)] 'redo) ; requires redo
     (define-key map [(alt x)] 'kill-region)
-    (define-key map [(alt c)] 'kill-ring-save)
+    (define-key map [(alt c)] 'kill-ring-save-keep-region)
     (define-key map [(alt v)] 'yank)
     (define-key map [(alt a)] 'mark-whole-buffer)
     (define-key map [(alt shift left)] 'beginning-of-line-mark)
