@@ -86,10 +86,10 @@
 ;; dired
 (require 'dired)
 (require 'dired-single)
+
 (defun my-dired-init ()
   "Bunch of stuff to run for dired, either immediately or when it's
    loaded."
-  ;; <add other stuff here>
   (define-key dired-mode-map [return] 'dired-single-buffer)
   (define-key dired-mode-map [mouse-1] 'dired-single-buffer-mouse)
   (define-key dired-mode-map "^"
@@ -333,23 +333,12 @@ makes)."
 ;; http://article.gmane.org/gmane.emacs.devel/64807
 (setq parse-sexp-ignore-comments t)
 
-;; always show trailing whitespace
-(setq-default show-trailing-whitespace t)
-
 ;; completion in M-:
 (when (keymapp read-expression-map)
   (define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol))
 
 ;; always try to indent on newline
 (define-key global-map (kbd "RET") 'newline-and-indent)
-
-;; but not for some modes
-(defun hide-trailing-whitespace ()
-  (setq show-trailing-whitespace nil))
-(mapc (lambda (mode-hook)
-        (add-hook mode-hook 'hide-trailing-whitespace))
-      '(help-mode-hook
-        slime-repl-mode-hook))
 
 ;; no startup message or splash screen
 (setq inhibit-splash-screen t)
@@ -448,6 +437,7 @@ makes)."
 ;(add-hook 'coding-hook 'local-comment-auto-fill)
 (add-hook 'coding-hook 'add-watchwords)
 ;(add-hook 'coding-hook 'idle-highlight)
+(add-hook 'coding-hook 'show-trailing-whitespace)
 (defun run-coding-hook ()
   "Enable things that are convenient across all coding buffers."
   (run-hooks 'coding-hook))
@@ -455,7 +445,9 @@ makes)."
 (add-hook 'python-mode-hook 'run-coding-hook)
 (add-hook 'python-mode-hook
           (lambda ()
-             (set (make-local-variable 'tab-width) 4)))
+            (progn
+              (set (make-local-variable 'tab-width) 4)
+              (setq show-trailing-whitespace t))))
 
 ;; untabify
 (defun untabify-buffer ()

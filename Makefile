@@ -28,6 +28,7 @@ MISCF = browse-kill-ring.el \
 		idle-highlight.el \
 		js2-mode.el \
 		mac-key-mode.el \
+		magit.el \
 		markdown-mode.el \
 		paredit.el \
 		project.el \
