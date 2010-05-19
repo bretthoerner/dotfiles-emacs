@@ -36,7 +36,7 @@
 
 (when
   (load
-    (expand-file-name "~/.emacs.d/elpa/package.el"))
+    (concat dotfiles-dir "elpa/package.el"))
   (package-initialize))
 
 
@@ -53,6 +53,10 @@
 
 ;; ansi-color
 (require 'ansi-color)
+
+;; autopair
+(require 'autopair)
+(autopair-global-mode)
 
 ;; bnf-mode
 (define-generic-mode 'bnf-mode
@@ -77,6 +81,10 @@
 ;; clojure
 (add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
 (require 'clojure-mode nil t)
+
+;; company-mode
+(add-to-list 'load-path (concat dotfiles-dir "company"))
+(autoload 'company-mode "company" nil t)
 
 ;; cua-mode
 (cua-mode t)
@@ -227,10 +235,9 @@ makes)."
 (global-set-key "\C-cb" 'org-iswitchb)
 
 ;; paredit
-(autoload 'paredit-mode "paredit" "Minor mode for pseudo-structurally editing Lisp code." t)
-(defun lisp-enable-paredit-hook () (paredit-mode 1))
+(require 'paredit)
 (mapc (lambda (mode-hook)
-        (add-hook mode-hook 'lisp-enable-paredit-hook))
+        (add-hook mode-hook 'enable-paredit-mode))
       '(emacs-lisp-mode-hook
         clojure-mode-hook
         lisp-mode-hook
@@ -246,11 +253,6 @@ makes)."
 
 ;; slime and swank
 (add-to-list 'load-path (concat dotfiles-dir "slime"))
-(require 'swank-clojure-autoloads nil t)
-(setq swank-clojure-binary (expand-file-name "~/bin/clojure"))
-(setq swank-clojure-classpath "-") ; stop asking me to install Clojure
-(eval-after-load "slime"
-  '(progn (slime-setup '(slime-repl))))
 (require 'slime nil t)
 (if (fboundp 'slime)
   (progn

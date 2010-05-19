@@ -17,7 +17,8 @@ BATCH=$(EMACS) -batch -q -no-site-file -eval \
 ELC = $(BATCH) -f batch-byte-compile
 
 # The following variables need to be defined by the maintainer
-MISCF = browse-kill-ring.el \
+MISCF = autopair.el \
+		browse-kill-ring.el \
 		dired-single.el \
 		find-file-in-project.el \
 		flymake-cursor.el \
