@@ -256,10 +256,16 @@ makes)."
 (require 'slime nil t)
 (if (fboundp 'slime)
   (progn
-    (add-to-list 'slime-lisp-implementations '(clozure ("/usr/local/ccl/dx86cl" "-K" "utf-8")))
+    (setq slime-lisp-implementations '((clozure ("/usr/local/ccl/dx86cl" "-K" "utf-8"))
+                                       (clojure ("~/bin/clojure") :init swank-clojure-init)))
     (setq slime-net-coding-system 'utf-8-unix)
+    (setf slime-use-autodoc-mode nil) ; swank-clojure doesn't support this
     (global-set-key "\C-cs" 'slime-selector)
     (slime-setup '(slime-fancy))))
+(add-to-list 'load-path (concat dotfiles-dir "swank-clojure"))
+(setq swank-clojure-binary "~/bin/clojure")
+(require 'swank-clojure nil t)
+
 
 ;; smooth-scrolling for keyboard
 ;; below are previous 'solution' to scroll one line at a time,
