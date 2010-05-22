@@ -27,6 +27,7 @@ MISCF = autopair.el \
 		growl.el \
 		hl-line+.el \
 		idle-highlight.el \
+		js-comint.el \
 		js2-mode.el \
 		mac-key-mode.el \
 		magit.el \
