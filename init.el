@@ -57,6 +57,14 @@
 ;; autopair
 (require 'autopair)
 (autopair-global-mode)
+(put 'autopair-insert-opening 'delete-selection t)
+(put 'autopair-skip-close-maybe 'delete-selection t)
+(put 'autopair-insert-or-skip-quote 'delete-selection t)
+(put 'autopair-extra-insert-opening 'delete-selection t)
+(put 'autopair-extra-skip-close-maybe 'delete-selection t)
+(put 'autopair-backspace 'delete-selection 'supersede)
+(put 'autopair-newline 'delete-selection t)
+(setq autopair-blink nil)
 
 ;; bnf-mode
 (define-generic-mode 'bnf-mode
@@ -455,7 +463,6 @@ makes)."
 ;(add-hook 'coding-hook 'local-comment-auto-fill)
 (add-hook 'coding-hook 'add-watchwords)
 ;(add-hook 'coding-hook 'idle-highlight)
-(add-hook 'coding-hook 'show-trailing-whitespace)
 (defun run-coding-hook ()
   "Enable things that are convenient across all coding buffers."
   (run-hooks 'coding-hook))
