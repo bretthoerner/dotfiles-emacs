@@ -26,11 +26,11 @@ MISCF = autopair.el \
 		goto-last-change.el \
 		growl.el \
 		hl-line+.el \
+		http-twiddle.el \
 		idle-highlight.el \
 		js-comint.el \
 		js2-mode.el \
 		mac-key-mode.el \
-		magit.el \
 		markdown-mode.el \
 		paredit.el \
 		project.el \

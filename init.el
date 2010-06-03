@@ -90,6 +90,10 @@
 (add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
 (require 'clojure-mode nil t)
 
+;; coffee-mode
+(add-to-list 'load-path (concat dotfiles-dir "coffee-mode"))
+(require 'coffee-mode)
+
 ;; company-mode
 (add-to-list 'load-path (concat dotfiles-dir "company"))
 (autoload 'company-mode "company" nil t)
@@ -226,6 +230,10 @@ makes)."
   (local-set-key "\C-cb" 'js-send-buffer)
   (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
   (local-set-key "\C-cl" 'js-load-file-and-go)))
+
+;; magit
+(add-to-list 'load-path (concat dotfiles-dir "magit"))
+(require 'magit)
 
 ;; markdown-mode
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
