@@ -223,7 +223,8 @@ makes)."
 
 ;; js-comint
 (require 'js-comint)
-(setq inferior-js-program-command "/usr/local/bin/rhino")
+;(setq inferior-js-program-command "/usr/local/bin/rhino")
+(setq inferior-js-program-command "/usr/local/bin/node-repl")
 (add-hook 'js2-mode-hook '(lambda ()
   (local-set-key "\C-x\C-e" 'js-send-last-sexp)
   (local-set-key "\C-\M-x" 'js-send-last-sexp-and-go)
@@ -263,6 +264,7 @@ makes)."
 ;; paredit
 (require 'paredit)
 (mapc (lambda (mode-hook)
+        (add-hook mode-hook 'turn-on-eldoc-mode)
         (add-hook mode-hook 'enable-paredit-mode))
       '(emacs-lisp-mode-hook
         clojure-mode-hook
