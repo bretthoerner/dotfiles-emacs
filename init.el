@@ -106,6 +106,8 @@
 ;; dired
 (require 'dired)
 (require 'dired-single)
+(require 'dired-x)
+(setq dired-omit-files-p t)
 
 (defun my-dired-init ()
   "Bunch of stuff to run for dired, either immediately or when it's
@@ -767,11 +769,20 @@ buffer-local variable `show-trailing-whitespace'."
     (if (or (string= "mac" window-system) (string= "ns" window-system))
      (progn
         ;; font
-        (set-face-font 'default "-apple-monaco-medium-r-normal--12-0-72-72-m-0-iso10646-1")
+        (if (>= emacs-major-version 23)
+            (set-frame-font "Monaco-12"))
 
         ;; normal mac command shortcuts
         (require 'mac-key-mode)
         (mac-key-mode 1)
+
+        ;; bind 'o' to run 'open' command on selected file in dired mode
+        (define-key dired-mode-map "o" 'dired-open-mac)
+        (defun dired-open-mac ()
+               (interactive)
+               (let ((file-name (dired-get-file-for-visit)))
+                 (if (file-exists-p file-name)
+                     (call-process "/usr/bin/open" nil 0 nil file-name))))
 
         ;; allow command-v to paste in search
         (define-key isearch-mode-map [(alt ?v)] 'isearch-yank-kill)
