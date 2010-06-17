@@ -57,13 +57,7 @@
 ;; autopair
 (require 'autopair)
 (autopair-global-mode)
-(put 'autopair-insert-opening 'delete-selection t)
-(put 'autopair-skip-close-maybe 'delete-selection t)
-(put 'autopair-insert-or-skip-quote 'delete-selection t)
-(put 'autopair-extra-insert-opening 'delete-selection t)
-(put 'autopair-extra-skip-close-maybe 'delete-selection t)
-(put 'autopair-backspace 'delete-selection 'supersede)
-(put 'autopair-newline 'delete-selection t)
+(setq autopair-autowrap t)
 (setq autopair-blink nil)
 
 ;; bnf-mode
@@ -296,6 +290,13 @@ makes)."
 (setq swank-clojure-binary "~/bin/clojure")
 (require 'swank-clojure nil t)
 
+;; smerge
+(defun sm-try-smerge ()
+  (save-excursion
+    (goto-char (point-min))
+    (when (re-search-forward "^<<<<<<< " nil t)
+      (smerge-mode 1))))
+(add-hook 'find-file-hook 'sm-try-smerge t)
 
 ;; smooth-scrolling for keyboard
 ;; below are previous 'solution' to scroll one line at a time,
