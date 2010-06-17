@@ -57,7 +57,7 @@ magit/magit.elc:
 	make clean all
 
 update:
-	git submodule foreach "git pull"
+	git submodule foreach "git pull upstream master; git push origin"
 	${MAKE} clean
 	${MAKE} all
 
