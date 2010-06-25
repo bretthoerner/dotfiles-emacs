@@ -55,10 +55,10 @@
 (require 'ansi-color)
 
 ;; autopair
-(require 'autopair)
-(autopair-global-mode)
-(setq autopair-autowrap t)
-(setq autopair-blink nil)
+;(require 'autopair)
+;(autopair-global-mode)
+;(setq autopair-autowrap t)
+;(setq autopair-blink nil)
 
 ;; bnf-mode
 (define-generic-mode 'bnf-mode
@@ -264,6 +264,7 @@ makes)."
         (add-hook mode-hook 'enable-paredit-mode))
       '(emacs-lisp-mode-hook
         clojure-mode-hook
+        ielm-mode-hook
         lisp-mode-hook
         scheme-mode-hook
         slime-repl-mode-hook))
