@@ -215,7 +215,8 @@ makes)."
   (progn
     (require 'js2-mode)
     (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
-    (setq js2-highlight-level 3)))
+    (setq js2-highlight-level 3
+          js2-bounce-indent-p t)))
 
 ;; js-comint
 (require 'js-comint)

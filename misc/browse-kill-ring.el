@@ -5,8 +5,8 @@
 ;; Author: Colin Walters <walters@verbum.org>
 ;; Maintainer: Nick Hurley <hurley@cis.ohio-state.edu>
 ;; Created: 7 Apr 2001
-;; Version: 1.3 (CVS)
-;; X-RCS: $Id: browse-kill-ring.el,v 1.2 2002/10/29 00:23:00 hurley Exp $
+;; Version: 1.3a (CVS)
+;; X-RCS: $Id: browse-kill-ring.el,v 1.3 2009-09-03 14:41:25 psg Exp $
 ;; URL: http://freedom.cis.ohio-state.edu/~hurley/
 ;; URL-ja: http://www.fan.gr.jp/~ring/doc/browse-kill-ring.html
 ;; Keywords: convenience
@@ -49,6 +49,12 @@
 ;; again.
 
 ;;; Change Log:
+
+;; Changes from 1.3 to 1.3a:
+
+;; * Sneak update by Benjamin Andresen <bandresen@gmail.com>
+;; * Added the read-only bugfix (http://bugs.debian.org/225082) from
+;;   the emacs-goodies-el package
 
 ;; Changes from 1.2 to 1.3:
 
@@ -899,13 +905,19 @@ directly; use `browse-kill-ring' instead.
   (let* ((item (browse-kill-ring-elide origitem))
 	 (len (length item)))
     (browse-kill-ring-add-overlays-for origitem
-	(insert item))
-    (insert "\n")
-    (when separatep
-      (insert (browse-kill-ring-propertize browse-kill-ring-separator
-					   'browse-kill-ring-extra t
-					   'browse-kill-ring-separator t))
-      (insert "\n"))))
+                                       (insert item))
+    ;; When the kill-ring has items with read-only text property at
+    ;; **the end of** string, browse-kill-ring-setup fails with error
+    ;; `Text is read-only'.  So inhibit-read-only here.
+    ;; See http://bugs.debian.org/225082
+    ;; - INOUE Hiroyuki <dombly@kc4.so-net.ne.jp>
+    (let ((inhibit-read-only t))
+      (insert "\n")
+      (when separatep
+        (insert (browse-kill-ring-propertize browse-kill-ring-separator
+                                             'browse-kill-ring-extra t
+                                             'browse-kill-ring-separator t))
+        (insert "\n")))))
 
 (defun browse-kill-ring-occur (regexp)
   "Display all `kill-ring' entries matching REGEXP."
@@ -1024,7 +1036,7 @@ directly; use `browse-kill-ring' instead.
 (defun browse-kill-ring ()
   "Display items in the `kill-ring' in another buffer."
   (interactive)
-  (if (eq major-mode 'browse-kill-ring-mode) 
+  (if (eq major-mode 'browse-kill-ring-mode)
       (message "Already viewing the kill ring")
     (let ((orig-buf (current-buffer))
 	  (buf (get-buffer-create "*Kill Ring*")))
