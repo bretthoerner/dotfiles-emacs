@@ -1,5 +1,5 @@
 # Name of your emacs binary
-EMACS = /Applications/Emacs.app/Contents/MacOS/Emacs
+EMACS = /usr/bin/emacs
 
 # Where local software is found
 EMACS_HOME = $(HOME)/.emacs.d

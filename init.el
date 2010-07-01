@@ -54,12 +54,6 @@
 ;; ansi-color
 (require 'ansi-color)
 
-;; autopair
-;(require 'autopair)
-;(autopair-global-mode)
-;(setq autopair-autowrap t)
-;(setq autopair-blink nil)
-
 ;; bnf-mode
 (define-generic-mode 'bnf-mode
  () ;; comment char: inapplicable because # must be at start of line
@@ -86,11 +80,7 @@
 
 ;; coffee-mode
 (add-to-list 'load-path (concat dotfiles-dir "coffee-mode"))
-(require 'coffee-mode)
-
-;; company-mode
-(add-to-list 'load-path (concat dotfiles-dir "company"))
-(autoload 'company-mode "company" nil t)
+(require 'coffee-mode nil t)
 
 ;; cua-mode
 (cua-mode t)
@@ -120,9 +110,9 @@
   (add-hook 'dired-load-hook 'my-dired-init))
 
 ;; erc
-(let ((erc-config-file (expand-file-name "~/.erc.el")))
-  (when (file-regular-p erc-config-file)
-    (load erc-config-file)))
+;(let ((erc-config-file (expand-file-name "~/.erc.el")))
+;  (when (file-regular-p erc-config-file)
+;    (load erc-config-file)))
 
 ;; ffap
 (when (fboundp 'find-file-at-point)
@@ -132,7 +122,7 @@
 (require 'project)
 (require 'find-file-in-project)
 (setq ffip-patterns
-  '("*.clj" "*.css" "*.el" "*.html" "*.js" "*.py" "*.rb" "*.sass"))
+  '("*.clj" "*.css" "*.el" "*.html" "*.js" "*.py" "*.rb" "*.sass" "*.txt"))
 
 ;; flymake
 (setq-default flymake-gui-warnings-enabled nil)
@@ -220,8 +210,8 @@ makes)."
 
 ;; js-comint
 (require 'js-comint)
-;(setq inferior-js-program-command "/usr/local/bin/rhino")
-(setq inferior-js-program-command "/usr/local/bin/node-repl")
+(setq inferior-js-program-command "/usr/bin/rhino")
+;(setq inferior-js-program-command "/usr/local/bin/node-repl")
 (add-hook 'js2-mode-hook '(lambda ()
   (local-set-key "\C-x\C-e" 'js-send-last-sexp)
   (local-set-key "\C-\M-x" 'js-send-last-sexp-and-go)
@@ -231,7 +221,7 @@ makes)."
 
 ;; magit
 (add-to-list 'load-path (concat dotfiles-dir "magit"))
-(require 'magit)
+(require 'magit nil t)
 
 ;; markdown-mode
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
@@ -240,8 +230,8 @@ makes)."
 ;; nxml-mode
 (when (> emacs-major-version 22)
   (setq auto-mode-alist
-      (cons '("\\.\\(xml\\|xsl\\|xhtml\\)\\'" . nxml-mode)
-          auto-mode-alist)))
+    (cons '("\\.\\(xml\\|xsl\\|xhtml\\)\\'" . nxml-mode)
+      auto-mode-alist)))
 
 ;; org-mode
 (when (> emacs-major-version 22)
@@ -722,7 +712,7 @@ buffer-local variable `show-trailing-whitespace'."
 (if window-system
   (progn
     ;; start emacs server
-    (server-start)
+    ;(server-start)
 
     ;; bar cursor
     (setq-default cursor-type 'bar)
@@ -751,12 +741,6 @@ buffer-local variable `show-trailing-whitespace'."
 
     ;; make frame larger
     (setq initial-frame-alist '((width . 140) (height . 40)))
-
-    ;; highlight whole expression inside parens
-    (setq show-paren-style 'expression)
-
-    ;; darker background color for expression
-    (set-face-background 'show-paren-match-face "#0f142a")
 
     ;; color-theme
     (add-to-list 'load-path (concat dotfiles-dir "color-theme"))
@@ -791,7 +775,24 @@ buffer-local variable `show-trailing-whitespace'."
         (define-key isearch-mode-map [(alt ?v)] 'isearch-yank-kill)
 
         ;; use alt for meta
-        (setq mac-option-modifier 'meta))))
+        (setq mac-option-modifier 'meta))
+
+     ;; else not mac
+     (progn
+        ;; font
+        (if (>= emacs-major-version 23)
+            (set-frame-font "Inconsolata-dz-10"))
+
+        ;; bind 'o' to run 'open' command on selected file in dired mode
+        (define-key dired-mode-map "o" 'dired-open-gnome)
+        (defun dired-open-gnome ()
+               (interactive)
+               (let ((file-name (dired-get-file-for-visit)))
+                 (if (file-exists-p file-name)
+                     (call-process "/usr/bin/gnome-open" nil 0 nil file-name))))
+
+        ;; allow command-v to paste in search
+        (define-key isearch-mode-map [(control ?y)] 'isearch-yank-kill))))
 
   ;; else (not in a window system)
 
