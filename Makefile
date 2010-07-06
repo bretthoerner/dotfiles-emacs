@@ -33,6 +33,7 @@ MISCF = autopair.el \
 		mac-key-mode.el \
 		markdown-mode.el \
 		paredit.el \
+		php-mode.el \
 		project.el \
 		redo.el \
 		smooth-scrolling.el
