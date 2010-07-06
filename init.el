@@ -12,7 +12,6 @@
 ;; custom files
 ;; -------------
 
-
 (setq dotfiles-dir (expand-file-name "~/.emacs.d/"))
 
 ;; work around a bug on OS X where system-name is FQDN
@@ -28,7 +27,7 @@
 (if (file-exists-p system-specific-config) (load system-specific-config))
 (if (file-exists-p user-specific-config) (load user-specific-config))
 (if (file-exists-p user-specific-dir)
-  (mapc #'load (directory-files user-specific-dir nil ".*el$")))
+    (mapc #'load (directory-files user-specific-dir nil ".*el$")))
 
 ;; ----
 ;; elpa
@@ -56,18 +55,18 @@
 
 ;; bnf-mode
 (define-generic-mode 'bnf-mode
- () ;; comment char: inapplicable because # must be at start of line
- nil ;; keywords
- '(
-   ("^#.*" . 'font-lock-comment-face) ;; comments at start of line
-   ("^<[^ \t\n]*?>" . 'font-lock-function-name-face) ;; LHS nonterminals
-   ("<[^ \T\n]*?>" . 'font-lock-builtin-face) ;; other nonterminals
-   ("::=" . 'font-lock-const-face) ;; "goes-to" symbol
-   ("\|" . 'font-lock-warning-face) ;; "OR" symbol
-   )
- '("\\.bnf\\'") ;; filename suffixes
- nil ;; extra function hooks
- "Major mode for BNF highlighting.")
+  () ;; comment char: inapplicable because # must be at start of line
+  nil ;; keywords
+  '(
+    ("^#.*" . 'font-lock-comment-face) ;; comments at start of line
+    ("^<[^ \t\n]*?>" . 'font-lock-function-name-face) ;; LHS nonterminals
+    ("<[^ \T\n]*?>" . 'font-lock-builtin-face) ;; other nonterminals
+    ("::=" . 'font-lock-const-face) ;; "goes-to" symbol
+    ("\|" . 'font-lock-warning-face) ;; "OR" symbol
+    )
+  '("\\.bnf\\'") ;; filename suffixes
+  nil ;; extra function hooks
+  "Major mode for BNF highlighting.")
 
 ;; browse-kill-ring
 (require 'browse-kill-ring)
@@ -122,7 +121,7 @@
 (require 'project)
 (require 'find-file-in-project)
 (setq ffip-patterns
-  '("*.clj" "*.css" "*.el" "*.html" "*.js" "*.py" "*.rb" "*.sass" "*.txt"))
+      '("*.clj" "*.css" "*.el" "*.html" "*.js" "*.py" "*.rb" "*.sass" "*.txt"))
 
 ;; flymake
 (setq-default flymake-gui-warnings-enabled nil)
@@ -213,11 +212,11 @@ makes)."
 (setq inferior-js-program-command "/usr/bin/rhino")
 ;(setq inferior-js-program-command "/usr/local/bin/node-repl")
 (add-hook 'js2-mode-hook '(lambda ()
-  (local-set-key "\C-x\C-e" 'js-send-last-sexp)
-  (local-set-key "\C-\M-x" 'js-send-last-sexp-and-go)
-  (local-set-key "\C-cb" 'js-send-buffer)
-  (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
-  (local-set-key "\C-cl" 'js-load-file-and-go)))
+                            (local-set-key "\C-x\C-e" 'js-send-last-sexp)
+                            (local-set-key "\C-\M-x" 'js-send-last-sexp-and-go)
+                            (local-set-key "\C-cb" 'js-send-buffer)
+                            (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
+                            (local-set-key "\C-cl" 'js-load-file-and-go)))
 
 ;; magit
 (add-to-list 'load-path (concat dotfiles-dir "magit"))
@@ -230,8 +229,8 @@ makes)."
 ;; nxml-mode
 (when (> emacs-major-version 22)
   (setq auto-mode-alist
-    (cons '("\\.\\(xml\\|xsl\\|xhtml\\)\\'" . nxml-mode)
-      auto-mode-alist)))
+        (cons '("\\.\\(xml\\|xsl\\|xhtml\\)\\'" . nxml-mode)
+              auto-mode-alist)))
 
 ;; org-mode
 (when (> emacs-major-version 22)
@@ -240,9 +239,9 @@ makes)."
     (require 'org-install)))
 
 (add-hook 'org-mode-hook
-  (lambda ()
-    ;; flyspell mode to spell check everywhere
-    (flyspell-mode 1)))
+          (lambda ()
+            ;; flyspell mode to spell check everywhere
+            (flyspell-mode 1)))
 
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
@@ -250,6 +249,10 @@ makes)."
 
 ;; paredit
 (require 'paredit)
+(require 'eldoc)
+(eldoc-add-command
+ 'paredit-backward-delete
+ 'paredit-close-round)
 (mapc (lambda (mode-hook)
         (add-hook mode-hook 'turn-on-eldoc-mode)
         (add-hook mode-hook 'enable-paredit-mode))
@@ -262,6 +265,7 @@ makes)."
 
 ;; redo
 (require 'redo)
+(global-set-key [(control ??)] 'redo)
 
 ;; saveplace
 (setq-default save-place t)
@@ -327,20 +331,12 @@ makes)."
 ;; (global-unset-key (kbd "<up>"))
 ;; (global-unset-key (kbd "<down>"))
 
-;; show time, just 'cause
-;(display-time-mode t)
-
 ;; show line numbers
 ;;(require 'linum)
 ;;(global-linum-mode 1)
 
 ;; example of .dir-locals.el
 ;; ((js2-mode . ((indent-tabs-mode . t))))
-
-;; 2 space indent for HTML
-;; (add-hook 'sgml-mode-hook
-;;   (lambda ()
-;;     (setq tab-width 2)))
 
 ;; final newlines are good
 (setq require-final-newline t)
@@ -447,8 +443,8 @@ makes)."
 (global-set-key [(control ?x) (control ?u)] 'undo)
 
 ;; shortcuts to resize fonts
-(global-set-key [(alt ?=)] 'text-scale-increase)
-(global-set-key [(alt ?-)] 'text-scale-decrease)
+(global-set-key [(super ?=)] 'text-scale-increase)
+(global-set-key [(super ?-)] 'text-scale-decrease)
 
 ;; autofill comments
 (defun local-comment-auto-fill ()
