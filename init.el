@@ -85,6 +85,10 @@
 (cua-mode t)
 ;; only use cua-mode for rectangle-edit
 (setq cua-enable-cua-keys nil)
+;; shift + click select region
+(define-key global-map (kbd "<S-down-mouse-1>") 'ignore) ; turn off font dialog
+(define-key global-map (kbd "<S-mouse-1>") 'mouse-set-point)
+(put 'mouse-set-point 'CUA 'move)
 
 ;; dired
 (require 'dired)
