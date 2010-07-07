@@ -276,7 +276,8 @@ makes)."
 (require 'slime nil t)
 (if (fboundp 'slime)
   (progn
-    (setq slime-lisp-implementations '((clozure ("/usr/local/ccl/dx86cl" "-K" "utf-8"))
+    (setq slime-lisp-implementations '(;(clozure ("/usr/local/ccl/dx86cl" "-K" "utf-8"))
+                                       (sbcl ("~/Development/clbuild/clbuild" "lisp"))
                                        (clojure ("~/bin/clojure") :init swank-clojure-init)))
     (setq slime-net-coding-system 'utf-8-unix)
     (setf slime-use-autodoc-mode nil) ; swank-clojure doesn't support this
