@@ -436,6 +436,9 @@ makes)."
 ;; allows "y" instead of "yes" on exit
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; disable menu bar in terminal
+(menu-bar-mode -1)
+
 ;; C-x C-m as replacement for M-x
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
@@ -788,10 +791,13 @@ buffer-local variable `show-trailing-whitespace'."
                  (if (file-exists-p file-name)
                      (call-process "/usr/bin/gnome-open" nil 0 nil file-name))))
 
+        (defun switch-full-screen ()
+          (interactive)
+          (shell-command "wmctrl -r :ACTIVE: -btoggle,fullscreen"))
+        (global-set-key [f11] 'switch-full-screen)
+
         ;; allow command-v to paste in search
         (define-key isearch-mode-map [(control ?y)] 'isearch-yank-kill))))
 
   ;; else (not in a window system)
-
-  ;; disable menu bar in terminal
-  (menu-bar-mode -1))
+  )
