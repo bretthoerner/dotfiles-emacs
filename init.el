@@ -113,9 +113,41 @@
   (add-hook 'dired-load-hook 'my-dired-init))
 
 ;; erc
-;(let ((erc-config-file (expand-file-name "~/.erc.el")))
-;  (when (file-regular-p erc-config-file)
-;    (load erc-config-file)))
+(let ((erc-config-file (expand-file-name "~/.ercpass.el")))
+ (when (file-regular-p erc-config-file)
+   (load erc-config-file)
+
+   (require 'erc-match)
+   (require 'erc-services)
+
+   (erc-services-mode t)
+
+   (setq erc-prompt-for-nickserv-password nil)
+   (setq erc-nickserv-passwords
+         `((freenode (("brett_h" . ,bjh-freenode-password)))))
+
+   (setq erc-autojoin-channels-alist
+         '(("freenode.net"
+            "#disqus")))
+
+   (setq erc-keywords '("\\bbrett\\b" "\\bhoerner\\b"))
+
+   (defun erc-proxy-enable ()
+     (interactive)
+     (setq socks-override-functions 1)
+     (setq socks-noproxy '("localhost"))
+     (require 'socks)
+     (setq socks-server '("ssh-socks" "localhost" 9999 5))
+     (setq erc-server-connect-function 'socks-open-network-stream))
+
+   (defun bjh-erc-freenode ()
+     (interactive)
+     (erc :server "irc.freenode.net"
+          :port 6667
+          :nick "brett_h"))
+
+   ;; (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+   ))
 
 ;; ffap
 (when (fboundp 'find-file-at-point)
@@ -185,6 +217,16 @@ makes)."
 
 ;; haskell-mode
 (load (concat dotfiles-dir "haskell-mode/haskell-site-file"))
+
+;; highlight-parentheses
+(require 'highlight-parentheses)
+(setq hl-paren-colors
+      '(;"#8f8f8f" ; this comes from Zenburn
+                   ; and I guess I'll try to make the far-outer parens look like this
+        "orange1" "yellow1" "greenyellow" "green1"
+        "springgreen1" "cyan1" "slateblue1" "magenta1" "purple"))
+(defun enable-highlight-parentheses-mode ()
+  (highlight-parentheses-mode t) (paredit-mode t))
 
 ;; hl-line+
 ;(require 'hl-line+)
@@ -259,7 +301,8 @@ makes)."
  'paredit-close-round)
 (mapc (lambda (mode-hook)
         (add-hook mode-hook 'turn-on-eldoc-mode)
-        (add-hook mode-hook 'enable-paredit-mode))
+        (add-hook mode-hook 'enable-paredit-mode)
+        (add-hook mode-hook 'enable-highlight-parentheses-mode))
       '(emacs-lisp-mode-hook
         clojure-mode-hook
         ielm-mode-hook
