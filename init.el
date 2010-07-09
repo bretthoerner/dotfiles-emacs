@@ -73,6 +73,10 @@
 (browse-kill-ring-default-keybindings)
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
+;; browse-url
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")
+
 ;; clojure
 (add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
 (require 'clojure-mode nil t)
@@ -119,6 +123,7 @@
 
    (require 'erc-match)
    (require 'erc-services)
+   (require 'erc-libnotify)
 
    (erc-services-mode t)
 
@@ -140,7 +145,7 @@
      (setq socks-server '("ssh-socks" "localhost" 9999 5))
      (setq erc-server-connect-function 'socks-open-network-stream))
 
-   (defun bjh-erc-freenode ()
+   (defun erc-connect-freenode ()
      (interactive)
      (erc :server "irc.freenode.net"
           :port 6667
