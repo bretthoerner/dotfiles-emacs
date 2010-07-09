@@ -310,6 +310,9 @@ makes)."
         scheme-mode-hook
         slime-repl-mode-hook))
 
+;; rainbow-mode
+(require 'rainbow-mode)
+
 ;; redo
 (require 'redo)
 (global-set-key [(control ??)] 'redo)
