@@ -790,10 +790,8 @@ buffer-local variable `show-trailing-whitespace'."
     (setq initial-frame-alist '((width . 140) (height . 40)))
 
     ;; color-theme
-    (add-to-list 'load-path (concat dotfiles-dir "color-theme"))
     (require 'color-theme)
-    (color-theme-initialize)
-    (load-file (concat dotfiles-dir "color-theme/themes/blackboard.el"))
+    (load-file (concat dotfiles-dir "themes/blackboard.el"))
     (color-theme-blackboard)
 
     ;; fix something that is overriding my region background
