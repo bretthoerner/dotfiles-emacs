@@ -127,15 +127,11 @@
 
    (erc-services-mode t)
 
-   (setq erc-prompt-for-nickserv-password nil)
-   (setq erc-nickserv-passwords
-         `((freenode (("brett_h" . ,bjh-freenode-password)))))
-
-   (setq erc-autojoin-channels-alist
-         '(("freenode.net"
-            "#disqus")))
-
-   (setq erc-keywords '("\\bbrett\\b" "\\bhoerner\\b"))
+   (setq erc-prompt-for-nickserv-password nil
+         erc-nickserv-passwords `((freenode (("brett_h" . ,bjh-freenode-password))))
+         erc-fill-column 100
+         erc-autojoin-channels-alist '(("freenode.net" "#disqus"))
+         erc-keywords '("\\bbrett\\b" "\\bhoerner\\b"))
 
    (defun erc-proxy-enable ()
      (interactive)
@@ -144,15 +140,13 @@
      (require 'socks)
      (setq socks-server '("ssh-socks" "localhost" 9999 5))
      (setq erc-server-connect-function 'socks-open-network-stream))
+   ;; (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
    (defun erc-connect-freenode ()
      (interactive)
      (erc :server "irc.freenode.net"
           :port 6667
-          :nick "brett_h"))
-
-   ;; (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-   ))
+          :nick "brett_h"))))
 
 ;; ffap
 (when (fboundp 'find-file-at-point)
