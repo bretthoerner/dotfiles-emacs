@@ -29,6 +29,7 @@
 (if (file-exists-p user-specific-dir)
     (mapc #'load (directory-files user-specific-dir nil ".*el$")))
 
+
 ;; ----
 ;; elpa
 ;; ----
@@ -779,14 +780,12 @@ buffer-local variable `show-trailing-whitespace'."
     (setq pc-select-selection-keys-only t)
     (pc-selection-mode 1)
 
-    ;; arrows to switch windows, overrides pc-select keys
+    ;; use thinkpad arrows to switch windows
     (defun other-other-window ()
       (interactive)
       (other-window -1))
-
-    ;; TODO: pick better key bindings for these
-    ;(global-set-key [(control right)] 'other-window)
-    ;(global-set-key [(control left)] 'other-other-window)
+    (global-set-key [(XF86Forward)] 'other-window)
+    (global-set-key [(XF86Back)] 'other-other-window)
 
     ;; make frame larger
     (setq initial-frame-alist '((width . 140) (height . 40)))
@@ -795,9 +794,6 @@ buffer-local variable `show-trailing-whitespace'."
     (require 'color-theme)
     (load-file (concat dotfiles-dir "themes/blackboard.el"))
     (color-theme-blackboard)
-
-    ;; fix something that is overriding my region background
-    (set-face-background 'region "#162248")
 
     ;; mac-specific
     (if (or (string= "mac" window-system) (string= "ns" window-system))
