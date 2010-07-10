@@ -117,6 +117,25 @@
   ;; it's not loaded yet, so add our bindings to the load-hook
   (add-hook 'dired-load-hook 'my-dired-init))
 
+;; elisp
+(require 'eldoc)
+
+(eldoc-add-command
+ 'paredit-backward-delete
+ 'paredit-close-round)
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'emacs-lisp-mode-hook 'remove-elc-on-save)
+
+(defun remove-elc-on-save ()
+  "If you're saving an elisp file, likely the .elc is no longer valid."
+  (make-local-variable 'after-save-hook)
+  (add-hook 'after-save-hook
+            (lambda ()
+              (if (file-exists-p (concat buffer-file-name "c"))
+                  (delete-file (concat buffer-file-name "c"))))))
+
+(define-key emacs-lisp-mode-map (kbd "M-.") 'find-function-at-point)
+
 ;; erc
 (let ((erc-config-file (expand-file-name "~/.ercpass.el")))
  (when (file-regular-p erc-config-file)
@@ -226,18 +245,18 @@ makes)."
         "orange1" "yellow1" "greenyellow" "green1"
         "springgreen1" "cyan1" "slateblue1" "magenta1" "purple"))
 (defun enable-highlight-parentheses-mode ()
-  (highlight-parentheses-mode t) (paredit-mode t))
+  (highlight-parentheses-mode t))
 
 ;; hl-line+
 ;(require 'hl-line+)
 ;(global-set-key [(meta alt ?l)] 'flash-line-highlight)
 
 ;; ido
-(setq ido-auto-merge-work-directories-length -1)
-(setq ido-case-fold t)
-(setq ido-create-new-buffer 'always)
-(setq ido-enable-flex-matching t)
-(setq ido-save-directory-list-file nil)
+(setq ido-auto-merge-work-directories-length -1
+      ido-case-fold t
+      ido-create-new-buffer 'always
+      ido-enable-flex-matching t
+      ido-save-directory-list-file nil)
 (require 'ido)
 (ido-mode t)
 (ido-everywhere t)
@@ -263,6 +282,9 @@ makes)."
                             (local-set-key "\C-cb" 'js-send-buffer)
                             (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
                             (local-set-key "\C-cl" 'js-load-file-and-go)))
+
+;; lisp
+(define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol)
 
 ;; magit
 (add-to-list 'load-path (concat dotfiles-dir "magit"))
@@ -295,23 +317,12 @@ makes)."
 
 ;; paredit
 (require 'paredit)
-(require 'eldoc)
-(eldoc-add-command
- 'paredit-backward-delete
- 'paredit-close-round)
-(mapc (lambda (mode-hook)
-        (add-hook mode-hook 'turn-on-eldoc-mode)
-        (add-hook mode-hook 'enable-paredit-mode)
-        (add-hook mode-hook 'enable-highlight-parentheses-mode))
-      '(emacs-lisp-mode-hook
-        clojure-mode-hook
-        ielm-mode-hook
-        lisp-mode-hook
-        scheme-mode-hook
-        slime-repl-mode-hook))
 
 ;; rainbow-mode
 (require 'rainbow-mode)
+
+;; recentf
+(require 'recentf)
 
 ;; redo
 (require 'redo)
@@ -359,15 +370,15 @@ makes)."
 (setq mouse-wheel-progressive-speed t)
 
 ;; tramp
-(setq tramp-default-method "ssh")
-(setq tramp-persistency-file-name nil)
+(setq tramp-default-method "ssh"
+      tramp-persistency-file-name nil)
 (require 'tramp)
 
 ;; uniquify
-(setq uniquify-after-kill-buffer-p t)
-(setq uniquify-buffer-name-style 'post-forward)
-(setq uniquify-ignore-buffers-re "^\\*")
-(setq uniquify-separator ": ")
+(setq uniquify-after-kill-buffer-p t
+      uniquify-buffer-name-style 'post-forward
+      uniquify-ignore-buffers-re "^\\*"
+      uniquify-separator ": ")
 (require 'uniquify)
 
 
@@ -396,8 +407,8 @@ makes)."
 (global-auto-revert-mode t)
 
 ;; kill out to clipboard
-(setq x-select-enable-clipboard t)
-(setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
+(setq x-select-enable-clipboard t
+      interprogram-paste-function 'x-cut-buffer-or-selection-value)
 
 ;; tell apropos to do more
 (setq apropos-do-all t)
@@ -419,8 +430,8 @@ makes)."
 (define-key global-map (kbd "RET") 'newline-and-indent)
 
 ;; no startup message or splash screen
-(setq inhibit-splash-screen t)
-(setq inhibit-startup-message t)
+(setq inhibit-splash-screen t
+      inhibit-startup-message t)
 
 ;; don't copy selected text to kill-ring automatically
 (setq mouse-drag-copy-region nil)
@@ -500,24 +511,42 @@ makes)."
 (global-set-key [(super ?=)] 'text-scale-increase)
 (global-set-key [(super ?-)] 'text-scale-decrease)
 
-;; autofill comments
+;; coding hook
 (defun local-comment-auto-fill ()
   (set (make-local-variable 'comment-auto-fill-only-comments) t)
   (auto-fill-mode t))
 
-;; highlight special words
+(defun turn-on-hl-line-mode ()
+  (if window-system (hl-line-mode t)))
+
+(defun turn-on-save-place-mode ()
+  (setq save-place t))
+
+(defun turn-on-whitespace ()
+  (whitespace-mode t))
+
+(defun pretty-lambdas ()
+  (font-lock-add-keywords
+   nil `(("(?\\(lambda\\>\\)"
+          (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                    ,(make-char 'greek-iso8859-7 107))
+                    nil))))))
+
 (defun add-watchwords ()
   (font-lock-add-keywords
    nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
           1 font-lock-warning-face t))))
 
-;; idle-highlight
 ;(require 'idle-highlight)
 
 ;; handy coding-hook to reuse
-;(add-hook 'coding-hook 'local-comment-auto-fill)
+(add-hook 'coding-hook 'local-comment-auto-fill)
+(add-hook 'coding-hook 'turn-on-hl-line-mode)
+(add-hook 'coding-hook 'turn-on-save-place-mode)
+(add-hook 'coding-hook 'pretty-lambdas)
 (add-hook 'coding-hook 'add-watchwords)
 ;(add-hook 'coding-hook 'idle-highlight)
+
 (defun run-coding-hook ()
   "Enable things that are convenient across all coding buffers."
   (run-hooks 'coding-hook))
@@ -527,12 +556,35 @@ makes)."
           (lambda ()
             (progn
               (set (make-local-variable 'tab-width) 4)
-              (setq show-trailing-whitespace t))))
+              ;; (setq show-trailing-whitespace t)
+              )))
 
-;; untabify
+;; enable modes for lisp files
+(mapc (lambda (mode-hook)
+        (add-hook mode-hook 'enable-paredit-mode)
+        (add-hook mode-hook 'enable-highlight-parentheses-mode)
+        (add-hook mode-hook 'run-coding-hook))
+      '(emacs-lisp-mode-hook
+        clojure-mode-hook
+        ielm-mode-hook
+        lisp-mode-hook
+        scheme-mode-hook
+        slime-repl-mode-hook))
+
 (defun untabify-buffer ()
   (interactive)
   (untabify (point-min) (point-max)))
+
+(defun indent-buffer ()
+  (interactive)
+  (indent-region (point-min) (point-max)))
+
+(defun cleanup-buffer ()
+  "Perform a bunch of operations on the whitespace content of a buffer."
+  (interactive)
+  (indent-buffer)
+  (untabify-buffer)
+  (delete-trailing-whitespace))
 
 ;; edit as root
 (defun sudo-edit (&optional arg)
