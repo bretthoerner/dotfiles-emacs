@@ -17,15 +17,12 @@ BATCH=$(EMACS) -batch -q -no-site-file -eval \
 ELC = $(BATCH) -f batch-byte-compile
 
 # The following variables need to be defined by the maintainer
-MISCF = autopair.el \
-		browse-kill-ring.el \
+MISCF =	browse-kill-ring.el \
 		dired-single.el \
 		find-file-in-project.el \
 		flymake-cursor.el \
 		full-ack.el \
 		goto-last-change.el \
-		growl.el \
-		hl-line+.el \
 		http-twiddle.el \
 		idle-highlight.el \
 		js-comint.el \
@@ -38,9 +35,7 @@ MISCF = autopair.el \
 		redo.el \
 		smooth-scrolling.el
 
-OTHERF = color-theme/color-theme.el
-
-LISPFILES  = $(MISCF:%=misc/%) $(OTHERF)
+LISPFILES  = $(MISCF:%=misc/%)
 ELCFILES   = $(LISPFILES:.el=.elc)
 
 .SUFFIXES: .el .elc

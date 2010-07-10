@@ -247,10 +247,6 @@ makes)."
 (defun enable-highlight-parentheses-mode ()
   (highlight-parentheses-mode t))
 
-;; hl-line+
-;(require 'hl-line+)
-;(global-set-key [(meta alt ?l)] 'flash-line-highlight)
-
 ;; ido
 (setq ido-auto-merge-work-directories-length -1
       ido-case-fold t
@@ -287,8 +283,20 @@ makes)."
 (define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol)
 
 ;; magit
+(eval-after-load 'diff-mode
+  '(progn
+     (set-face-foreground 'diff-added "green4")
+     (set-face-foreground 'diff-removed "red3")))
+
+(eval-after-load 'magit
+  '(progn
+     (set-face-foreground 'magit-diff-add "green3")
+     (set-face-foreground 'magit-diff-del "red3")
+     (set-face-background 'magit-item-highlight "#0b163b")))
+
 (add-to-list 'load-path (concat dotfiles-dir "magit"))
 (require 'magit nil t)
+(global-set-key (kbd "C-x g") 'magit-status)
 
 ;; markdown-mode
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
@@ -323,6 +331,7 @@ makes)."
 
 ;; recentf
 (require 'recentf)
+(recentf-mode 1)
 
 ;; redo
 (require 'redo)
@@ -468,12 +477,17 @@ makes)."
 ;; show column number in status bar
 (column-number-mode 1)
 
+;; where does the file end?
+(set-default 'indicate-empty-lines t)
+
 ;; highlight characters after 80 columns
 (setq whitespace-style '(lines-tail)
       whitespace-line-column 80)
 (global-whitespace-mode 1)
 
 ;; use UTF-8
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
 ;; follow symlinks to version controlled files
@@ -500,6 +514,9 @@ makes)."
 ;; disable menu bar in terminal
 (menu-bar-mode -1)
 
+;; default to unified diffs
+(setq diff-switches "-u")
+
 ;; C-x C-m as replacement for M-x
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
@@ -507,9 +524,14 @@ makes)."
 ;; C-x C-u for undo (a common typo of mine)
 (global-set-key [(control ?x) (control ?u)] 'undo)
 
+;; hippie-expand
+(global-set-key (kbd "M-/") 'hippie-expand)
+(delete 'try-expand-line hippie-expand-try-functions-list)
+(delete 'try-expand-list hippie-expand-try-functions-list)
+
 ;; shortcuts to resize fonts
-(global-set-key [(super ?=)] 'text-scale-increase)
-(global-set-key [(super ?-)] 'text-scale-decrease)
+(define-key global-map (kbd "C-+") 'text-scale-increase)
+(define-key global-map (kbd "C--") 'text-scale-decrease)
 
 ;; coding hook
 (defun local-comment-auto-fill ()
@@ -844,6 +866,7 @@ buffer-local variable `show-trailing-whitespace'."
 
     ;; color-theme
     (require 'color-theme)
+    (setq color-theme-is-global t)
     (load-file (concat dotfiles-dir "themes/blackboard.el"))
     (color-theme-blackboard)
 
