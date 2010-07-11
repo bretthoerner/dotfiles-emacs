@@ -137,9 +137,9 @@
 (define-key emacs-lisp-mode-map (kbd "M-.") 'find-function-at-point)
 
 ;; erc
-(let ((erc-config-file (expand-file-name "~/.ercpass.el")))
- (when (file-regular-p erc-config-file)
-   (load erc-config-file)
+(let ((erc-password-file (expand-file-name "~/.ercpass.el")))
+ (when (file-regular-p erc-password-file)
+   (load erc-password-file)
 
    (require 'erc-match)
    (require 'erc-services)
@@ -476,9 +476,6 @@ makes)."
 
 ;; show column number in status bar
 (column-number-mode 1)
-
-;; where does the file end?
-(set-default 'indicate-empty-lines t)
 
 ;; highlight characters after 80 columns
 (setq whitespace-style '(lines-tail)
@@ -860,6 +857,10 @@ buffer-local variable `show-trailing-whitespace'."
       (other-window -1))
     (global-set-key [(XF86Forward)] 'other-window)
     (global-set-key [(XF86Back)] 'other-other-window)
+
+    (require 'buffer-move)
+    (global-set-key [(shift XF86Forward)] 'buf-move-right)
+    (global-set-key [(shift XF86Back)] 'buf-move-left)
 
     ;; make frame larger
     (setq initial-frame-alist '((width . 140) (height . 40)))
