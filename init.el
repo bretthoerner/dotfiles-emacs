@@ -542,7 +542,7 @@ makes)."
   (setq save-place t))
 
 (defun turn-on-whitespace ()
-  (whitespace-mode t))
+  (setq show-trailing-whitespace t))
 
 (defun pretty-lambdas ()
   (font-lock-add-keywords
@@ -562,6 +562,7 @@ makes)."
 (add-hook 'coding-hook 'local-comment-auto-fill)
 (add-hook 'coding-hook 'turn-on-hl-line-mode)
 (add-hook 'coding-hook 'turn-on-save-place-mode)
+(add-hook 'coding-hook 'turn-on-whitespace)
 (add-hook 'coding-hook 'pretty-lambdas)
 (add-hook 'coding-hook 'add-watchwords)
 ;(add-hook 'coding-hook 'idle-highlight)
@@ -851,12 +852,15 @@ buffer-local variable `show-trailing-whitespace'."
     (setq pc-select-selection-keys-only t)
     (pc-selection-mode 1)
 
-    ;; use thinkpad arrows to switch windows
+    ;; use thinkpad arrows to manipulate windows and buffers
     (defun other-other-window ()
       (interactive)
       (other-window -1))
     (global-set-key [(XF86Forward)] 'other-window)
     (global-set-key [(XF86Back)] 'other-other-window)
+
+    (global-set-key [(control XF86Forward)] 'next-buffer)
+    (global-set-key [(control XF86Back)] 'previous-buffer)
 
     (require 'buffer-move)
     (global-set-key [(shift XF86Forward)] 'buf-move-right)
