@@ -146,7 +146,7 @@
    (require 'erc-libnotify)
 
    (erc-services-mode t)
-
+   (add-hook 'erc-mode-hook 'erc-add-scroll-to-bottom)
    (setq erc-prompt-for-nickserv-password nil
          erc-nickserv-passwords `((freenode (("brett_h" . ,bjh-freenode-password))))
          erc-fill-column 100
@@ -240,9 +240,7 @@ makes)."
 ;; highlight-parentheses
 (require 'highlight-parentheses)
 (setq hl-paren-colors
-      '(;"#8f8f8f" ; this comes from Zenburn
-                   ; and I guess I'll try to make the far-outer parens look like this
-        "orange1" "yellow1" "greenyellow" "green1"
+      '("orange1" "yellow1" "greenyellow" "green1"
         "springgreen1" "cyan1" "slateblue1" "magenta1" "purple"))
 (defun enable-highlight-parentheses-mode ()
   (highlight-parentheses-mode t))
@@ -283,17 +281,6 @@ makes)."
 (define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol)
 
 ;; magit
-(eval-after-load 'diff-mode
-  '(progn
-     (set-face-foreground 'diff-added "green4")
-     (set-face-foreground 'diff-removed "red3")))
-
-(eval-after-load 'magit
-  '(progn
-     (set-face-foreground 'magit-diff-add "green3")
-     (set-face-foreground 'magit-diff-del "red3")
-     (set-face-background 'magit-item-highlight "#0b163b")))
-
 (add-to-list 'load-path (concat dotfiles-dir "magit"))
 (require 'magit nil t)
 (global-set-key (kbd "C-x g") 'magit-status)
@@ -556,6 +543,12 @@ makes)."
    nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
           1 font-lock-warning-face t))))
 
+(defun show-parens ()
+  (setq show-paren-delay 0)
+  (setq show-paren-style 'parenthesis)
+  (make-variable-buffer-local 'show-paren-mode)
+  (show-paren-mode 1))
+
 ;(require 'idle-highlight)
 
 ;; handy coding-hook to reuse
@@ -565,6 +558,7 @@ makes)."
 (add-hook 'coding-hook 'turn-on-whitespace)
 (add-hook 'coding-hook 'pretty-lambdas)
 (add-hook 'coding-hook 'add-watchwords)
+(add-hook 'coding-hook 'show-parens)
 ;(add-hook 'coding-hook 'idle-highlight)
 
 (defun run-coding-hook ()
@@ -775,9 +769,6 @@ is a comment, uncomment."
                 (lambda (beg end out command)
                   (interactive "r\nP\nsCommand: ")
                   (shell-command-on-region beg end command t t)))
-
-;; show paired parenthesis
-(show-paren-mode 1)
 
 ;; show marks visually
 (transient-mark-mode 1)
