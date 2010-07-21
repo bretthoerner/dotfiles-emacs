@@ -18,11 +18,14 @@ ELC = $(BATCH) -f batch-byte-compile
 
 # The following variables need to be defined by the maintainer
 MISCF =	browse-kill-ring.el \
+		buffer-move.el \
 		dired-single.el \
+		erc-libnotify.el \
 		find-file-in-project.el \
 		flymake-cursor.el \
 		full-ack.el \
 		goto-last-change.el \
+		highlight-parentheses.el \
 		http-twiddle.el \
 		idle-highlight.el \
 		js-comint.el \
@@ -32,6 +35,7 @@ MISCF =	browse-kill-ring.el \
 		paredit.el \
 		php-mode.el \
 		project.el \
+		rainbow-mode.el \
 		redo.el \
 		smooth-scrolling.el
 
