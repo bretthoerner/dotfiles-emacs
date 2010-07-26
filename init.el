@@ -330,16 +330,17 @@ makes)."
 
 ;; slime and swank
 (add-to-list 'load-path (concat dotfiles-dir "slime"))
+(add-to-list 'load-path (concat dotfiles-dir "slime/contrib"))
 (require 'slime nil t)
 (if (fboundp 'slime)
   (progn
-    (setq slime-lisp-implementations '(;(clozure ("/usr/local/ccl/dx86cl" "-K" "utf-8"))
-                                       (sbcl ("~/Development/clbuild/clbuild" "lisp"))
-                                       (clojure ("~/bin/clojure") :init swank-clojure-init)))
-    (setq slime-net-coding-system 'utf-8-unix)
-    (setf slime-use-autodoc-mode nil) ; swank-clojure doesn't support this
+    (setq slime-lisp-implementations '((sbcl ("~/Development/clbuild/clbuild" "lisp"))
+                                       (clojure ("~/bin/clojure") :init swank-clojure-init))
+          slime-net-coding-system 'utf-8-unix
+          slime-use-autodoc-mode nil) ; swank-clojure doesn't support this
     (global-set-key "\C-cs" 'slime-selector)
-    (slime-setup '(slime-fancy))))
+    (slime-setup '(slime-fancy slime-tramp slime-asdf))
+    (slime-require :swank-listener-hooks)))
 (add-to-list 'load-path (concat dotfiles-dir "swank-clojure"))
 (setq swank-clojure-binary "~/bin/clojure")
 (require 'swank-clojure nil t)
