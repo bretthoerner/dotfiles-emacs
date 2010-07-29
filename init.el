@@ -313,6 +313,10 @@ makes)."
 ;; paredit
 (require 'paredit)
 
+;; puppet-mode
+(require 'puppet-mode)
+(add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
+
 ;; rainbow-mode
 (require 'rainbow-mode)
 
@@ -566,6 +570,7 @@ makes)."
   "Enable things that are convenient across all coding buffers."
   (run-hooks 'coding-hook))
 
+(add-hook 'puppet-mode-hook 'run-coding-hook)
 (add-hook 'python-mode-hook 'run-coding-hook)
 (add-hook 'python-mode-hook
           (lambda ()

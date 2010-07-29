@@ -35,6 +35,7 @@ MISCF =	browse-kill-ring.el \
 		paredit.el \
 		php-mode.el \
 		project.el \
+		puppet-mode.el \
 		rainbow-mode.el \
 		redo.el \
 		smooth-scrolling.el
