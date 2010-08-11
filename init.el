@@ -316,6 +316,7 @@ makes)."
 ;; puppet-mode
 (require 'puppet-mode)
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
+(setq puppet-indent-level 4)
 
 ;; rainbow-mode
 (require 'rainbow-mode)
