@@ -735,7 +735,7 @@ A place is considered `tab-width' character columns."
 (global-set-key [(meta return)] 'textmate-next-line)
 
 ;; M-l for goto-line
-(global-set-key [(meta ?l)] 'goto-line)
+;(global-set-key [(meta ?l)] 'goto-line)
 
 ;; M-x M-d = dired, a common typo of mine
 (global-set-key [(control ?x) (control ?d)] 'ido-dired)
