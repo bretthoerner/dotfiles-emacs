@@ -333,6 +333,11 @@ makes)."
 (setq-default save-place t)
 (require 'saveplace)
 
+;; scpaste
+(require 'scpaste)
+(setq scpaste-http-destination "http://p.hoerner.us"
+      scpaste-scp-destination "bretthoerner.com:/a/bretthoerner.com/media/paste")
+
 ;; slime and swank
 (add-to-list 'load-path (concat dotfiles-dir "slime"))
 (add-to-list 'load-path (concat dotfiles-dir "slime/contrib"))
