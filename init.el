@@ -873,6 +873,7 @@ buffer-local variable `show-trailing-whitespace'."
     (setq initial-frame-alist '((width . 140) (height . 40)))
 
     ;; color-theme
+    ; C-u C-x = to get font info at point
     (require 'color-theme)
     (setq color-theme-is-global t)
     (load-file (concat dotfiles-dir "themes/blackboard.el"))
