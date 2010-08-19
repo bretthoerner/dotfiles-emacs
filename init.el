@@ -479,6 +479,10 @@ makes)."
 (setq whitespace-style '(lines-tail)
       whitespace-line-column 80)
 (global-whitespace-mode 1)
+;; global-whitespace-mode slows thngs down a lot, so disable (some)
+;; fontification. Tip due to
+;; http://www.emacswiki.org/emacs/WhiteSpace
+(defun whitespace-post-command-hook () nil)
 
 ;; use UTF-8
 (set-terminal-coding-system 'utf-8)
