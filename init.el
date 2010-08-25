@@ -528,10 +528,6 @@ makes)."
 (delete 'try-expand-line hippie-expand-try-functions-list)
 (delete 'try-expand-list hippie-expand-try-functions-list)
 
-;; shortcuts to resize fonts
-(define-key global-map (kbd "C-+") 'text-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
-
 ;; coding hook
 (defun local-comment-auto-fill ()
   (set (make-local-variable 'comment-auto-fill-only-comments) t)
@@ -883,12 +879,26 @@ buffer-local variable `show-trailing-whitespace'."
     (load-file (concat dotfiles-dir "themes/blackboard.el"))
     (color-theme-blackboard)
 
+    (defun bjh-set-frame-font-size (size)
+      (set-frame-font (concat bjh-font "-" (number-to-string size)))
+      (setq bjh-current-font-size size))
+    (defun bjh-text-scale-increase (inc)
+      (interactive "p")
+      (bjh-set-frame-font-size (+ bjh-current-font-size inc)))
+    (defun bjh-text-scale-decrease (dec)
+      (interactive "p")
+      (bjh-set-frame-font-size (- bjh-current-font-size dec)))
+
+    ;; shortcuts to resize fonts
+    (define-key global-map (kbd "C-+") 'bjh-text-scale-increase)
+    (define-key global-map (kbd "C--") 'bjh-text-scale-decrease)
+
     ;; mac-specific
     (if (or (string= "mac" window-system) (string= "ns" window-system))
      (progn
         ;; font
-        (if (>= emacs-major-version 23)
-            (set-frame-font "Monaco-12"))
+        (setq bjh-font "Monaco")
+        (bjh-set-frame-font-size 10)
 
         ;; normal mac command shortcuts
         (require 'mac-key-mode)
@@ -911,8 +921,8 @@ buffer-local variable `show-trailing-whitespace'."
      ;; else not mac
      (progn
         ;; font
-        (if (>= emacs-major-version 23)
-            (set-frame-font "Inconsolata-dz-10"))
+        (setq bjh-font "Inconsolata-dz")
+        (bjh-set-frame-font-size 10)
 
         ;; bind 'o' to run 'open' command on selected file in dired mode
         (define-key dired-mode-map "o" 'dired-open-gnome)
