@@ -302,6 +302,18 @@ makes)."
 (require 'magit nil t)
 (global-set-key (kbd "C-x g") 'magit-status)
 
+;; malabar-mode
+(add-to-list 'load-path (concat dotfiles-dir "malabar/lisp"))
+(require 'cedet)
+(setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
+                                  global-semanticdb-minor-mode
+                                  global-semantic-idle-summary-mode
+                                  global-semantic-mru-bookmark-mode))
+(semantic-mode 1)
+(require 'malabar-mode)
+(setq malabar-groovy-lib-dir (concat dotfiles-dir "malabar/lib"))
+(add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
+
 ;; markdown-mode
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.mkd$" . markdown-mode))

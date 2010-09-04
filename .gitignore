@@ -1,2 +1,4 @@
 *.elc
 elpa/
+malabar/
+srecode-map.el
