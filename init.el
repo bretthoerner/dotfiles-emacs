@@ -147,6 +147,7 @@
 
    (erc-services-mode t)
    (add-hook 'erc-mode-hook 'erc-add-scroll-to-bottom)
+   (add-to-list 'erc-server-alist '("Brett Hoerner's Bitlebee" bitlbee "localhost" 6668))
    (setq erc-prompt-for-nickserv-password nil
          erc-nickserv-passwords `((freenode (("brett_h" . ,bjh-freenode-password))))
          erc-fill-column 100
@@ -162,11 +163,27 @@
      (setq erc-server-connect-function 'socks-open-network-stream))
    ;; (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
+   (defun bitlbee-identify ()
+     "If we're on the bitlbee server, send the identify command to the
+ &bitlbee channel."
+     (when (and (string= "localhost" erc-session-server)
+                (string= "&bitlbee" (buffer-name)))
+       (erc-message "PRIVMSG" (format "%s identify %s"
+                                      (erc-default-target)
+                                      bjh-bitlbee-password))))
+   (add-hook 'erc-join-hook 'bitlbee-identify)
+
    (defun erc-connect-freenode ()
      (interactive)
      (erc :server "irc.freenode.net"
           :port 6667
-          :nick "brett_h"))))
+          :nick "brett_h"))
+   (defun erc-connect-bitlbee ()
+     (interactive)
+     (erc :server "localhost"
+          :port 6668
+          :nick "brett_h"
+          :password bjh-bitlbee-server-password))))
 
 ;; ffap
 (when (fboundp 'find-file-at-point)
@@ -439,6 +456,9 @@ makes)."
 ;; no startup message or splash screen
 (setq inhibit-splash-screen t
       inhibit-startup-message t)
+
+;; don't insert instructions into the *scratch* buffer
+(setq initial-scratch-message nil)
 
 ;; don't copy selected text to kill-ring automatically
 (setq mouse-drag-copy-region nil)
