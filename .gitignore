@@ -1,4 +1,5 @@
 *.elc
 elpa/
 malabar/
+semanticdb
 srecode-map.el
