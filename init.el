@@ -309,8 +309,8 @@ makes)."
                                   global-semanticdb-minor-mode
                                   global-semantic-idle-summary-mode
                                   global-semantic-mru-bookmark-mode))
-(semantic-mode 1)
 (require 'malabar-mode)
+(add-hook 'malabar-mode-hook (lambda ()  (semantic-mode 1)))
 (setq malabar-groovy-lib-dir (concat dotfiles-dir "malabar/lib"))
 (add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
 
