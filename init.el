@@ -141,6 +141,11 @@
  (when (file-regular-p erc-password-file)
    (load erc-password-file)
 
+   ;; random bitlbee notes
+   ; account add oscar <user> <pass> login.oscar.aol.com
+   ; account add jabber <email> <pass> talk.google.com:5223:ssl
+   ; chat add 0 <aim_channel>
+
    (require 'erc-match)
    (require 'erc-services)
    (require 'erc-libnotify)
@@ -346,6 +351,11 @@ makes)."
 (require 'puppet-mode)
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
 (setq puppet-indent-level 4)
+
+;; quack
+(require 'quack)
+(setq quack-programs '("racket")
+      quack-default-program "racket")
 
 ;; rainbow-mode
 (require 'rainbow-mode)
@@ -973,4 +983,4 @@ buffer-local variable `show-trailing-whitespace'."
         (define-key isearch-mode-map [(control ?y)] 'isearch-yank-kill))))
 
   ;; else (not in a window system)
-  )
+)

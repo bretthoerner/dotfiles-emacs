@@ -15,7 +15,7 @@
 ;; All patches welcome
 
 (require 'color-theme)
-
+(setq x 1)
 ;;;###autoload
 (defun color-theme-blackboard ()
   "Color theme by JD Huntington, based off the TextMate Blackboard theme, created 2008-11-27"
@@ -59,6 +59,9 @@
      (magit-diff-del ((t (:foreground "red3"))))
      (magit-item-highlight ((t (:background "#0b163b"))))
      (mode-line ((t (:background "grey75" :foreground "black"))))
+     (quack-pltish-defn-face ((t (:foreground "#FF6400"))))
+     (quack-pltish-keyword-face ((t (:foreground "#FBDE2D"))))
+     (quack-pltish-paren-face ((((class color) (background dark)) nil)))
      (region ((t (:background "#162248"))))
      (text-cursor ((t (:background "yellow" :foreground "black"))))
      (toolbar ((t (nil))))
