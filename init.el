@@ -377,6 +377,9 @@ makes)."
 (setq scpaste-http-destination "http://p.hoerner.us"
       scpaste-scp-destination "bretthoerner.com:/a/bretthoerner.com/media/paste")
 
+;; scratch
+(autoload 'scratch "scratch" nil t)
+
 ;; slime and swank
 (add-to-list 'load-path (concat dotfiles-dir "slime"))
 (add-to-list 'load-path (concat dotfiles-dir "slime/contrib"))
