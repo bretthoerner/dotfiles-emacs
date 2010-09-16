@@ -323,6 +323,9 @@ makes)."
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.mkd$" . markdown-mode))
 
+;; multi-term
+(require 'multi-term)
+
 ;; nxml-mode
 (when (> emacs-major-version 22)
   (setq auto-mode-alist
