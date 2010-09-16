@@ -28,16 +28,20 @@ MISCF =	browse-kill-ring.el \
 		highlight-parentheses.el \
 		http-twiddle.el \
 		idle-highlight.el \
-		js-comint.el \
 		js2-mode.el \
+		js-comint.el \
 		mac-key-mode.el \
 		markdown-mode.el \
+		multi-term.el \
 		paredit.el \
 		php-mode.el \
 		project.el \
 		puppet-mode.el \
+		quack.el \
 		rainbow-mode.el \
 		redo.el \
+		scpaste.el \
+		scratch.el \
 		smooth-scrolling.el
 
 LISPFILES  = $(MISCF:%=misc/%)
