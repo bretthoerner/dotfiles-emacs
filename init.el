@@ -460,8 +460,7 @@ makes)."
 (global-auto-revert-mode t)
 
 ;; kill out to clipboard
-(setq x-select-enable-clipboard t
-      interprogram-paste-function 'x-cut-buffer-or-selection-value)
+(setq x-select-enable-clipboard t)
 
 ;; tell apropos to do more
 (setq apropos-do-all t)
@@ -903,6 +902,9 @@ buffer-local variable `show-trailing-whitespace'."
     ;; shift+cursor to select text
     (setq pc-select-selection-keys-only t)
     (pc-selection-mode 1)
+
+    ;; don't support suspend in GUI mode
+    (global-unset-key (kbd "C-z"))
 
     ;; use thinkpad arrows to manipulate windows and buffers
     (defun other-other-window ()
