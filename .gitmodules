@@ -10,9 +10,6 @@
 [submodule "submodules/magit"]
 	path = submodules/magit
 	url = git@github.com:bretthoerner/magit.git
-[submodule "submodules/coffee-mode"]
-	path = submodules/coffee-mode
-	url = git@github.com:bretthoerner/coffee-mode.git
 [submodule "submodules/malabar-mode"]
 	path = submodules/malabar-mode
 	url = git@github.com:bretthoerner/malabar-mode.git
