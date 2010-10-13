@@ -30,16 +30,6 @@
     (mapc #'load (directory-files user-specific-dir nil ".*el$")))
 
 
-;; ----
-;; elpa
-;; ----
-
-(when
-  (load
-    (concat dotfiles-dir "elpa/package.el"))
-  (package-initialize))
-
-
 ;; -------------
 ;; plugin config
 ;; -------------
@@ -321,7 +311,7 @@ makes)."
 
 ;; multi-term
 ;; To get special control codes use: cat, xev, od -a
-;(require 'multi-term)
+(require 'multi-term)
 
 ;; nxml-mode
 (when (> emacs-major-version 22)
@@ -386,7 +376,7 @@ makes)."
 (require 'slime nil t)
 (if (fboundp 'slime)
   (progn
-    (setq slime-lisp-implementations '((sbcl ("~/Development/clbuild/clbuild" "lisp"))
+    (setq slime-lisp-implementations '((sbcl ("/usr/bin/sbcl"))
                                        (clojure ("~/bin/clojure") :init swank-clojure-init))
           slime-net-coding-system 'utf-8-unix
           slime-use-autodoc-mode nil) ; swank-clojure doesn't support this
