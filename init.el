@@ -44,6 +44,12 @@
 ;; ansi-color
 (require 'ansi-color)
 
+;; auto-complete
+(add-to-list 'load-path (concat dotfiles-dir "auto-complete"))
+(setq ac-dictionary-directories (list (concat dotfiles-dir "auto-complete/dict")))
+(require 'auto-complete-config)
+(ac-config-default)
+
 ;; bnf-mode
 (define-generic-mode 'bnf-mode
   () ;; comment char: inapplicable because # must be at start of line
@@ -319,6 +325,15 @@ makes)."
         (cons '("\\.\\(xml\\|xsl\\|xhtml\\)\\'" . nxml-mode)
               auto-mode-alist)))
 
+;; occur
+(defun isearch-occur ()
+  "Invoke `occur' from within isearch."
+  (interactive)
+  (let ((case-fold-search isearch-case-fold-search))
+    (occur (if isearch-regexp isearch-string (regexp-quote isearch-string)))))
+
+(define-key isearch-mode-map (kbd "C-o") 'isearch-occur)
+
 ;; org-mode
 (when (> emacs-major-version 22)
   (progn
@@ -371,8 +386,14 @@ makes)."
 (autoload 'scratch "scratch" nil t)
 
 ;; slime and swank
+(require 'ac-slime)
+(add-to-list 'ac-sources 'ac-source-slime-simple)
+(add-hook 'slime-mode-hook 'set-up-slime-ac)
+(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+
 (add-to-list 'load-path (concat dotfiles-dir "slime"))
 (add-to-list 'load-path (concat dotfiles-dir "slime/contrib"))
+
 (require 'slime nil t)
 (if (fboundp 'slime)
   (progn
@@ -383,6 +404,7 @@ makes)."
     (global-set-key "\C-cs" 'slime-selector)
     (slime-setup '(slime-fancy slime-tramp slime-asdf))
     (slime-require :swank-listener-hooks)))
+
 (add-to-list 'load-path (concat dotfiles-dir "swank-clojure"))
 (setq swank-clojure-binary "~/bin/clojure")
 (require 'swank-clojure nil t)
@@ -510,8 +532,7 @@ makes)."
 (column-number-mode 1)
 
 ;; highlight characters after 80 columns
-(setq whitespace-style '(lines-tail)
-      whitespace-line-column 80)
+(setq whitespace-style '(face lines-tail))
 (global-whitespace-mode 1)
 ;; global-whitespace-mode slows thngs down a lot, so disable (some)
 ;; fontification. Tip due to
