@@ -41,9 +41,6 @@
 ;; ack
 (require 'full-ack)
 
-;; ansi-color
-(require 'ansi-color)
-
 ;; auto-complete
 (add-to-list 'load-path (concat dotfiles-dir "auto-complete"))
 (setq ac-dictionary-directories (list (concat dotfiles-dir "auto-complete/dict")))
@@ -71,10 +68,9 @@
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
 ;; browse-url
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "google-chrome")
+(setq browse-url-browser-function 'browse-url-firefox)
 
-;; clojure
+;; clojure-mode
 (add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
 (require 'clojure-mode nil t)
 
@@ -273,12 +269,10 @@ makes)."
 (require 'imenu)
 
 ;; js2-mode
-(when (> emacs-major-version 22)
-  (progn
-    (require 'js2-mode)
-    (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
-    (setq js2-highlight-level 3
-          js2-bounce-indent-p t)))
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
+(setq js2-highlight-level 3
+      js2-bounce-indent-p t)
 
 ;; js-comint
 (require 'js-comint)
@@ -291,9 +285,6 @@ makes)."
                             (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
                             (local-set-key "\C-cl" 'js-load-file-and-go)))
 
-;; lisp
-(define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol)
-
 ;; magit
 (add-to-list 'load-path (concat dotfiles-dir "magit"))
 (require 'magit nil t)
@@ -303,9 +294,9 @@ makes)."
 (add-to-list 'load-path (concat dotfiles-dir "malabar/lisp"))
 (require 'cedet)
 (setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
-                                 global-semanticdb-minor-mode
-                                 global-semantic-idle-summary-mode
-                                 global-semantic-mru-bookmark-mode))
+                                  global-semanticdb-minor-mode
+                                  global-semantic-idle-summary-mode
+                                  global-semantic-mru-bookmark-mode))
 (require 'malabar-mode)
 (add-hook 'malabar-mode-hook (lambda ()  (semantic-mode 1)))
 (setq malabar-groovy-lib-dir (concat dotfiles-dir "malabar/lib"))
@@ -320,10 +311,9 @@ makes)."
 (require 'multi-term)
 
 ;; nxml-mode
-(when (> emacs-major-version 22)
-  (setq auto-mode-alist
-        (cons '("\\.\\(xml\\|xsl\\|xhtml\\)\\'" . nxml-mode)
-              auto-mode-alist)))
+(setq auto-mode-alist
+      (cons '("\\.\\(xml\\|xsl\\|xhtml\\)\\'" . nxml-mode)
+            auto-mode-alist))
 
 ;; occur
 (defun isearch-occur ()
@@ -335,10 +325,8 @@ makes)."
 (define-key isearch-mode-map (kbd "C-o") 'isearch-occur)
 
 ;; org-mode
-(when (> emacs-major-version 22)
-  (progn
-    (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-    (require 'org-install)))
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+(require 'org-install)
 
 (add-hook 'org-mode-hook
           (lambda ()
@@ -390,6 +378,9 @@ makes)."
 (add-to-list 'ac-sources 'ac-source-slime-simple)
 (add-hook 'slime-mode-hook 'set-up-slime-ac)
 (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+
+;; old, ghetto auto complete
+;(define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol)
 
 (add-to-list 'load-path (concat dotfiles-dir "slime"))
 (add-to-list 'load-path (concat dotfiles-dir "slime/contrib"))
@@ -455,8 +446,8 @@ makes)."
 ;; (global-unset-key (kbd "<down>"))
 
 ;; show line numbers
-;;(require 'linum)
-;;(global-linum-mode 1)
+;; (require 'linum)
+;; (global-linum-mode 1)
 
 ;; example of .dir-locals.el
 ;; ((js2-mode . ((indent-tabs-mode . t))))
@@ -621,7 +612,7 @@ makes)."
 (add-hook 'coding-hook 'local-comment-auto-fill)
 (add-hook 'coding-hook 'turn-on-hl-line-mode)
 (add-hook 'coding-hook 'turn-on-save-place-mode)
-(add-hook 'coding-hook 'turn-on-whitespace)
+;(add-hook 'coding-hook 'turn-on-whitespace)
 (add-hook 'coding-hook 'pretty-lambdas)
 (add-hook 'coding-hook 'add-watchwords)
 (add-hook 'coding-hook 'show-parens)
@@ -637,8 +628,7 @@ makes)."
           (lambda ()
             (progn
               (set (make-local-variable 'tab-width) 4)
-              ;; (setq show-trailing-whitespace t)
-              )))
+              (turn-on-whitespace))))
 
 ;; enable modes for lisp files
 (mapc (lambda (mode-hook)
