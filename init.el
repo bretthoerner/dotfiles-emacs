@@ -368,7 +368,7 @@ makes)."
 ;; scpaste
 (require 'scpaste)
 (setq scpaste-http-destination "http://p.hoerner.us"
-      scpaste-scp-destination "bretthoerner.com:/a/bretthoerner.com/media/paste")
+      scpaste-scp-destination "bretthoerner.com:~/bretthoerner.com/media/paste")
 
 ;; scratch
 (autoload 'scratch "scratch" nil t)
