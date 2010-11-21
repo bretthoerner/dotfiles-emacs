@@ -1,6 +1,6 @@
 ac-comphist.dat
 *.elc
 elpa/
-malabar/
+malabar-mode/
 semanticdb
 srecode-map.el
