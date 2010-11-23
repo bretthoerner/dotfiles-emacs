@@ -309,7 +309,12 @@ makes)."
 (add-to-list 'auto-mode-alist '("\\.mkd$" . markdown-mode))
 
 ;; multi-term
-;; To get special control codes use: cat, xev, od -a
+; To get special control codes use: cat, xev, od -a
+; Use `list-colors-display' to view all available colors
+(setq term-default-bg-color "#0C1021"
+      term-default-fg-color "white"
+      ansi-term-color-vector [unspecified "black" "red2" "green2" "yellow2"
+                                          "DodgerBlue2" "magenta2" "cyan2" "white"])
 (require 'multi-term)
 
 ;; nxml-mode
