@@ -176,7 +176,14 @@
      (erc :server "localhost"
           :port 6668
           :nick "brett_h"
-          :password bjh-bitlbee-server-password))))
+          :password bjh-bitlbee-server-password))
+
+   (setq rcirc-default-nick "brett_h"
+         rcirc-default-user-name "brett"
+         rcirc-default-full-name "Brett"
+         rcirc-authinfo `(("freenode" nickserv "brett_h" ,bjh-freenode-password)
+                          ("localhost" bitlbee "brett_h" ,bjh-bitlbee-password))
+         rcirc-server-alist '(("irc.freenode.net" :channels ("#emacs"))))))
 
 ;; ffap
 (when (fboundp 'find-file-at-point)
@@ -274,6 +281,57 @@ makes)."
 (setq js2-highlight-level 3
       js2-bounce-indent-p t)
 
+;; ;; Custom indentation function since JS2 indenting is terrible.
+;; ;; Uses js-mode's (espresso-mode) indentation semantics.
+;; ;;
+;; ;; Based on: http://mihai.bazon.net/projects/editing-javascript-with-emacs-js2-mode
+;; ;; (Thanks!)
+;; (defun my-js2-indent-function ()
+;;   (interactive)
+;;   (save-restriction
+;;     (widen)
+;;     (let* ((inhibit-point-motion-hooks t)
+;;            (parse-status (save-excursion (syntax-ppss (point-at-bol))))
+;;            (offset (- (current-column) (current-indentation)))
+;;            (indentation (js--proper-indentation parse-status))
+;;            node)
+
+;;       (save-excursion
+
+;;         ;; I like to indent case and labels to half of the tab width
+;;         (back-to-indentation)
+;;         (if (looking-at "case\\s-")
+;;             (setq indentation (+ indentation (/ js-indent-level 2))))
+
+;;         ;; consecutive declarations in a var statement are nice if
+;;         ;; properly aligned, i.e:
+;;         ;;
+;;         ;; var foo = "bar",
+;;         ;; bar = "foo";
+;;         (setq node (js2-node-at-point))
+;;         (when (and node
+;;                    (= js2-NAME (js2-node-type node))
+;;                    (= js2-VAR (js2-node-type (js2-node-parent node))))
+;;           (setq indentation (+ 4 indentation))))
+
+;;       (indent-line-to indentation)
+;;       (when (> offset 0) (forward-char offset)))))
+
+;; (defun my-js2-mode-hook ()
+;;   (if (not (boundp 'js--proper-indentation))
+;;       (progn (js-mode)
+;;              (remove-hook 'js2-mode-hook 'my-js2-mode-hook)
+;;              (js2-mode)
+;;              (add-hook 'js2-mode-hook 'my-js2-mode-hook)))
+;;   (set (make-local-variable 'indent-line-function) 'my-js2-indent-function)
+;;   (define-key js2-mode-map [(return)] 'newline-and-indent)
+;;   (define-key js2-mode-map [(backspace)] 'c-electric-backspace)
+;;   (define-key js2-mode-map [(control d)] 'c-electric-delete-forward)
+;;   (message "JS2 mode hook ran."))
+
+;; ;; Add the hook so this is all loaded when JS2-mode is loaded
+;; (add-hook 'js2-mode-hook 'my-js2-mode-hook)
+
 ;; js-comint
 (require 'js-comint)
 (setq inferior-js-program-command "/usr/bin/rhino")
@@ -289,6 +347,7 @@ makes)."
 (add-to-list 'load-path (concat dotfiles-dir "magit"))
 (require 'magit nil t)
 (global-set-key (kbd "C-x g") 'magit-status)
+(setq magit-diff-options "-w")
 
 ;; malabar-mode
 (let ((malabar-dir (concat dotfiles-dir "malabar-mode/")))
@@ -391,6 +450,14 @@ makes)."
 
 (add-to-list 'load-path (concat dotfiles-dir "slime"))
 (add-to-list 'load-path (concat dotfiles-dir "slime/contrib"))
+
+(eval-after-load 'slime
+  '(define-key slime-mode-map (kbd "C-c p")
+     'slime-pprint-eval-last-expression))
+
+(eval-after-load 'slime-repl
+  '(define-key slime-repl-mode-map (kbd "C-c p")
+     'slime-pprint-eval-last-expression))
 
 (require 'slime nil t)
 (if (fboundp 'slime)
@@ -567,7 +634,13 @@ makes)."
 (menu-bar-mode -1)
 
 ;; default to unified diffs
-(setq diff-switches "-u")
+(setq diff-switches "-u -w")
+
+;; much better name
+(defalias 'auto-revert-tail-mode 'tail-mode)
+
+;; bind unbound join-line
+(global-set-key (kbd "C-c q") 'join-line)
 
 ;; C-x C-m as replacement for M-x
 (global-set-key "\C-x\C-m" 'execute-extended-command)
@@ -576,10 +649,17 @@ makes)."
 ;; C-x C-u for undo (a common typo of mine)
 (global-set-key [(control ?x) (control ?u)] 'undo)
 
+;; lolworthy function from esk
+(defun bjh-disapproval ()
+  (interactive)
+  (insert "ಠ_ಠ"))
+
 ;; hippie-expand
 (global-set-key (kbd "M-/") 'hippie-expand)
 (delete 'try-expand-line hippie-expand-try-functions-list)
 (delete 'try-expand-list hippie-expand-try-functions-list)
+(delete 'try-complete-file-name-partially hippie-expand-try-functions-list)
+(delete 'try-complete-file-name hippie-expand-try-functions-list)
 
 ;; coding hook
 (defun local-comment-auto-fill ()
@@ -587,7 +667,7 @@ makes)."
   (auto-fill-mode t))
 
 (defun turn-on-hl-line-mode ()
-  (if window-system (hl-line-mode t)))
+  (when (> (display-color-cells) 8) (hl-line-mode t)))
 
 (defun turn-on-save-place-mode ()
   (setq save-place t))
