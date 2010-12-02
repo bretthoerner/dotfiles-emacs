@@ -1,6 +1,5 @@
 (set-language-environment "utf-8")
 
-
 ;; -------------
 ;; debug config
 ;; -------------
@@ -75,6 +74,7 @@
 (require 'clojure-mode nil t)
 
 ;; cua-mode
+(setq cua-rectangle-mark-key (kbd "<C-S-M-return>"))
 (cua-mode t)
 ;; only use cua-mode for rectangle-edit
 (setq cua-enable-cua-keys nil)
@@ -391,6 +391,7 @@ makes)."
 (define-key isearch-mode-map (kbd "C-o") 'isearch-occur)
 
 ;; org-mode
+(setq org-replace-disputed-keys t)
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (require 'org-install)
 
