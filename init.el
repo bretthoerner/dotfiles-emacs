@@ -1011,7 +1011,8 @@ buffer-local variable `show-trailing-whitespace'."
     ;; color-theme
     ; C-u C-x = to get font info at point
     (require 'color-theme)
-    (setq color-theme-is-global t)
+    (setq color-theme-is-global t
+          frame-background-mode 'dark)
     (load-file (concat dotfiles-dir "themes/blackboard.el"))
     (color-theme-blackboard)
 
