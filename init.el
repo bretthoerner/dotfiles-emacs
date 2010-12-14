@@ -178,6 +178,11 @@
           :nick "brett_h"
           :password bjh-bitlbee-server-password))
 
+   (require 'rcirc)
+   (require 'rcirc-notify)
+
+   (rcirc-track-minor-mode 1)
+
    (setq rcirc-default-nick "brett_h"
          rcirc-default-user-name "brett"
          rcirc-default-full-name "Brett"
@@ -193,7 +198,7 @@
 (require 'project)
 (require 'find-file-in-project)
 (setq ffip-patterns
-      '("*.clj" "*.css" "*.el" "*.html" "*.js" "*.py" "*.rb" "*.sass" "*.txt"))
+      '("*.clj" "*.css" "*.el" "*.html" "*.js" "*.py" "*.rb" "*.txt"))
 
 ;; flymake
 (setq-default flymake-gui-warnings-enabled nil)
