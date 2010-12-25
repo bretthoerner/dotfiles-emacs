@@ -272,7 +272,32 @@ makes)."
       ido-case-fold t
       ido-create-new-buffer 'always
       ido-enable-flex-matching t
-      ido-save-directory-list-file nil)
+      ido-save-directory-list-file nil
+      ido-decorations (quote ("\n> " ; show choices vertically
+                              ""
+                              "\n "
+                              "\n ..."
+                              "[" "]"
+                              " [No match]"
+                              " [Matched]"
+                              " [Not readable]"
+                              " [Too big]"
+                              " [Confirm]")))
+
+;; truncate long lines in choices
+(defun my-ido-minibuffer-setup-hook ()
+  ;; allow line wrapping in the minibuffer
+  (set (make-local-variable 'truncate-lines) nil))
+(add-hook 'ido-minibuffer-setup-hook 'my-ido-minibuffer-setup-hook)
+
+;; add additional keybindings
+(defun my-ido-keys ()
+  (define-key ido-completion-map [up] 'ido-prev-match)
+  (define-key ido-completion-map [down] 'ido-next-match)
+  (define-key ido-completion-map [(control n)] 'ido-next-match)
+  (define-key ido-completion-map [(control p)] 'ido-prev-match))
+(add-hook 'ido-setup-hook 'my-ido-keys)
+
 (require 'ido)
 (ido-mode t)
 (ido-everywhere t)
@@ -282,7 +307,7 @@ makes)."
 
 ;; js2-mode
 (require 'js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (setq js2-highlight-level 3
       js2-bounce-indent-p t)
 
@@ -383,8 +408,14 @@ makes)."
 
 ;; nxml-mode
 (setq auto-mode-alist
-      (cons '("\\.\\(xml\\|xsl\\|xhtml\\)\\'" . nxml-mode)
+      (cons '("\\.\\(html\\|xml\\|xsl\\|xhtml\\)\\'" . nxml-mode)
             auto-mode-alist))
+
+; set indent to 4
+(setq nxml-child-indent 4)
+
+; remap finish element
+(global-set-key [(control ?.)] 'nxml-finish-element)
 
 ;; occur
 (defun isearch-occur ()
