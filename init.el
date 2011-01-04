@@ -619,7 +619,10 @@ makes)."
 (setq-default c-basic-offset 4)
 
 ;; set tab stops based on default-tab-width
-(setq-default tab-stop-list (loop for i from default-tab-width to 120 by default-tab-width collect i))
+(setq-default tab-stop-list (loop for i
+                                  from default-tab-width to 120
+                                  by default-tab-width
+                                  collect i))
 
 ;; C-k deletes the whole line
 (setq kill-whole-line t)
@@ -637,7 +640,8 @@ makes)."
 (column-number-mode 1)
 
 ;; highlight characters after 80 columns
-(setq whitespace-style '(face lines-tail))
+(setq whitespace-style '(face trailing indentation lines-tail
+                              space-before-tab space-after-tab))
 (global-whitespace-mode 1)
 ;; global-whitespace-mode slows thngs down a lot, so disable (some)
 ;; fontification. Tip due to
@@ -712,9 +716,6 @@ makes)."
 (defun turn-on-save-place-mode ()
   (setq save-place t))
 
-(defun turn-on-whitespace ()
-  (setq show-trailing-whitespace t))
-
 (defun pretty-lambdas ()
   (font-lock-add-keywords
    nil `(("(?\\(lambda\\>\\)"
@@ -737,7 +738,7 @@ makes)."
 
 ;; handy coding-hook to reuse
 (add-hook 'coding-hook 'local-comment-auto-fill)
-(add-hook 'coding-hook 'turn-on-hl-line-mode)
+;(add-hook 'coding-hook 'turn-on-hl-line-mode)
 (add-hook 'coding-hook 'turn-on-save-place-mode)
 ;(add-hook 'coding-hook 'turn-on-whitespace)
 (add-hook 'coding-hook 'pretty-lambdas)
@@ -754,8 +755,7 @@ makes)."
 (add-hook 'python-mode-hook
           (lambda ()
             (progn
-              (set (make-local-variable 'tab-width) 4)
-              (turn-on-whitespace))))
+              (set (make-local-variable 'tab-width) 4))))
 
 ;; enable modes for lisp files
 (mapc (lambda (mode-hook)
@@ -817,18 +817,18 @@ can get out of the minibuffer or other recursive edit,
 cancel the use of the current buffer (for special-purpose buffers)."
   (interactive)
   (cond ((eq last-command 'mode-exited) nil)
-	((> (minibuffer-depth) 0)
-	 (abort-recursive-edit))
-	(current-prefix-arg
-	 nil)
-	((region-active-p)
-	 (deactivate-mark))
-	((> (recursion-depth) 0)
-	 (exit-recursive-edit))
-	(buffer-quit-function
-	 (funcall buffer-quit-function))
-	((string-match "^ \\*" (buffer-name (current-buffer)))
-	 (bury-buffer))))
+        ((> (minibuffer-depth) 0)
+         (abort-recursive-edit))
+        (current-prefix-arg
+         nil)
+        ((region-active-p)
+         (deactivate-mark))
+        ((> (recursion-depth) 0)
+         (exit-recursive-edit))
+        (buffer-quit-function
+         (funcall buffer-quit-function))
+        ((string-match "^ \\*" (buffer-name (current-buffer)))
+         (bury-buffer))))
 
 (global-set-key (kbd "ESC ESC ESC") 'keyboard-escape-quit-no-delete-other-windows)
 
