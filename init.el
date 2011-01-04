@@ -680,9 +680,6 @@ makes)."
 ;; default to unified diffs
 (setq diff-switches "-u -w")
 
-;; much better name
-(defalias 'auto-revert-tail-mode 'tail-mode)
-
 ;; bind unbound join-line
 (global-set-key (kbd "C-c q") 'join-line)
 
@@ -692,6 +689,12 @@ makes)."
 
 ;; C-x C-u for undo (a common typo of mine)
 (global-set-key [(control ?x) (control ?u)] 'undo)
+
+;; keep things in the same window
+(setq pop-up-windows nil)
+(add-to-list 'same-window-buffer-names "*Help*")
+(add-to-list 'same-window-buffer-names "*Apropos*")
+(add-to-list 'same-window-buffer-names "*Summary*")
 
 ;; lolworthy function from esk
 (defun bjh-disapproval ()
@@ -715,6 +718,9 @@ makes)."
 
 (defun turn-on-save-place-mode ()
   (setq save-place t))
+
+(defun turn-on-electric-pair-mode ()
+  (electric-pair-mode))
 
 (defun pretty-lambdas ()
   (font-lock-add-keywords
@@ -743,6 +749,7 @@ makes)."
 ;(add-hook 'coding-hook 'turn-on-whitespace)
 (add-hook 'coding-hook 'pretty-lambdas)
 (add-hook 'coding-hook 'add-watchwords)
+(add-hook 'coding-hook 'turn-on-electric-pair-mode)
 (add-hook 'coding-hook 'show-parens)
 ;(add-hook 'coding-hook 'idle-highlight)
 
