@@ -29,10 +29,17 @@
     (mapc #'load (directory-files user-specific-dir nil ".*el$")))
 
 
+;; -----------------
+;; package.el config
+;; -----------------
+
+(require 'package)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages"))
+
+
 ;; -------------
 ;; plugin config
 ;; -------------
-
 
 ;; add dotfiles/misc to path
 (add-to-list 'load-path (concat dotfiles-dir "misc"))
@@ -273,30 +280,31 @@ makes)."
       ido-create-new-buffer 'always
       ido-enable-flex-matching t
       ido-save-directory-list-file nil
-      ido-decorations (quote ("\n> " ; show choices vertically
-                              ""
-                              "\n "
-                              "\n ..."
-                              "[" "]"
-                              " [No match]"
-                              " [Matched]"
-                              " [Not readable]"
-                              " [Too big]"
-                              " [Confirm]")))
+      ;; ido-decorations (quote ("\n> " ; show choices vertically
+      ;;                         ""
+      ;;                         "\n "
+      ;;                         "\n ..."
+      ;;                         "[" "]"
+      ;;                         " [No match]"
+      ;;                         " [Matched]"
+      ;;                         " [Not readable]"
+      ;;                         " [Too big]"
+      ;;                         " [Confirm]"))
+      )
 
 ;; truncate long lines in choices
-(defun my-ido-minibuffer-setup-hook ()
-  ;; allow line wrapping in the minibuffer
-  (set (make-local-variable 'truncate-lines) nil))
-(add-hook 'ido-minibuffer-setup-hook 'my-ido-minibuffer-setup-hook)
+;; (defun my-ido-minibuffer-setup-hook ()
+;;   ;; allow line wrapping in the minibuffer
+;;   (set (make-local-variable 'truncate-lines) nil))
+;; (add-hook 'ido-minibuffer-setup-hook 'my-ido-minibuffer-setup-hook)
 
-;; add additional keybindings
-(defun my-ido-keys ()
-  (define-key ido-completion-map [up] 'ido-prev-match)
-  (define-key ido-completion-map [down] 'ido-next-match)
-  (define-key ido-completion-map [(control n)] 'ido-next-match)
-  (define-key ido-completion-map [(control p)] 'ido-prev-match))
-(add-hook 'ido-setup-hook 'my-ido-keys)
+;; ;; add additional keybindings
+;; (defun my-ido-keys ()
+;;   (define-key ido-completion-map [up] 'ido-prev-match)
+;;   (define-key ido-completion-map [down] 'ido-next-match)
+;;   (define-key ido-completion-map [(control n)] 'ido-next-match)
+;;   (define-key ido-completion-map [(control p)] 'ido-prev-match))
+;; (add-hook 'ido-setup-hook 'my-ido-keys)
 
 (require 'ido)
 (ido-mode t)
@@ -640,13 +648,13 @@ makes)."
 (column-number-mode 1)
 
 ;; highlight characters after 80 columns
-(setq whitespace-style '(face trailing indentation lines-tail
-                              space-before-tab space-after-tab))
+(setq whitespace-style '(face trailing lines-tail space-before-tab
+                              space-after-tab))
 (global-whitespace-mode 1)
 ;; global-whitespace-mode slows thngs down a lot, so disable (some)
 ;; fontification. Tip due to
 ;; http://www.emacswiki.org/emacs/WhiteSpace
-(defun whitespace-post-command-hook () nil)
+;(defun whitespace-post-command-hook () nil)
 
 ;; use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -749,7 +757,7 @@ makes)."
 ;(add-hook 'coding-hook 'turn-on-whitespace)
 (add-hook 'coding-hook 'pretty-lambdas)
 (add-hook 'coding-hook 'add-watchwords)
-(add-hook 'coding-hook 'turn-on-electric-pair-mode)
+;(add-hook 'coding-hook 'turn-on-electric-pair-mode)
 (add-hook 'coding-hook 'show-parens)
 ;(add-hook 'coding-hook 'idle-highlight)
 

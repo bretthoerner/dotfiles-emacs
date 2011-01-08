@@ -1,11 +1,11 @@
 ;;; quack.el --- enhanced support for editing and running Scheme code
 
-(defconst quack-copyright    "Copyright (C) 2002-2009 Neil Van Dyke")
+(defconst quack-copyright    "Copyright (C) 2002-2010 Neil Van Dyke")
 (defconst quack-copyright-2  "Portions Copyright (C) Free Software Foundation")
 ;; Emacs-style font-lock specs adapted from GNU Emacs 21.2 scheme.el.
 ;; Scheme Mode menu adapted from GNU Emacs 21.2 cmuscheme.el.
 
-(defconst quack-version      "0.37")
+(defconst quack-version      "0.40")
 (defconst quack-author-name  "Neil Van Dyke")
 (defconst quack-author-email "neil@neilvandyke.org")
 (defconst quack-web-page     "http://www.neilvandyke.org/quack/")
@@ -20,7 +20,7 @@ particular purpose.  See the GNU General Public License for more details.  See
 http://www.gnu.org/licenses/ for details.  For other licenses and consulting,
 please contact Neil Van Dyke.")
 
-(defconst quack-cvsid "$Id: quack.el,v 1.463 2009/06/29 12:54:35 neilpair Exp $")
+(defconst quack-cvsid "$Id: quack.el,v 1.469 2010/12/23 00:01:33 neilpair Exp $")
 
 ;;; Commentary:
 
@@ -37,12 +37,14 @@ please contact Neil Van Dyke.")
 
 ;; COMPATIBILITY:
 ;;
-;;     GNU Emacs 22 -- Yes.  Quack is developed under GNU Emacs 22 on a
+;;     GNU Emacs 22 -- Yes.  Quack is now developed under GNU Emacs 22 on a
 ;;     GNU/Linux system, which is the preferred platform for Quacksmokers.
 ;;     Quack should work under GNU Emacs 22 on any Un*x-like OS.  Reportedly,
 ;;     Quack also works with GNU Emacs 22 on Apple Mac OS X and Microsoft
 ;;     Windows (NT, 2000, XP), but the author has no means of testing on those
 ;;     platforms.
+;;
+;;     GNU Emacs 22 -- Yes.
 ;;
 ;;     GNU Emacs 21 -- Probably, but no longer tested.
 ;;
@@ -111,6 +113,18 @@ please contact Neil Van Dyke.")
 ;;     neil@neilvandyke.org to add you to the moderated `scheme-announce' list.
 
 ;; HISTORY:
+;;
+;;     Version 0.40 (2010-12-22)
+;;         * Added indent rules for Racket `let:', `let*:', and `match'.  And
+;;           a provisional rule for `define:'.
+;;
+;;     Version 0.39 (2010-10-18)
+;;         * Renamed "typed/scheme" to "typed/racket".
+;;
+;;     Version 0.38 (2010-10-14)
+;;         * Replaced old PLT Scheme programs in `quack-programs' with Racket.
+;;         * Added Racket ".rkt" and ".rktd" filename extensions.
+;;         * Added some Racket keywords for fontifying.
 ;;
 ;;     Version 0.37 (2009-06-29)
 ;;         * Disabled highlighting of "Compilation started at" lines.
@@ -740,8 +754,8 @@ This only has effect when `quack-fontify-style' is `plt'."
   :initialize 'custom-initialize-default)
 
 (defcustom quack-pltish-fontify-keywords-p t
-  ;; TODO: !!! Rename this from "keywords" to "syntax-keywords", here, and in
-  ;; for face names.
+  ;; TODO: Rename this from "keywords" to "syntax-keywords", here, and in for
+  ;; face names.
   "*If non-nil, fontify keywords in PLT-style fontification.
 
 This only has effect when `quack-fontify-style' is `plt'."
@@ -753,13 +767,14 @@ This only has effect when `quack-fontify-style' is `plt'."
 (defcustom quack-pltish-keywords-to-fontify
   ;; TODO: These are currently R5RS and some SRFI special syntax plus a bunch
   ;; of PLT, especially PLT 200 class.ss, and some "define-"* variants from
-  ;; various dialects.  The dumbness of this kind of highlighting without
-  ;; regard to context is not really satisfactory.
+  ;; various dialects, plus some Racket 5.0.2...  The dumbness of this kind of
+  ;; highlighting without regard to context is not really satisfactory.
   '(
 
     "and" "begin" "begin0" "c-declare" "c-lambda" "case" "case-lambda" "class"
     "class*" "class*/names" "class100" "class100*" "compound-unit/sig" "cond"
-    "cond-expand" "define" "define-class" "define-const-structure"
+    "cond-expand" "define" "define-class" "define-compound-unit"
+    "define-const-structure"
     "define-constant" "define-embedded" "define-entry-point" "define-external"
     "define-for-syntax" "define-foreign-record" "define-foreign-type"
     "define-foreign-variable" "define-generic" "define-generic-procedure"
@@ -768,6 +783,7 @@ This only has effect when `quack-fontify-style' is `plt'."
     "define-record" "define-record-printer" "define-record-type"
     "define-signature" "define-struct" "define-structure" "define-syntax"
     "define-syntax-set" "define-values" "define-values-for-syntax"
+    "define-values/invoke-unit/infer"
     "define-values/invoke-unit/sig" "define/contract" "define/override"
     "define/private" "define/public" "define/kw"
     "delay" "do" "else" "exit-handler" "field"
@@ -849,12 +865,10 @@ unavailable for your system, please notify the Quack author."
   :initialize 'custom-initialize-default)
 
 (defcustom quack-programs
-  '("bigloo" "csi" "csi -hygienic" "gosh" "gsi" "gsi ~~/syntax-case.scm -"
-    "guile" "kawa" "mit-scheme" "mred -z" "mzscheme" "mzscheme -il r6rs"
-    "mzscheme -il typed-scheme"
-    "mzscheme -M errortrace" 
-    "mzscheme3m" "mzschemecgc" "rs" "scheme" "scheme48" "scsh"
-    "sisc" "stklos" "sxi")
+  '("bigloo" "csi" "csi -hygienic" "gosh" "gracket" "gsi"
+    "gsi ~~/syntax-case.scm -" "guile" "kawa" "mit-scheme" "racket"
+    "racket -il typed/racket" "rs" "scheme" "scheme48" "scsh" "sisc" "stklos"
+    "sxi")
   "List of Scheme interpreter programs that can be used with `run-scheme'.
 
 These names will be accessible via completion when `run-scheme' prompts for
@@ -3095,6 +3109,8 @@ Can be used in your `~/.emacs' file something like this:
                   (reverse retained)))))
 
 (quack-add-auto-mode-alist '(("\\.ccl\\'"    . scheme-mode)
+                             ("\\.rkt\\'"    . scheme-mode)
+                             ("\\.rktd\\'"   . scheme-mode)
                              ("\\.sch\\'"    . scheme-mode)
                              ("\\.scm\\'"    . scheme-mode)
                              ("\\.ss\\'"     . scheme-mode)
@@ -3164,21 +3180,25 @@ Can be used in your `~/.emacs' file something like this:
 (put 'class              'scheme-indent-function 'defun)
 (put 'class*             'scheme-indent-function 'defun)
 (put 'compound-unit/sig  'scheme-indent-function 0)
+(put 'define:            'scheme-indent-function 3)
 (put 'dynamic-wind       'scheme-indent-function 0)
 (put 'for/fold           'scheme-indent-function 2)
 (put 'instantiate        'scheme-indent-function 2)
 (put 'interface          'scheme-indent-function 1)
 (put 'lambda/kw          'scheme-indent-function 1)
 (put 'let*-values        'scheme-indent-function 1)
+(put 'let*:              'scheme-indent-function 'quack-let-colon-indent)
 (put 'let+               'scheme-indent-function 1)
 (put 'let-values         'scheme-indent-function 1)
 (put 'let/ec             'scheme-indent-function 1)
+(put 'let:               'scheme-indent-function 'quack-let-colon-indent)
+(put 'match              'scheme-indent-function 1)
 (put 'mixin              'scheme-indent-function 2)
 (put 'module             'scheme-indent-function 'defun)
 (put 'opt-lambda         'scheme-indent-function 1)
 (put 'parameterize       'scheme-indent-function 1)
-(put 'parameterize-break 'scheme-indent-function 1)
 (put 'parameterize*      'scheme-indent-function 1)
+(put 'parameterize-break 'scheme-indent-function 1)
 (put 'quasisyntax/loc    'scheme-indent-function 1)
 (put 'receive            'scheme-indent-function 2)
 (put 'send*              'scheme-indent-function 1)
@@ -3193,6 +3213,13 @@ Can be used in your `~/.emacs' file something like this:
 (put 'with-handlers      'scheme-indent-function 1)
 (put 'with-method        'scheme-indent-function 1)
 (put 'with-syntax        'scheme-indent-function 1)
+
+(defun quack-let-colon-indent (state indent-point normal-indent)
+  ;; Note: This was adapted from "scheme.el" "scheme-let-indent".
+  (skip-chars-forward " \t")
+  (if (looking-at "[-a-zA-Z0-9+*/?!@$%^&_:~]")
+      (lisp-indent-specform 4 state indent-point normal-indent)
+    (lisp-indent-specform 1 state indent-point normal-indent)))
 
 ;; Keymaps:
 
