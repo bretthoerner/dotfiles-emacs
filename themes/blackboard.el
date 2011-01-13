@@ -15,7 +15,7 @@
 ;; All patches welcome
 
 (require 'color-theme)
-(setq x 1)
+
 ;;;###autoload
 (defun color-theme-blackboard ()
   "Color theme by JD Huntington, based off the TextMate Blackboard theme, created 2008-11-27"

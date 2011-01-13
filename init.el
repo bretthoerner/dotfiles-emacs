@@ -76,6 +76,12 @@
 ;; browse-url
 (setq browse-url-browser-function 'browse-url-firefox)
 
+;; c-mode
+;(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
+(setq c-eldoc-includes "-I./ -I../ ")
+(load "c-eldoc")
+(add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+
 ;; clojure-mode
 (add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
 (require 'clojure-mode nil t)
@@ -189,6 +195,11 @@
    (require 'rcirc-notify)
 
    (rcirc-track-minor-mode 1)
+
+   ;; clear screen
+   ;; (let ((inhibit-read-only t))
+   ;;   (delete-region
+   ;;    (point-min) rcirc-prompt-start-marker))
 
    (setq rcirc-default-nick "brett_h"
          rcirc-default-user-name "brett"
@@ -458,8 +469,8 @@ makes)."
 
 ;; quack
 (require 'quack)
-(setq quack-programs '("mzscheme")
-      quack-default-program "mzscheme")
+(setq quack-programs '("racket")
+      quack-default-program "racket")
 
 ;; rainbow-mode
 (require 'rainbow-mode)
@@ -601,6 +612,11 @@ makes)."
 
 ;; always try to indent on newline
 (define-key global-map (kbd "RET") 'newline-and-indent)
+
+;; show full file path on F2
+(define-key global-map (kbd "<f2>") (lambda ()
+                                      (interactive "*")
+                                      (message buffer-file-truename)))
 
 ;; no startup message or splash screen
 (setq inhibit-splash-screen t
@@ -1068,7 +1084,9 @@ buffer-local variable `show-trailing-whitespace'."
     (setq color-theme-is-global t
           frame-background-mode 'dark)
     (load-file (concat dotfiles-dir "themes/blackboard.el"))
+    ;; (load-file (concat dotfiles-dir "themes/irblack.el"))
     (color-theme-blackboard)
+    ;; (color-theme-irblack)
 
     (defun bjh-set-frame-font-size (size)
       (set-frame-font (concat bjh-font "-" (number-to-string size)))
