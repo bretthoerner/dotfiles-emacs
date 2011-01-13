@@ -41,6 +41,7 @@
 ;; plugin config
 ;; -------------
 
+
 ;; add dotfiles/misc to path
 (add-to-list 'load-path (concat dotfiles-dir "misc"))
 
@@ -222,7 +223,6 @@
 (setq-default flymake-gui-warnings-enabled nil)
 (require 'flymake)
 (load-library "flymake-cursor")
-(add-hook 'python-mode-hook 'flymake-mode)
 
 (defun flymake-create-temp-intemp (file-name prefix)
   "Return file name in temporary directory for checking FILE-NAME.
@@ -259,13 +259,15 @@ makes)."
                       (file-name-directory buffer-file-name))))
     (list "pyflakes" (list local-file))))
 
-(setq flymake-allowed-file-name-masks
-  (cons '("\\.py\\'" flymake-pyflakes-init)
-    flymake-allowed-file-name-masks))
+(push '("\\.py\\'" flymake-pyflakes-init)
+      flymake-allowed-file-name-masks)
+(push '("could not compile '\\([^']+\\)':\\([0-9]+\\):\\(\n.*\\)" 1 2 nil nil)
+      flymake-err-line-patterns)
 
-(setq flymake-err-line-patterns
-  (cons '("could not compile '\\([^']+\\)':\\([0-9]+\\):\\(\n.*\\)" 1 2 nil nil)
-    flymake-err-line-patterns))
+(add-hook 'python-mode-hook
+          (lambda ()
+            ;; Activate flymake unless buffer is a tmp buffer for the interpreter
+            (unless (eq buffer-file-name nil) (flymake-mode t))))
 
 ;; flyspell-mode
 (setq ispell-program-name "aspell"
@@ -700,6 +702,9 @@ makes)."
 
 ;; disable menu bar in terminal
 (menu-bar-mode -1)
+
+;; allow narrowing
+(put 'narrow-to-region 'disabled nil)
 
 ;; default to unified diffs
 (setq diff-switches "-u -w")
