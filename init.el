@@ -1063,6 +1063,9 @@ buffer-local variable `show-trailing-whitespace'."
     (setq pc-select-selection-keys-only t)
     (pc-selection-mode 1)
 
+    ;; restore old `exchange-point-and-mark' (which pc-selection-mode overrides)
+    (global-set-key (kbd "C-x C-x") 'exchange-point-and-mark)
+
     ;; don't support suspend in GUI mode
     (global-unset-key (kbd "C-z"))
 
