@@ -913,12 +913,6 @@ Symbols matching the text at point are put first in the completion list."
 
 (global-set-key [(control ?x) (tab)] 'ido-imenu)
 
-;; don't deactivate my mark on kill-ring-save!
-(defun kill-ring-save-keep-region (beg end)
-  (interactive "r")
-  (let ((deactivate-mark nil))
-    (save-excursion (kill-ring-save beg end))))
-
 ;; define and bind textmate-like shift-right and shift-left
 (defun textmate-shift-right (&optional arg)
   "Shift the line or region to the ARG places to the right.
@@ -1022,12 +1016,12 @@ buffer-local variable `show-trailing-whitespace'."
 (global-set-key [(control ?h) ?a] 'apropos)
 
 ;; M-s regex search forward
-(global-set-key [(meta ?s)] 'isearch-forward-regexp)
-(define-key isearch-mode-map [(meta ?s)] 'isearch-repeat-forward)
+;(global-set-key [(meta ?s)] 'isearch-forward-regexp)
+;(define-key isearch-mode-map [(meta ?s)] 'isearch-repeat-forward)
 
 ;; M-r regex search backward
-(global-set-key [(meta ?r)] 'isearch-backward-regexp)
-(define-key isearch-mode-map [(meta ?r)] 'isearch-repeat-backward)
+;(global-set-key [(meta ?r)] 'isearch-backward-regexp)
+;(define-key isearch-mode-map [(meta ?r)] 'isearch-repeat-backward)
 
 ;; C-M-h to kill word like in readline
 (global-set-key [(control meta ?h)] 'backward-kill-word)
