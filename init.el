@@ -668,7 +668,7 @@ makes)."
 ;; highlight characters after 80 columns
 (setq whitespace-style '(face trailing lines-tail space-before-tab
                               space-after-tab))
-(global-whitespace-mode 1)
+;(global-whitespace-mode 1)
 ;; global-whitespace-mode slows thngs down a lot, so disable (some)
 ;; fontification. Tip due to
 ;; http://www.emacswiki.org/emacs/WhiteSpace
@@ -748,6 +748,9 @@ makes)."
 (defun turn-on-save-place-mode ()
   (setq save-place t))
 
+(defun turn-on-whitespace ()
+  (whitespace-mode))
+
 (defun turn-on-electric-pair-mode ()
   (electric-pair-mode))
 
@@ -775,7 +778,7 @@ makes)."
 (add-hook 'coding-hook 'local-comment-auto-fill)
 ;(add-hook 'coding-hook 'turn-on-hl-line-mode)
 (add-hook 'coding-hook 'turn-on-save-place-mode)
-;(add-hook 'coding-hook 'turn-on-whitespace)
+(add-hook 'coding-hook 'turn-on-whitespace)
 (add-hook 'coding-hook 'pretty-lambdas)
 (add-hook 'coding-hook 'add-watchwords)
 ;(add-hook 'coding-hook 'turn-on-electric-pair-mode)
@@ -818,7 +821,7 @@ makes)."
   (interactive)
   (indent-buffer)
   (untabify-buffer)
-  (delete-trailing-whitespace))
+  (whitespace-cleanup))
 
 ;; edit as root
 (defun sudo-edit (&optional arg)
