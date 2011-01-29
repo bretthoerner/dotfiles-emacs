@@ -400,20 +400,6 @@ makes)."
 (global-set-key (kbd "C-x g") 'magit-status)
 (setq magit-diff-options "-w")
 
-;; malabar-mode
-(let ((malabar-dir (concat dotfiles-dir "malabar-mode/")))
-  (when (file-exists-p malabar-dir)
-    (add-to-list 'load-path (concat malabar-dir "lisp"))
-    (require 'cedet)
-    (setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
-                                      global-semanticdb-minor-mode
-                                      global-semantic-idle-summary-mode
-                                      global-semantic-mru-bookmark-mode))
-    (require 'malabar-mode)
-    (add-hook 'malabar-mode-hook (lambda ()  (semantic-mode 1)))
-    (setq malabar-groovy-lib-dir (concat malabar-dir "lib"))
-    (add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))))
-
 ;; markdown-mode
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.mkd$" . markdown-mode))
