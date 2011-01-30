@@ -41,5 +41,5 @@ cursor is sitting on a flymake error the error information is
 displayed in the minibuffer (rather than having to mouse over
 it)"
   (set (make-local-variable 'post-command-hook)
-       (cons 'show-fly-err-at-point post-command-hook))) 
+       (cons 'show-fly-err-at-point post-command-hook)))
 

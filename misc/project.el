@@ -1,18 +1,18 @@
 ;;; project.el --- Keep track of the current project
- 
+
 ;; Copyright (C) 2008 Nathan Weizenbaum
- 
+
 ;; Author: Nathan Weizenbaum
 ;; URL: http://github.com/nex3/in-project-el
 ;; Version: 1.0
 ;; Created: 2008-01-06
 ;; Keywords: project, convenience
 ;; EmacsWiki: FindFileInProject
- 
+
 ;; This file is NOT part of GNU Emacs.
- 
+
 ;;; License:
- 
+
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 3, or (at your option)
@@ -27,7 +27,7 @@
 ;; along with GNU Emacs; see the file COPYING. If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
- 
+
 ;;; Commentary:
 
 ;; This library provides a simple, standard, extensible way of keeping
@@ -83,3 +83,5 @@ by `project-everylevel-files', and nil otherwise."
       (return t))))
 
 (provide 'project)
+
+;;; project.el ends here

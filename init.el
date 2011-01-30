@@ -34,7 +34,7 @@
 ;; -----------------
 
 (require 'package)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages"))
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 
 ;; -------------
@@ -500,7 +500,6 @@ makes)."
 (autoload 'scratch "scratch" nil t)
 
 ;; slime and swank
-(require 'ac-slime)
 ;(add-to-list 'ac-sources 'ac-source-slime-simple)
 ;(add-hook 'slime-mode-hook 'set-up-slime-ac)
 ;(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)

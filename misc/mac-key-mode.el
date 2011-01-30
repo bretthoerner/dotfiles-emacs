@@ -1,9 +1,9 @@
 ;;; mac-key-mode.el --- provide mac-style key bindings on Carbon Emacs
 
-;; Copyright (C) 2004-2008  Seiji Zenitani
+;; Copyright (C) 2004-2010  Seiji Zenitani
 
 ;; Author: Seiji Zenitani <zenitani@mac.com>
-;; $Id$
+;; Version: 2010.01.03
 ;; Keywords: tools, mac
 ;; Created: 2004-12-27
 ;; Compatibility: Mac OS X 10.5 (Carbon Emacs)
@@ -34,11 +34,11 @@
 ;;
 ;; To use this package, add these lines to your .emacs file:
 ;;
-;; ;;    (require 'redo)
+;; ;;    (require 'redo+)
 ;;     (require 'mac-key-mode)
 ;;     (mac-key-mode 1)
 ;;
-;; Note that mac-key-mode requires redo.el.
+;; Note that mac-key-mode requires redo+.el.
 ;; In order to set additional key bindings,
 ;; modify mac-key-mode-map in your .emacs file:
 ;;
@@ -65,8 +65,8 @@
 
 ;;; Code:
 
-;; requires redo
-(require 'redo)
+;; requires redo+
+(require 'redo+)
 
 (defgroup mac-key-mode nil
   "Mac-style key-binding mode."
@@ -104,32 +104,31 @@ when `mac-key-mode' is on.")
 
 (defvar mac-key-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map [(alt o)] 'ido-find-file)
+    (define-key map [(alt o)] (lambda()(interactive)(let(last-nonmenu-event)(menu-find-file-existing))))
     (define-key map [(alt w)] 'mac-key-close-window)
     (define-key map [(alt s)] 'save-buffer)
     (define-key map [(alt shift s)] 'mac-key-save-as)
     (define-key map [(alt i)] 'mac-key-show-in-finder)
+    (define-key map [(alt p)] 'print-buffer)
     (define-key map [(alt q)] 'save-buffers-kill-emacs)
     (define-key map [(alt z)] 'undo)
-    (define-key map [(alt shift z)] 'redo) ; requires redo
-    (define-key map [(alt x)] 'kill-region)
-    (define-key map [(alt c)] 'kill-ring-save-keep-region)
-    (define-key map [(alt v)] 'yank)
+    (define-key map [(alt shift z)] 'redo) ; requires redo+
+    (define-key map [(alt x)] 'clipboard-kill-region)
+    (define-key map [(alt c)] 'clipboard-kill-ring-save)
+    (define-key map [(alt v)] 'clipboard-yank)
     (define-key map [(alt a)] 'mark-whole-buffer)
-    (define-key map [(alt shift left)] 'beginning-of-line-mark)
-    (define-key map [(alt shift right)] 'end-of-line-mark)
-    (define-key map [(alt shift up)] 'beginning-of-buffer-mark)
-    (define-key map [(alt shift down)] 'end-of-buffer-mark)
     (define-key map [(alt f)] 'isearch-forward)
     (define-key map [(alt meta f)] 'occur)
     (define-key map [(alt g)] 'isearch-repeat-forward)
     (define-key map [(alt shift g)] 'isearch-repeat-backward)
-    (define-key map [(alt h)] 'ns-do-hide-emacs)
     (define-key map [(alt l)] 'goto-line)
+    (define-key map [(alt t)] 'mac-font-panel-mode)
     (define-key map [(alt m)] 'iconify-frame)
     (define-key map [(alt \`)] 'other-frame)
     (define-key map [(alt shift n)] 'make-frame-command)
     (define-key map [(alt shift w)] 'delete-frame)
+    (define-key map [(alt \?)] 'info)
+    (define-key map [(alt /)] 'info)
     (define-key map [(alt .)] 'keyboard-quit)
     (define-key map [(alt up)] 'beginning-of-buffer)
     (define-key map [(alt down)] 'end-of-buffer)
@@ -285,8 +284,8 @@ When Mac Key mode is enabled, mac-style key bindings are provided."
 
     (cond
      ((not (stringp item)))
-     ((string-match tramp-file-name-regexp item)
-      (error "Remote directories not supported"))
+     ((file-remote-p item)
+      (error "This item is located on a remote system."))
      (t
       (setq item (expand-file-name item))
       (condition-case err
@@ -314,8 +313,8 @@ When Mac Key mode is enabled, mac-style key bindings are provided."
 
     (cond
      ((not (stringp item)))
-     ((string-match tramp-file-name-regexp item)
-      (error "Remote directories not supported"))
+     ((file-remote-p item)
+      (error "This item is located on a remote system."))
      ((file-directory-p item)
       (setq item (expand-file-name item))
       (condition-case err
@@ -346,11 +345,7 @@ When Mac Key mode is enabled, mac-style key bindings are provided."
   (interactive "r")
   (mac-key-stop-speaking)
   (let ((buffer-file-coding-system 'utf-8-unix)
-        (tmp-file (expand-file-name
-                   "speech.text"
-                   (if (featurep 'carbon-emacs-package)
-                       (carbon-emacs-package-tmpdir) "/tmp")
-                   )))
+        (tmp-file (make-temp-file "emacs-speech-" nil ".txt")))
     (write-region beg end tmp-file nil)
     (message "Invoking text-to-speech...")
     (setq mac-key-speech-process
@@ -390,8 +385,8 @@ like this:
       (kill-buffer mybuffer))
 ;;       (eq (process-status mac-key-ql-process) 'run)
 ;;       (kill-process mac-key-ql-process))
-     ((string-match tramp-file-name-regexp item)
-      (error "Remote directories not supported"))
+     ((file-remote-p item)
+      (error "This item is located on a remote system."))
      (t
       (setq item (expand-file-name item))
       (condition-case err
@@ -462,11 +457,11 @@ the mouse.  This should be bound to a mouse click event type."
       :active t
       :help "Look up word at cursor in Dictionary.app"]
      ["--" nil]
-     ["Cut"   (kill-region beg end) :active (and editable mark-active)
+     ["Cut"   (clipboard-kill-region beg end) :active (and editable mark-active)
       :help "Delete text in region and copy it to the clipboard"]
-     ["Copy"  (kill-ring-save beg end) :active mark-active
+     ["Copy"  (clipboard-kill-ring-save beg end) :active mark-active
       :help "Copy text in region to the clipboard"]
-     ["Paste" (yank) :active editable
+     ["Paste" (clipboard-yank) :active editable
       :help "Paste text from clipboard"]
      ["--" nil]
      ("Spelling"

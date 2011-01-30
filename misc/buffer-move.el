@@ -1,11 +1,11 @@
-;;; buffer-move.el --- 
+;;; buffer-move.el --- swap buffers between windows
 
 ;; Copyright (C) 2004  Lucas Bonnet <lukhas@free.fr>
 
 ;; Author: Lucas Bonnet <lucas@rincevent.net>
 ;; Keywords: lisp,convenience
 ;; Version: 0.4
-;; URL : http://lukhas.free. fr/emacs/elisp/buffer-move.el
+;; URL: http://www.emacswiki.org/cgi-bin/wiki/buffer-move.el
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License
@@ -74,7 +74,7 @@ error is signaled."
 ;;  split, if possible."
   (interactive)
   (let* ((other-win (windmove-find-other-window 'up))
-	 (buf-this-buf (window-buffer (selected-window))))
+     (buf-this-buf (window-buffer (selected-window))))
     (if (null other-win)
         (error "No window above this one")
       ;; swap top with this one
@@ -89,8 +89,8 @@ If there is no split, ie now window under the current one, an
 error is signaled."
   (interactive)
   (let* ((other-win (windmove-find-other-window 'down))
-	 (buf-this-buf (window-buffer (selected-window))))
-    (if (or (null other-win) 
+     (buf-this-buf (window-buffer (selected-window))))
+    (if (or (null other-win)
             (string-match "^ \\*Minibuf" (buffer-name (window-buffer other-win))))
         (error "No window under this one")
       ;; swap top with this one
@@ -105,7 +105,7 @@ If there is no split, ie now window on the left of the current
 one, an error is signaled."
   (interactive)
   (let* ((other-win (windmove-find-other-window 'left))
-	 (buf-this-buf (window-buffer (selected-window))))
+     (buf-this-buf (window-buffer (selected-window))))
     (if (null other-win)
         (error "No left split")
       ;; swap top with this one
@@ -120,7 +120,7 @@ If there is no split, ie now window on the right of the current
 one, an error is signaled."
   (interactive)
   (let* ((other-win (windmove-find-other-window 'right))
-	 (buf-this-buf (window-buffer (selected-window))))
+     (buf-this-buf (window-buffer (selected-window))))
     (if (null other-win)
         (error "No right split")
       ;; swap top with this one
@@ -131,4 +131,5 @@ one, an error is signaled."
 
 
 (provide 'buffer-move)
+
 ;;; buffer-move.el ends here

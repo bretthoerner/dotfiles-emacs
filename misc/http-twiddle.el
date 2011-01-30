@@ -1,4 +1,8 @@
-;;; http-twiddle.el -- send & twiddle & resend HTTP requests
+;;; http-twiddle.el --- send & twiddle & resend HTTP requests
+;;
+;; Author: Luke Gorrie <luke@synap.se>
+;; Version: 1.0
+;;
 ;;
 ;; Version 1.0 written by Luke Gorrie <luke@synap.se> in February 2006
 ;; This program belongs to the public domain.
@@ -132,7 +136,7 @@ length."
   (with-current-buffer (process-buffer process)
     (goto-char (point-max))
     (insert string)))
-    
+
 (defun http-twiddle-process-sentinel (process what)
   (with-current-buffer (process-buffer process)
     (goto-char (point-max))
@@ -150,3 +154,4 @@ length."
 
 (provide 'http-twiddle)
 
+;;; http-twiddle.el ends here

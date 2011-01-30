@@ -1,14 +1,14 @@
-;;; @(#) dired-single.el -- reuse the current dired buffer to visit another directory
-;;; @(#) $Id: dired-single.el,v 1.7 2008/10/30 01:49:22 joe Exp $
+;;; dired-single.el --- reuse the current dired buffer to visit another directory
 
 ;; This file is not part of Emacs
 
 ;; Copyright (C) 2000-2001 by Joseph L. Casadonte Jr.
-;; Author:          Joe Casadonte (emacs@northbound-train.com)
-;; Maintainer:      Joe Casadonte (emacs@northbound-train.com)
-;; Created:         August 17, 2000
-;; Keywords:        dired reuse buffer
-;; Latest Version:  http://www.northbound-train.com/emacs.html
+;; Author: Joe Casadonte <emacs@northbound-train.com>
+;; Maintainer: Joe Casadonte <emacs@northbound-train.com>
+;; Created: August 17, 2000
+;; Version: 1.7.0
+;; Keywords: dired reuse buffer
+;; Latest Version: http://www.northbound-train.com/emacs.html
 
 ;; COPYRIGHT NOTICE
 
@@ -116,13 +116,13 @@
 ;;        (define-key dired-mode-map [return] 'dired-single-buffer)
 ;;        (define-key dired-mode-map [mouse-1] 'dired-single-buffer-mouse)
 ;;        (define-key dired-mode-map "^"
-;;      	(function
-;;      	 (lambda nil (interactive) (dired-single-buffer "..")))))
+;;          (function
+;;           (lambda nil (interactive) (dired-single-buffer "..")))))
 ;;
 ;;      ;; if dired's already loaded, then the keymap will be bound
 ;;      (if (boundp 'dired-mode-map)
-;;      	;; we're good to go; just add our bindings
-;;      	(my-dired-init)
+;;          ;; we're good to go; just add our bindings
+;;          (my-dired-init)
 ;;        ;; it's not loaded yet, so add our bindings to the load-hook
 ;;        (add-hook 'dired-load-hook 'my-dired-init))
 ;;
@@ -138,10 +138,10 @@
 ;;
 ;;      (global-set-key [(f5)] 'dired-single-magic-buffer)
 ;;      (global-set-key [(control f5)] (function
-;;      	(lambda nil (interactive)
+;;          (lambda nil (interactive)
 ;;              (dired-single-magic-buffer default-directory))))
 ;;      (global-set-key [(shift f5)] (function
-;;	        (lambda nil (interactive)
+;;          (lambda nil (interactive)
 ;;              (message "Current directory is: %s" default-directory))))
 ;;      (global-set-key [(meta f5)] 'dired-single-toggle-buffer-name)
 ;;
@@ -284,23 +284,23 @@ in another window."
   ;; use arg passed in or find name of current line
   (let ((name (or default-dirname (dired-get-filename nil t))))
 	(save-excursion
-	  (save-match-data
+      (save-match-data
 		;; See if the selection is a directory or not.
 		(end-of-line)
 		(let ((eol (point)))
-		  (beginning-of-line)
-		  ;; assume directory if arg passed in
-		  (if (or default-dirname (re-search-forward "^  d" eol t))
-			  ;; save current buffer's name
-			  (let ((current-buffer-name (buffer-name)))
+          (beginning-of-line)
+          ;; assume directory if arg passed in
+          (if (or default-dirname (re-search-forward "^  d" eol t))
+              ;; save current buffer's name
+              (let ((current-buffer-name (buffer-name)))
 				;; go ahead and read in the directory
 				(find-alternate-file name)
 				;; if the saved buffer's name was the magic name, rename this buffer
 				(if (and dired-single-use-magic-buffer
-						 (string= current-buffer-name dired-single-magic-buffer-name))
+                         (string= current-buffer-name dired-single-magic-buffer-name))
 					(rename-buffer dired-single-magic-buffer-name)))
 			;; it's just a file
-		  (find-file name)))))))
+          (find-file name)))))))
 
 ;;;; ------------------------------------------------------------------------
 ;;;###autoload
@@ -310,8 +310,8 @@ in another window."
 Argument CLICK is the mouse-click event."
   (interactive "e")
   (let* ( (start (event-start click))
-		  (window (car start))
-		  (pos (car (cdr start))) )
+          (window (car start))
+          (pos (car (cdr start))) )
 	(select-window window)
 	(goto-char pos))
   (dired-single-buffer))
@@ -335,26 +335,26 @@ the currently displayed directory)."
 		;; nothing to switch to
 		;; get directory name to start in
 		(let ((dirname (or default-dirname
-						   (read-file-name (format "Dired %s(directory): " "")
-										   nil default-directory t))))
+                           (read-file-name (format "Dired %s(directory): " "")
+                                           nil default-directory t))))
 
-		  ;; make sure it's really a directory
-		  (if (not (file-directory-p dirname))
-			  (error "Error: <%s> is not a directory" dirname))
+          ;; make sure it's really a directory
+          (if (not (file-directory-p dirname))
+              (error "Error: <%s> is not a directory" dirname))
 
-		  ;; do we need a new buffer?
-		  (if (eq magic-dired-buffer nil)
-			  ;; find the file in new buffer, current window
-			  (find-file dirname)
+          ;; do we need a new buffer?
+          (if (eq magic-dired-buffer nil)
+              ;; find the file in new buffer, current window
+              (find-file dirname)
 			;; just find in place of current buffer
 			(find-alternate-file dirname))
-		  ;; rename the buffer, where ever we found it
-		  (rename-buffer dired-single-magic-buffer-name))
-	  ;; we're not there (we have one already), so simply switch to it
-	  (switch-to-buffer magic-dired-buffer)
-	  ;; if called with a default, try it again
-	  (if default-dirname
-		  (dired-single-magic-buffer default-dirname)))))
+          ;; rename the buffer, where ever we found it
+          (rename-buffer dired-single-magic-buffer-name))
+      ;; we're not there (we have one already), so simply switch to it
+      (switch-to-buffer magic-dired-buffer)
+      ;; if called with a default, try it again
+      (if default-dirname
+          (dired-single-magic-buffer default-dirname)))))
 
 ;;;; ------------------------------------------------------------------------
 ;;;###autoload
@@ -387,5 +387,3 @@ Will also seek to uniquify the 'real' buffer name."
 (run-hooks 'dired-single-load-hook)
 
 ;;; dired-single.el ends here
-;;; **************************************************************************
-;;;; *****  EOF  *****  EOF  *****  EOF  *****  EOF  *****  EOF  *************

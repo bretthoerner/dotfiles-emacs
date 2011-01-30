@@ -4,11 +4,12 @@
 ;;               2008 Aaron S. Hawley
 
 ;; Maintainer: Aaron S. Hawley <ashawley at users.sourceforge.net>
-;; Author: Turadg Aleahmad, 1999-2004
+;; Author: Turadg Aleahmad
 ;; Keywords: php languages oop
 ;; Created: 1999-05-17
 ;; Modified: 2008-11-04
-;; X-URL:   http://php-mode.sourceforge.net/
+;; Version: 1.5.0
+;; X-URL: http://php-mode.sourceforge.net/
 
 (defconst php-mode-version-number "1.5.0"
   "PHP Mode version number.")
@@ -315,7 +316,7 @@ See `php-beginning-of-defun'."
   (set (make-local-variable 'c-opt-cpp-prefix) php-tags-key)
 
   (c-set-offset 'cpp-macro 0)
-  
+
 ;;   (c-lang-defconst c-block-stmt-1-kwds php php-block-stmt-1-kwds)
 ;;   (c-lang-defvar c-block-stmt-1-kwds (c-lang-const c-block-stmt-1-kwds))
   (set (make-local-variable 'c-block-stmt-1-key) php-block-stmt-1-key)

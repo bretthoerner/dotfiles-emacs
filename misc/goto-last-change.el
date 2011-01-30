@@ -1,12 +1,11 @@
 ;;; goto-last-change.el --- Move point through buffer-undo-list positions -*-unibyte: t; coding: iso-8859-1;-*-
 
-;; Copyright © 2003 Kevin Rodgers
+;; Copyright 2003 Kevin Rodgers
 
 ;; Author: Kevin Rodgers <ihs_4664@yahoo.com>
 ;; Created: 17 Jun 2003
-;; Version: $Revision: 1.2 $
+;; Version: 1.2
 ;; Keywords: convenience
-;; RCS: $Id: goto-last-change.el,v 1.2 2003/07/30 17:43:47 kevinr Exp kevinr $
 
 ;; Contributors:
 ;;   Attila Lendvai <attila.lendvai@gmail.com> (line distance and auto marks)
@@ -30,16 +29,16 @@
 
 ;; After installing goto-last-change.el in a `load-path' directory and
 ;; compiling it with `M-x byte-compile-file', load it with
-;; 	(require 'goto-last-change)
+;;  (require 'goto-last-change)
 ;; or autoload it with
-;; 	(autoload 'goto-last-change "goto-last-change"
-;; 	  "Set point to the position of the last change." t)
-;; 
+;;  (autoload 'goto-last-change "goto-last-change"
+;;    "Set point to the position of the last change." t)
+;;
 ;; You may also want to bind a key to `M-x goto-last-change', e.g.
-;; 	(global-set-key "\C-x\C-\\" 'goto-last-change)
+;;  (global-set-key "\C-x\C-\\" 'goto-last-change)
 
 ;; goto-last-change.el was written in response to to the following:
-;; 
+;;
 ;; From: Dan Jacobson <jidanni@jidanni.org>
 ;; Newsgroups: gnu.emacs.bug
 ;; Subject: function to go to spot of last change
@@ -47,17 +46,17 @@
 ;; Sender: news <news@main.gmane.org>
 ;; Message-ID: <mailman.7910.1055637181.21513.bug-gnu-emacs@gnu.org>
 ;; NNTP-Posting-Host: monty-python.gnu.org
-;; 
-;; 
+;;
+;;
 ;; Why of course, a function to get the user to the spot of last changes
 ;; in the current buffer(s?), that's what emacs must lack.
-;; 
+;;
 ;; How many times have you found yourself mosying [<-not in spell
 ;; checker!?] thru a file when you wonder, where the heck was I just
 ;; editing?  Well, the best you can do is hit undo, ^F, and undo again,
 ;; to get back.  Hence the "burning need" for the additional function,
 ;; which you might name the-jacobson-memorial-function, due to its brilliance.
-;; -- 
+;; --
 ;; http://jidanni.org/ Taiwan(04)25854780
 
 ;;; Code:
@@ -88,9 +87,9 @@ will return point to the current position."
     (setq minimal-line-distance 10))
   (let ((position nil)
 	(undo-list (if (and (eq this-command last-command)
-			    goto-last-change-undo)
-		       (cdr (memq goto-last-change-undo buffer-undo-list))
-		     buffer-undo-list))
+                goto-last-change-undo)
+               (cdr (memq goto-last-change-undo buffer-undo-list))
+             buffer-undo-list))
 	undo)
     (while (and undo-list
                 (or (not position)
@@ -104,29 +103,29 @@ will return point to the current position."
                             minimal-line-distance))))
       (setq undo (car undo-list))
       (cond ((and (consp undo) (integerp (car undo)) (integerp (cdr undo)))
-	     ;; (BEG . END)
-	     (setq position (cdr undo)))
-	    ((and (consp undo) (stringp (car undo))) ; (TEXT . POSITION)
-	     (setq position (abs (cdr undo))))
-	    ((and (consp undo) (eq (car undo) t))) ; (t HIGH . LOW)
-	    ((and (consp undo) (null (car undo)))
-	     ;; (nil PROPERTY VALUE BEG . END)
-	     (setq position (cdr (last undo))))
-	    ((and (consp undo) (markerp (car undo)))) ; (MARKER . DISTANCE)
-	    ((integerp undo))		; POSITION
-	    ((null undo))		; nil
-	    (t (error "Invalid undo entry: %s" undo)))
+         ;; (BEG . END)
+         (setq position (cdr undo)))
+        ((and (consp undo) (stringp (car undo))) ; (TEXT . POSITION)
+         (setq position (abs (cdr undo))))
+        ((and (consp undo) (eq (car undo) t))) ; (t HIGH . LOW)
+        ((and (consp undo) (null (car undo)))
+         ;; (nil PROPERTY VALUE BEG . END)
+         (setq position (cdr (last undo))))
+        ((and (consp undo) (markerp (car undo)))) ; (MARKER . DISTANCE)
+        ((integerp undo))		; POSITION
+        ((null undo))		; nil
+        (t (error "Invalid undo entry: %s" undo)))
       (setq undo-list (cdr undo-list)))
     (cond (position
-	   (setq goto-last-change-undo undo)
-	   (goto-char (min position (point-max))))
-	  ((and (eq this-command last-command)
+       (setq goto-last-change-undo undo)
+       (goto-char (min position (point-max))))
+      ((and (eq this-command last-command)
 		goto-last-change-undo)
-	   (setq goto-last-change-undo nil)
-	   (error "No further undo information"))
-	  (t
-	   (setq goto-last-change-undo nil)
-	   (error "Buffer not modified")))))
+       (setq goto-last-change-undo nil)
+       (error "No further undo information"))
+      (t
+       (setq goto-last-change-undo nil)
+       (error "Buffer not modified")))))
 
 (defun goto-last-change-with-auto-marks (&optional minimal-line-distance)
   "Calls goto-last-change and sets the mark at only the first invocations
