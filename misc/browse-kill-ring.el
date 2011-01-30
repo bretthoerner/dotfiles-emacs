@@ -1,4 +1,4 @@
-;;; browse-kill-ring.el --- interactively insert items from kill-ring -*- coding: utf-8 -*-
+;;; browse-kill-ring.el --- interactively insert items from kill-ring
 
 ;; Copyright (C) 2001, 2002 Colin Walters <walters@verbum.org>
 

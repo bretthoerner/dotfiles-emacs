@@ -1,6 +1,8 @@
 ;;; c-eldoc.el --- helpful description of the arguments to C functions
 
 ;; Version: 0.5
+;; Author: Paul Pogonyshev
+;; Maintainer: Nathaniel Flath
 
 ;; Copyright (C) 2004 Paul Pogonyshev
 ;; Copyright (C) 2004, 2005 Matt Strange
@@ -29,8 +31,8 @@
 ;;
 ;; (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
 
-;; Nathaniel has submitted a caching patch to make this workable on large projects "like the emacs
-;; codebase"
+;; Nathaniel has submitted a caching patch to make this workable on
+;; large projects "like the emacs codebase"
 ;; v0.5 01/02/2010
 
 ;; Provides helpful description of the arguments to C functions.

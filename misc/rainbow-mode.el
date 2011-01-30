@@ -322,8 +322,8 @@ This will convert \"80 %\" to 204, \"100 %\" to 255 but \"123\" to \"123\"."
         (setq m2 (- (+ l s) (* l s))))
     (setq m1 (- (* l 2) m2))
     (list (rainbow-hue-to-rgb m1 m2 (+ h (/ 1 3.0)))
-	  (rainbow-hue-to-rgb m1 m2 h)
-	  (rainbow-hue-to-rgb m1 m2 (- h (/ 1 3.0))))))
+      (rainbow-hue-to-rgb m1 m2 h)
+      (rainbow-hue-to-rgb m1 m2 (- h (/ 1 3.0))))))
 
 (defun rainbow-colorize-hsl ()
   "Colorize a match with itself."
@@ -332,7 +332,7 @@ This will convert \"80 %\" to 204, \"100 %\" to 255 but \"123\" to \"123\"."
         (l (/ (string-to-number (match-string-no-properties 3)) 100.0)))
     (rainbow-colorize-match
      (multiple-value-bind (r g b)
-	 (rainbow-hsl-to-rgb-fractions h s l)
+     (rainbow-hsl-to-rgb-fractions h s l)
        (format "#%02X%02X%02X" (* r 255) (* g 255) (* b 255))))))
 
 (defun rainbow-colorize-rgb ()
@@ -356,9 +356,9 @@ This will convert \"80 %\" to 204, \"100 %\" to 255 but \"123\" to \"123\"."
 (defun rainbow-x-color-luminance (color)
   "Calculate the luminance of a color string (e.g. \"#ffaa00\", \"blue\")."
   (let* ((values (x-color-values color))
-	 (r (car values))
-	 (g (cadr values))
-	 (b (caddr values)))
+     (r (car values))
+     (g (cadr values))
+     (b (caddr values)))
     (rainbow-color-luminance r g b)))
 
 (defun rainbow-turn-on ()

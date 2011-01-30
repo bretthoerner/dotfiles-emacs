@@ -1,3 +1,9 @@
+;;; flymake-cursor.el --- show flymake messages in the minibuffer
+
+;; Version: 1.0
+;; Author: Unknown
+;; URL: http://paste.lisp.org/display/60617,1/raw
+
 ;; -*- emacs-lisp -*-
 ;; License: Gnu Public License
 ;;
@@ -6,7 +12,6 @@
 ;; error. This saves having to mouse over the error, which is a
 ;; keyboard user's annoyance
 
-;;flymake-ler(file line type text &optional full-file)
 (defun show-fly-err-at-point ()
   "If the cursor is sitting on a flymake error, display the
 message in the minibuffer"
@@ -43,3 +48,6 @@ it)"
   (set (make-local-variable 'post-command-hook)
        (cons 'show-fly-err-at-point post-command-hook)))
 
+(provide 'flymake-cursor)
+
+;;; flymake-cursor.el ends here

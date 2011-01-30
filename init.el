@@ -148,49 +148,49 @@
    ; account add jabber <email> <pass> talk.google.com:5223:ssl
    ; chat add 0 <aim_channel>
 
-   (require 'erc-match)
-   (require 'erc-services)
-   (require 'erc-libnotify)
+ ;;   (require 'erc-match)
+ ;;   (require 'erc-services)
+ ;;   (require 'erc-libnotify)
 
-   (erc-services-mode t)
-   (add-hook 'erc-mode-hook 'erc-add-scroll-to-bottom)
-   (add-to-list 'erc-server-alist '("Brett Hoerner's Bitlebee" bitlbee "localhost" 6668))
-   (setq erc-prompt-for-nickserv-password nil
-         erc-nickserv-passwords `((freenode (("brett_h" . ,bjh-freenode-password))))
-         erc-fill-column 100
-         erc-autojoin-channels-alist '(("freenode.net" "#disqus"))
-         erc-keywords '("\\bbrett\\b" "\\bhoerner\\b"))
+ ;;   (erc-services-mode t)
+ ;;   (add-hook 'erc-mode-hook 'erc-add-scroll-to-bottom)
+ ;;   (add-to-list 'erc-server-alist '("Brett Hoerner's Bitlebee" bitlbee "localhost" 6668))
+ ;;   (setq erc-prompt-for-nickserv-password nil
+ ;;         erc-nickserv-passwords `((freenode (("brett_h" . ,bjh-freenode-password))))
+ ;;         erc-fill-column 100
+ ;;         erc-autojoin-channels-alist '(("freenode.net" "#disqus"))
+ ;;         erc-keywords '("\\bbrett\\b" "\\bhoerner\\b"))
 
-   (defun erc-proxy-enable ()
-     (interactive)
-     (setq socks-override-functions 1)
-     (setq socks-noproxy '("localhost"))
-     (require 'socks)
-     (setq socks-server '("ssh-socks" "localhost" 9999 5))
-     (setq erc-server-connect-function 'socks-open-network-stream))
-   ;; (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+ ;;   (defun erc-proxy-enable ()
+ ;;     (interactive)
+ ;;     (setq socks-override-functions 1)
+ ;;     (setq socks-noproxy '("localhost"))
+ ;;     (require 'socks)
+ ;;     (setq socks-server '("ssh-socks" "localhost" 9999 5))
+ ;;     (setq erc-server-connect-function 'socks-open-network-stream))
+ ;;   ;; (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
-   (defun bitlbee-identify ()
-     "If we're on the bitlbee server, send the identify command to the
- &bitlbee channel."
-     (when (and (string= "localhost" erc-session-server)
-                (string= "&bitlbee" (buffer-name)))
-       (erc-message "PRIVMSG" (format "%s identify %s"
-                                      (erc-default-target)
-                                      bjh-bitlbee-password))))
-   (add-hook 'erc-join-hook 'bitlbee-identify)
+ ;;   (defun bitlbee-identify ()
+ ;;     "If we're on the bitlbee server, send the identify command to the
+ ;; &bitlbee channel."
+ ;;     (when (and (string= "localhost" erc-session-server)
+ ;;                (string= "&bitlbee" (buffer-name)))
+ ;;       (erc-message "PRIVMSG" (format "%s identify %s"
+ ;;                                      (erc-default-target)
+ ;;                                      bjh-bitlbee-password))))
+ ;;   (add-hook 'erc-join-hook 'bitlbee-identify)
 
-   (defun erc-connect-freenode ()
-     (interactive)
-     (erc :server "irc.freenode.net"
-          :port 6667
-          :nick "brett_h"))
-   (defun erc-connect-bitlbee ()
-     (interactive)
-     (erc :server "localhost"
-          :port 6668
-          :nick "brett_h"
-          :password bjh-bitlbee-server-password))
+ ;;   (defun erc-connect-freenode ()
+ ;;     (interactive)
+ ;;     (erc :server "irc.freenode.net"
+ ;;          :port 6667
+ ;;          :nick "brett_h"))
+ ;;   (defun erc-connect-bitlbee ()
+ ;;     (interactive)
+ ;;     (erc :server "localhost"
+ ;;          :port 6668
+ ;;          :nick "brett_h"
+ ;;          :password bjh-bitlbee-server-password))
 
    (require 'rcirc)
    (require 'rcirc-notify)
@@ -481,7 +481,7 @@ makes)."
     (message "Aborting")))
 
 ;; redo
-(require 'redo)
+(require 'redo+)
 (global-set-key [(control ??)] 'redo)
 
 ;; savehist

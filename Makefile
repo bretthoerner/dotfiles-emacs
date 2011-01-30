@@ -19,11 +19,12 @@ ELC = $(BATCH) -f batch-byte-compile
 # The following variables need to be defined by the maintainer
 MISCF =	browse-kill-ring.el \
 		buffer-move.el \
+		c-eldoc.el \
 		dired-single.el \
-		erc-libnotify.el \
 		find-file-in-project.el \
 		flymake-cursor.el \
 		full-ack.el \
+		furl.el \
 		goto-last-change.el \
 		highlight-parentheses.el \
 		http-twiddle.el \
@@ -34,15 +35,19 @@ MISCF =	browse-kill-ring.el \
 		markdown-mode.el \
 		multi-term.el \
 		paredit.el \
+		parenface.el \
 		php-mode.el \
 		project.el \
 		puppet-mode.el \
 		quack.el \
 		rainbow-mode.el \
-		redo.el \
+		rcirc-notify.el \
+		rcirc-notify-mode.el \
+		redo+.el \
 		scpaste.el \
 		scratch.el \
-		smooth-scrolling.el
+		smooth-scrolling.el \
+		undo-tree.el
 
 LISPFILES  = $(MISCF:%=misc/%)
 ELCFILES   = $(LISPFILES:.el=.elc)

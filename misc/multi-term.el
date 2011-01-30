@@ -761,6 +761,6 @@ This advice can make `other-window' skip `multi-term' dedicated window."
 ;; time-stamp-end: ">"
 ;; End:
 
-;;; multi-term.el ends here
-
 ;;; LocalWords:  multi el dir sr Hawley eb ef cd
+
+;;; multi-term.el ends here
