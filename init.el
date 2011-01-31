@@ -1079,8 +1079,10 @@ buffer-local variable `show-trailing-whitespace'."
           frame-background-mode 'dark)
     (load-file (concat dotfiles-dir "themes/blackboard.el"))
     ;; (load-file (concat dotfiles-dir "themes/irblack.el"))
+    ;; (load-file (concat dotfiles-dir "themes/naquadah.el"))
     (color-theme-blackboard)
     ;; (color-theme-irblack)
+    ;; (color-theme-naquadah)
 
     (defun bjh-set-frame-font-size (size)
       (set-frame-font (concat bjh-font "-" (number-to-string size)))
