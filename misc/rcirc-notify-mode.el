@@ -50,7 +50,7 @@
     (define-key map (kbd "r")        'rcirc-notify-mode:mark-as-read)
     (define-key map (kbd "p")        'rcirc-notify-mode:mark-all-previous-as-read)
     (define-key map (kbd "a")        'rcirc-notify-mode:mark-all-as-read)
-    
+
     map)
   "Keymap for `rcirc-notify-mode'.")
 
@@ -76,8 +76,8 @@
     (save-excursion
       (rcirc-notify-mode:mark-as-read)
       (while (not (eq -1 (forward-line -1)))
-	(remove-text-properties 
-	 (line-beginning-position) (line-end-position) '(face default))))))
+	(remove-text-properties
+     (line-beginning-position) (line-end-position) '(face default))))))
 
 (defun rcirc-notify-mode:mark-all-as-read ()
   (interactive)
@@ -104,24 +104,24 @@
       (save-excursion
 	(goto-char (point-max))
 	(insert (propertize message
-			    'line-prefix (format-time-string
-					  rcirc-notify-mode:time-format (current-time))
-			    'read-only t
-			    'face face
-			    'rcirc-buffer target-buffer-name))
+                'line-prefix (format-time-string
+                      rcirc-notify-mode:time-format (current-time))
+                'read-only t
+                'face face
+                'rcirc-buffer target-buffer-name))
 	(insert "\n")))))
 
 (defun rcirc-notify-mode:notify (sender target target-buffer-name)
   "fill in the *rcirc-motify* buffer"
    (rcirc-notify-mode:append (format rcirc-notify-mode:message sender target)
-			     'rcirc-nick-in-message 
-			     target-buffer-name))
+                 'rcirc-nick-in-message
+                 target-buffer-name))
 
 (defun rcirc-notify-mode:notify-private (sender target target-buffer-name)
   "fill in the *rcirc-motify* buffer"
-  (rcirc-notify-mode:append (format rcirc-notify-mode:message-private sender target) 
-			    'rcirc-nick-in-message-full-line
-			    target-buffer-name))
+  (rcirc-notify-mode:append (format rcirc-notify-mode:message-private sender target)
+                'rcirc-nick-in-message-full-line
+                target-buffer-name))
 
 (defun rcirc-notify-mode:nick-allowed (nick &optional delay)
   "Return non-nil if a notification should be made for NICK.
@@ -146,7 +146,7 @@ matches a regexp in `rcirc-keywords'."
   (interactive)
 
   (when (and (string-match (concat (rcirc-nick proc) "[:, $]") text)
-	     ;(not (string= (rcirc-nick proc) sender))
+         ;(not (string= (rcirc-nick proc) sender))
              (not (string= (rcirc-server-name proc) sender))
              (rcirc-notify-mode:nick-allowed sender))
     (rcirc-notify-mode:notify sender target (current-buffer))))
@@ -170,15 +170,15 @@ matches a regexp in `rcirc-keywords'."
       ;; that will be the first line (maybe current one) where 'face isn't nil
       ;; loop forward to find unread notification (non nil 'face property)
       (while (and (< (point) (point-max))
-		  (not (get-text-property (point) 'face)))
+          (not (get-text-property (point) 'face)))
 	(forward-line 1)))
-	  
+
     (set-window-buffer (selected-window) notify-buffer)))
 
 (add-hook 'rcirc-print-hooks 'rcirc-notify-mode:privmsg)
 (add-hook 'rcirc-print-hooks 'rcirc-notify-mode:notify-me)
 (add-hook 'rcirc-mode-hook   (lambda ()
-			       (local-set-key (kbd "C-c n") 
-					      'rcirc-notify-mode:switch-to-notify-buffer)))
+                   (local-set-key (kbd "C-c n")
+                          'rcirc-notify-mode:switch-to-notify-buffer)))
 
 (provide 'rcirc-notify-mode)

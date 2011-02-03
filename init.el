@@ -399,6 +399,7 @@ makes)."
 
    (require 'rcirc)
    (require 'rcirc-notify)
+   ;; (require 'rcirc-notify-mode)
 
    (rcirc-track-minor-mode 1)
 
@@ -630,7 +631,7 @@ makes)."
 (setq auto-save-default nil)
 
 ;; allows "y" instead of "yes" on exit
-(fset 'yes-or-no-p 'y-or-n-p)
+;; (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; disable menu bar in terminal
 (menu-bar-mode -1)
