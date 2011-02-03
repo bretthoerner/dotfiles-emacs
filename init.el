@@ -75,7 +75,8 @@
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
 ;; browse-url
-(setq browse-url-browser-function 'browse-url-firefox)
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")
 
 ;; c-mode
 ;(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
@@ -137,77 +138,6 @@
                   (delete-file (concat buffer-file-name "c"))))))
 
 (define-key emacs-lisp-mode-map (kbd "M-.") 'find-function-at-point)
-
-;; erc
-(let ((erc-password-file (expand-file-name "~/.ercpass.el")))
- (when (file-regular-p erc-password-file)
-   (load erc-password-file)
-
-   ;; random bitlbee notes
-   ; account add oscar <user> <pass> login.oscar.aol.com
-   ; account add jabber <email> <pass> talk.google.com:5223:ssl
-   ; chat add 0 <aim_channel>
-
- ;;   (require 'erc-match)
- ;;   (require 'erc-services)
- ;;   (require 'erc-libnotify)
-
- ;;   (erc-services-mode t)
- ;;   (add-hook 'erc-mode-hook 'erc-add-scroll-to-bottom)
- ;;   (add-to-list 'erc-server-alist '("Brett Hoerner's Bitlebee" bitlbee "localhost" 6668))
- ;;   (setq erc-prompt-for-nickserv-password nil
- ;;         erc-nickserv-passwords `((freenode (("brett_h" . ,bjh-freenode-password))))
- ;;         erc-fill-column 100
- ;;         erc-autojoin-channels-alist '(("freenode.net" "#disqus"))
- ;;         erc-keywords '("\\bbrett\\b" "\\bhoerner\\b"))
-
- ;;   (defun erc-proxy-enable ()
- ;;     (interactive)
- ;;     (setq socks-override-functions 1)
- ;;     (setq socks-noproxy '("localhost"))
- ;;     (require 'socks)
- ;;     (setq socks-server '("ssh-socks" "localhost" 9999 5))
- ;;     (setq erc-server-connect-function 'socks-open-network-stream))
- ;;   ;; (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-
- ;;   (defun bitlbee-identify ()
- ;;     "If we're on the bitlbee server, send the identify command to the
- ;; &bitlbee channel."
- ;;     (when (and (string= "localhost" erc-session-server)
- ;;                (string= "&bitlbee" (buffer-name)))
- ;;       (erc-message "PRIVMSG" (format "%s identify %s"
- ;;                                      (erc-default-target)
- ;;                                      bjh-bitlbee-password))))
- ;;   (add-hook 'erc-join-hook 'bitlbee-identify)
-
- ;;   (defun erc-connect-freenode ()
- ;;     (interactive)
- ;;     (erc :server "irc.freenode.net"
- ;;          :port 6667
- ;;          :nick "brett_h"))
- ;;   (defun erc-connect-bitlbee ()
- ;;     (interactive)
- ;;     (erc :server "localhost"
- ;;          :port 6668
- ;;          :nick "brett_h"
- ;;          :password bjh-bitlbee-server-password))
-
-   (require 'rcirc)
-   (require 'rcirc-notify)
-
-   (rcirc-track-minor-mode 1)
-
-   ;; clear screen
-   ;; (let ((inhibit-read-only t))
-   ;;   (delete-region
-   ;;    (point-min) rcirc-prompt-start-marker))
-
-   (setq rcirc-default-nick "brett_h"
-         rcirc-default-user-name "brett"
-         rcirc-default-full-name "Brett"
-         rcirc-authinfo `(("freenode" nickserv "brett_h" ,bjh-freenode-password)
-                          ("localhost" bitlbee "brett_h" ,bjh-bitlbee-password))
-         rcirc-server-alist '(("irc.freenode.net" :channels ("#emacs"))))))
 
 ;; ffap
 (when (fboundp 'find-file-at-point)
@@ -483,6 +413,37 @@ makes)."
 ;; redo
 (require 'redo+)
 (global-set-key [(control ??)] 'redo)
+
+;; rcirc
+(let ((irc-password-file (expand-file-name "~/.ircpass.el")))
+ (when (file-regular-p irc-password-file)
+   (load irc-password-file)
+
+   ;; random bitlbee notes
+   ; account add oscar <user> <pass> login.oscar.aol.com
+   ; account add jabber <email> <pass> talk.google.com:5223:ssl
+   ; chat add 0 <aim_channel>
+
+   (require 'rcirc)
+   (require 'rcirc-notify)
+
+   (rcirc-track-minor-mode 1)
+
+   ;; clear screen
+   ;; (let ((inhibit-read-only t))
+   ;;   (delete-region
+   ;;    (point-min) rcirc-prompt-start-marker))
+
+   (add-hook 'rcirc-mode-hook
+             '(lambda ()
+                (set (make-local-variable 'blink-matching-paren) nil)))
+
+   (setq rcirc-default-nick "brett_h"
+         rcirc-default-user-name "brett"
+         rcirc-default-full-name "Brett"
+         rcirc-authinfo `(("freenode" nickserv "brett_h" ,bjh-freenode-password)
+                          ("localhost" bitlbee "brett_h" ,bjh-bitlbee-password))
+         rcirc-server-alist '(("irc.freenode.net" :channels ("#emacs"))))))
 
 ;; savehist
 (savehist-mode 1)
