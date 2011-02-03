@@ -222,32 +222,7 @@ makes)."
       ido-case-fold t
       ido-create-new-buffer 'always
       ido-enable-flex-matching t
-      ido-save-directory-list-file nil
-      ;; ido-decorations (quote ("\n> " ; show choices vertically
-      ;;                         ""
-      ;;                         "\n "
-      ;;                         "\n ..."
-      ;;                         "[" "]"
-      ;;                         " [No match]"
-      ;;                         " [Matched]"
-      ;;                         " [Not readable]"
-      ;;                         " [Too big]"
-      ;;                         " [Confirm]"))
-      )
-
-;; truncate long lines in choices
-;; (defun my-ido-minibuffer-setup-hook ()
-;;   ;; allow line wrapping in the minibuffer
-;;   (set (make-local-variable 'truncate-lines) nil))
-;; (add-hook 'ido-minibuffer-setup-hook 'my-ido-minibuffer-setup-hook)
-
-;; ;; add additional keybindings
-;; (defun my-ido-keys ()
-;;   (define-key ido-completion-map [up] 'ido-prev-match)
-;;   (define-key ido-completion-map [down] 'ido-next-match)
-;;   (define-key ido-completion-map [(control n)] 'ido-next-match)
-;;   (define-key ido-completion-map [(control p)] 'ido-prev-match))
-;; (add-hook 'ido-setup-hook 'my-ido-keys)
+      ido-save-directory-list-file nil)
 
 (require 'ido)
 (ido-mode t)
@@ -262,56 +237,54 @@ makes)."
 (setq js2-highlight-level 3
       js2-bounce-indent-p t)
 
-;; ;; Custom indentation function since JS2 indenting is terrible.
-;; ;; Uses js-mode's (espresso-mode) indentation semantics.
-;; ;;
-;; ;; Based on: http://mihai.bazon.net/projects/editing-javascript-with-emacs-js2-mode
-;; ;; (Thanks!)
-;; (defun my-js2-indent-function ()
-;;   (interactive)
-;;   (save-restriction
-;;     (widen)
-;;     (let* ((inhibit-point-motion-hooks t)
-;;            (parse-status (save-excursion (syntax-ppss (point-at-bol))))
-;;            (offset (- (current-column) (current-indentation)))
-;;            (indentation (js--proper-indentation parse-status))
-;;            node)
+;; Custom indentation function since JS2 indenting is terrible.
+;; Uses js-mode's (espresso-mode) indentation semantics.
+;;
+;; Based on: http://mihai.bazon.net/projects/editing-javascript-with-emacs-js2-mode
+(defun bjh-js2-indent-function ()
+  (interactive)
+  (save-restriction
+    (widen)
+    (let* ((inhibit-point-motion-hooks t)
+           (parse-status (save-excursion (syntax-ppss (point-at-bol))))
+           (offset (- (current-column) (current-indentation)))
+           (indentation (js--proper-indentation parse-status))
+           node)
 
-;;       (save-excursion
+      (save-excursion
 
-;;         ;; I like to indent case and labels to half of the tab width
-;;         (back-to-indentation)
-;;         (if (looking-at "case\\s-")
-;;             (setq indentation (+ indentation (/ js-indent-level 2))))
+        ;; I like to indent case and labels to half of the tab width
+        (back-to-indentation)
+        (if (looking-at "case\\s-")
+            (setq indentation (+ indentation (/ js-indent-level 2))))
 
-;;         ;; consecutive declarations in a var statement are nice if
-;;         ;; properly aligned, i.e:
-;;         ;;
-;;         ;; var foo = "bar",
-;;         ;; bar = "foo";
-;;         (setq node (js2-node-at-point))
-;;         (when (and node
-;;                    (= js2-NAME (js2-node-type node))
-;;                    (= js2-VAR (js2-node-type (js2-node-parent node))))
-;;           (setq indentation (+ 4 indentation))))
+        ;; consecutive declarations in a var statement are nice if
+        ;; properly aligned, i.e:
+        ;;
+        ;; var foo = "bar",
+        ;; bar = "foo";
+        (setq node (js2-node-at-point))
+        (when (and node
+                   (= js2-NAME (js2-node-type node))
+                   (= js2-VAR (js2-node-type (js2-node-parent node))))
+          (setq indentation (+ 4 indentation))))
 
-;;       (indent-line-to indentation)
-;;       (when (> offset 0) (forward-char offset)))))
+      (indent-line-to indentation)
+      (when (> offset 0) (forward-char offset)))))
 
-;; (defun my-js2-mode-hook ()
-;;   (if (not (boundp 'js--proper-indentation))
-;;       (progn (js-mode)
-;;              (remove-hook 'js2-mode-hook 'my-js2-mode-hook)
-;;              (js2-mode)
-;;              (add-hook 'js2-mode-hook 'my-js2-mode-hook)))
-;;   (set (make-local-variable 'indent-line-function) 'my-js2-indent-function)
-;;   (define-key js2-mode-map [(return)] 'newline-and-indent)
-;;   (define-key js2-mode-map [(backspace)] 'c-electric-backspace)
-;;   (define-key js2-mode-map [(control d)] 'c-electric-delete-forward)
-;;   (message "JS2 mode hook ran."))
+(defun bjh-js2-mode-hook ()
+  (if (not (boundp 'js--proper-indentation))
+      (progn (js-mode)
+             (remove-hook 'js2-mode-hook 'bjh-js2-mode-hook)
+             (js2-mode)
+             (add-hook 'js2-mode-hook 'bjh-js2-mode-hook)))
+  (set (make-local-variable 'indent-line-function) 'bjh-js2-indent-function)
+  (define-key js2-mode-map [(return)] 'newline-and-indent)
+  (define-key js2-mode-map [(backspace)] 'c-electric-backspace)
+  (define-key js2-mode-map [(control d)] 'c-electric-delete-forward))
 
-;; ;; Add the hook so this is all loaded when JS2-mode is loaded
-;; (add-hook 'js2-mode-hook 'my-js2-mode-hook)
+;; Add the hook so this is all loaded when JS2-mode is loaded
+(add-hook 'js2-mode-hook 'bjh-js2-mode-hook)
 
 ;; js-comint
 (require 'js-comint)
