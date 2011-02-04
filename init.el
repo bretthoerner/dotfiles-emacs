@@ -633,6 +633,9 @@ makes)."
 ;; allows "y" instead of "yes" on exit
 ;; (fset 'yes-or-no-p 'y-or-n-p)
 
+;; always ask if you really want to exit
+(setq confirm-kill-emacs 'yes-or-no-p)
+
 ;; disable menu bar in terminal
 (menu-bar-mode -1)
 
@@ -996,6 +999,8 @@ buffer-local variable `show-trailing-whitespace'."
       (other-window -1))
     (global-set-key [(XF86Forward)] 'other-window)
     (global-set-key [(XF86Back)] 'other-other-window)
+    (global-set-key [(control tab)] 'other-window)
+    (global-set-key [(control shift tab)] 'other-other-window)
 
     (global-set-key [(control XF86Forward)] 'next-buffer)
     (global-set-key [(control XF86Back)] 'previous-buffer)
