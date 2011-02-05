@@ -1,7 +1,7 @@
 ;; smooth-scrolling.el
-;; $Id: smooth-scrolling.el,v 1.9 2009-11-23 10:32:14 adam Exp $
+;; $Id: smooth-scrolling.el,v 1.10 2009-12-19 01:45:28 adam Exp $
 ;; Adam Spiers <emacs-ss@adamspiers.org>
-;; 
+;;
 ;; Make emacs scroll smoothly, keeping the point away from the top and
 ;; bottom of the current buffer's window in order to keep lines of
 ;; context around the point visible as much as possible, whilst
@@ -49,14 +49,14 @@
 ;;
 ;; - Maybe add option to avoid scroll jumps when point is within
 ;;   margin.
-;; 
+;;
 ;;;_* Acknowledgements
-;; 
+;;
 ;; Thanks to Mark Hulme-Jones and consolers on #emacs for helping
 ;; debug issues with line-wrapping.
-;; 
+;;
 ;;;_* License
-;; 
+;;
 ;; Released under the GNU General Public License v2 or later, with
 ;; all rights assigned to the Free Software Foundation.
 ;;
@@ -64,6 +64,7 @@
 ;;;_* Code follows
 ;;;_ + disable `scroll-margin'
 (setq scroll-margin 0)
+
 ;;;_ + defcustoms
 (defcustom smooth-scroll-margin 10
   "Number of lines of visible margin at the top and bottom of a window.
@@ -106,6 +107,7 @@ code uses `count-lines', and put up with the fact that sometimes
 the point will be allowed to stray into the margin."
   :type  'boolean
   :group 'windows)
+
 ;;;_ + helper functions
 (defun smooth-scroll-lines-from-window-top ()
   "Work out, using the function indicated by
@@ -130,14 +132,14 @@ with 1 referring to the bottom line in the window."
   (if smooth-scroll-strict-margins
       (count-screen-lines (point) (window-end))
     (count-lines (point) (window-end))))
-;;;_ + after advice
 
+;;;_ + after advice
 (defun smooth-scroll-down ()
   "Scroll down smoothly if cursor is within `smooth-scroll-margin'
 lines of the top of the window."
   (and
    ;; Only scroll down if there is buffer above the start of the window.
-   (> (window-start) (buffer-end -1))
+   (> (line-number-at-pos (window-start)) 1)
    (let ((lines-from-window-top
           (smooth-scroll-lines-from-window-top)))
      (and
@@ -154,7 +156,7 @@ lines of the top of the window."
       (save-excursion
         (scroll-down
               (1+ (- smooth-scroll-margin lines-from-window-top))))))))
-                            
+
 (defun smooth-scroll-up ()
   "Scroll up smoothly if cursor is within `smooth-scroll-margin'
 lines of the bottom of the window."
@@ -178,6 +180,7 @@ lines of the bottom of the window."
                             (&optional arg try-vscroll)
                             activate)
   (smooth-scroll-down))
+
 (defadvice next-line (after smooth-scroll-up
                             (&optional arg try-vscroll)
                             activate)
