@@ -415,9 +415,11 @@ makes)."
    (setq rcirc-default-nick "brett_h"
          rcirc-default-user-name "brett"
          rcirc-default-full-name "Brett"
+         rcirc-keywords '("brett")
          rcirc-authinfo `(("freenode" nickserv "brett_h" ,bjh-freenode-password)
                           ("localhost" bitlbee "brett_h" ,bjh-bitlbee-password))
-         rcirc-server-alist '(("irc.freenode.net" :channels ("#emacs"))))))
+         rcirc-server-alist '(("irc.freenode.net" :channels ("#disqus"))
+                              ("localhost")))))
 
 ;; savehist
 (savehist-mode 1)
