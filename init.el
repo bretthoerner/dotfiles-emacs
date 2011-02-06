@@ -354,7 +354,6 @@ makes)."
 
 (add-hook 'org-mode-hook
           (lambda ()
-            ;; flyspell mode to spell check everywhere
             (flyspell-mode 1)))
 
 (global-set-key "\C-cl" 'org-store-link)
@@ -412,17 +411,19 @@ makes)."
    (require 'rcirc-notify)
    ;; (require 'rcirc-notify-mode)
 
-   ;; clear screen
-   ;; (let ((inhibit-read-only t))
-   ;;   (delete-region
-   ;;    (point-min) rcirc-prompt-start-marker))
-
    (add-hook 'rcirc-mode-hook
              '(lambda ()
                 (set (make-local-variable 'blink-matching-paren) nil)
                 (set (make-local-variable 'scroll-conservatively) 8192)
                 (rcirc-track-minor-mode 1)
                 (flyspell-mode 1)))
+
+   (defun-rcirc-command clear (arg)
+     "Clear rcirc buffer."
+     (interactive "i")
+     (let ((inhibit-read-only t))
+       (delete-region
+        (point-min) rcirc-prompt-start-marker)))
 
    (defun-rcirc-command reconnect (arg)
      "Reconnect the server process."
