@@ -310,11 +310,22 @@ makes)."
 ;; multi-term
 ; To get special control codes use: cat, xev, od -a
 ; Use `list-colors-display' to view all available colors
+(require 'multi-term)
 (setq term-default-bg-color "#0C1021"
       term-default-fg-color "white"
       ansi-term-color-vector [unspecified "black" "red2" "green2" "yellow2"
                                           "DodgerBlue2" "magenta2" "cyan2" "white"])
-(require 'multi-term)
+
+(defun bjh-term-char-mode ()
+  (interactive)
+  (term-char-mode)
+  (comint-goto-process-mark))
+
+(add-hook 'term-mode-hook
+          '(lambda ()
+             (define-key term-raw-map (kbd "C-c C-j") 'term-line-mode)
+             (define-key term-mode-map (kbd "C-c C-k") 'bjh-term-char-mode)
+             (define-key term-raw-map (kbd "C-y") 'term-paste)))
 
 ;; nxml-mode
 (setq auto-mode-alist
@@ -408,11 +419,10 @@ makes)."
 
    (add-hook 'rcirc-mode-hook
              '(lambda ()
-                (progn
-                  (set (make-local-variable 'blink-matching-paren) nil)
-                  (set (make-local-variable 'scroll-conservatively) 8192)
-                  (rcirc-track-minor-mode 1)
-                  (flyspell-mode 1))))
+                (set (make-local-variable 'blink-matching-paren) nil)
+                (set (make-local-variable 'scroll-conservatively) 8192)
+                (rcirc-track-minor-mode 1)
+                (flyspell-mode 1)))
 
    (defun-rcirc-command reconnect (arg)
      "Reconnect the server process."
@@ -1027,7 +1037,7 @@ buffer-local variable `show-trailing-whitespace'."
     (global-set-key [(XF86Forward)] 'other-window)
     (global-set-key [(XF86Back)] 'other-other-window)
     (global-set-key [(control tab)] 'other-window)
-    (global-set-key [(control shift tab)] 'other-other-window)
+    (global-set-key [(control shift iso-lefttab)] 'other-other-window)
 
     (global-set-key [(control XF86Forward)] 'next-buffer)
     (global-set-key [(control XF86Back)] 'previous-buffer)
