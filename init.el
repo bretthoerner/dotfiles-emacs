@@ -585,10 +585,16 @@ makes)."
 ;; always try to indent on newline
 (define-key global-map (kbd "RET") 'newline-and-indent)
 
-;; show full file path on F2
-(define-key global-map (kbd "<f2>") (lambda ()
+;; rename buffer on F2
+(define-key global-map (kbd "<f2>") 'rename-buffer)
+
+;; show full file path on F6
+(define-key global-map (kbd "<f6>") (lambda ()
                                       (interactive "*")
                                       (message buffer-file-truename)))
+
+;; revert buffer on F5
+(define-key global-map (kbd "<f5>") 'revert-buffer)
 
 ;; no startup message or splash screen
 (setq inhibit-splash-screen t
@@ -1045,6 +1051,8 @@ buffer-local variable `show-trailing-whitespace'."
     (require 'buffer-move)
     (global-set-key [(shift XF86Forward)] 'buf-move-right)
     (global-set-key [(shift XF86Back)] 'buf-move-left)
+    (global-set-key [(super right)] 'buf-move-right)
+    (global-set-key [(super left)] 'buf-move-left)
 
     ;; make frame larger
     (setq initial-frame-alist '((width . 140) (height . 40)))
