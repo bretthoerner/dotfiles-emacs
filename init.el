@@ -467,6 +467,15 @@ makes)."
                 (rcirc-track-minor-mode 1)
                 (flyspell-mode 1)))
 
+   (setq rcirc-default-nick "brett_h"
+         rcirc-default-user-name "brett"
+         rcirc-default-full-name "Brett"
+         rcirc-keywords '("brett" "bretthoerner" "hoerner")
+         rcirc-authinfo `(("freenode" nickserv "brett_h" ,bjh-freenode-password)
+                          ("localhost" bitlbee "brett_h" ,bjh-bitlbee-password))
+         rcirc-server-alist '(("irc.freenode.net" :channels ("#disqus"))
+                              ("localhost")))
+
    (defun-rcirc-command clear (arg)
      "Clear rcirc buffer."
      (interactive "i")
@@ -494,17 +503,8 @@ makes)."
        (delete-process process)
        (rcirc-connect server port nick
                       rcirc-default-user-name
-                      rcirc-default-user-full-name
-                      channels)))
-
-   (setq rcirc-default-nick "brett_h"
-         rcirc-default-user-name "brett"
-         rcirc-default-full-name "Brett"
-         rcirc-keywords '("brett" "bretthoerner" "hoerner")
-         rcirc-authinfo `(("freenode" nickserv "brett_h" ,bjh-freenode-password)
-                          ("localhost" bitlbee "brett_h" ,bjh-bitlbee-password))
-         rcirc-server-alist '(("irc.freenode.net" :channels ("#disqus"))
-                              ("localhost")))))
+                      rcirc-default-full-name
+                      channels)))))
 
 ;; savehist
 (savehist-mode 1)
