@@ -402,6 +402,7 @@ makes)."
 
 (add-hook 'org-mode-hook
           (lambda ()
+            (local-unset-key [(control tab)])
             (flyspell-mode 1)))
 
 (global-set-key "\C-cl" 'org-store-link)
