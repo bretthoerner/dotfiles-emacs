@@ -346,11 +346,11 @@ makes)."
 (global-set-key (kbd "C-c p t") 'project-tags)
 
 (project-def "disqus"
-      `((basedir          ,(expand-file-name "~/Development/python/disqus.com/git/disqus")
+      `((basedir          ,(expand-file-name "~/Development/python/disqus.com/git/disqus"))
         (src-patterns     ("*.html" "*.py" "*.js" "*.css" "*.dtjs" "*.dtpl" "*.tmpl" "*.txt" "*.sh"))
         (ignore-patterns  ("*.jpg" "*.gif" "*.png" "*.pyc" "~*" "#*"))
-        (file-list-cache  ,(concat dotfiles-dir "projects/disqus/file-list-cache")
-        (open-files-cache ,(concat dotfiles-dir "projects/disqus/open-files-cache")
+        (file-list-cache  ,(concat dotfiles-dir "projects/disqus/file-list-cache"))
+        (open-files-cache ,(concat dotfiles-dir "projects/disqus/open-files-cache"))
         (vcs              git)
         (startup-hook     nil)
         (shutdown-hook    nil)))
