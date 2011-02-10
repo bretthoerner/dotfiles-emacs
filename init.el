@@ -364,14 +364,22 @@ makes)."
       ansi-term-color-vector [unspecified "black" "red2" "green2" "yellow2"
                                           "DodgerBlue2" "magenta2" "cyan2" "white"])
 
+(defun bjh-term-line-mode ()
+  (interactive)
+  (set (make-local-variable 'cua-mode) t)
+  (set (make-local-variable 'transient-mark-mode) t)
+  (term-line-mode))
+
 (defun bjh-term-char-mode ()
   (interactive)
+  (set (make-local-variable 'cua-mode) nil)
+  (set (make-local-variable 'transient-mark-mode) nil)
   (term-char-mode)
   (comint-goto-process-mark))
 
 (add-hook 'term-mode-hook
           '(lambda ()
-             (define-key term-raw-map (kbd "C-c C-j") 'term-line-mode)
+             (define-key term-raw-map (kbd "C-c C-j") 'bjh-term-line-mode)
              (define-key term-mode-map (kbd "C-c C-k") 'bjh-term-char-mode)
              (define-key term-raw-map (kbd "C-y") 'term-paste)))
 
