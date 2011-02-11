@@ -1125,6 +1125,8 @@ buffer-local variable `show-trailing-whitespace'."
     (global-set-key [(shift XF86Back)] 'buf-move-left)
     (global-set-key [(super right)] 'buf-move-right)
     (global-set-key [(super left)] 'buf-move-left)
+    (global-set-key [(super up)] 'buf-move-up)
+    (global-set-key [(super down)] 'buf-move-down)
 
     ;; make frame larger
     (setq initial-frame-alist '((width . 140) (height . 40)))
