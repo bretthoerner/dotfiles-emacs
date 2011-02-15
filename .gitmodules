@@ -10,3 +10,6 @@
 [submodule "submodules/magit"]
 	path = submodules/magit
 	url = git@github.com:bretthoerner/magit.git
+[submodule "submodules/geiser"]
+	path = submodules/geiser
+	url = git://git.sv.gnu.org/geiser.git

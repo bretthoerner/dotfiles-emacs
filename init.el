@@ -203,6 +203,9 @@ makes)."
 (setq ispell-program-name "aspell"
       ispell-extra-args '("--sug-mode=ultra"))
 
+;; geiser
+(load-file (concat dotfiles-dir "geiser/elisp/geiser.el"))
+
 ;; goto-last-change
 (require 'goto-last-change)
 
