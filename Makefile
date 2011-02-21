@@ -39,6 +39,7 @@ MISCF =	browse-kill-ring.el \
 		parenface.el \
 		php-mode.el \
 		project.el \
+		python.el \
 		puppet-mode.el \
 		quack.el \
 		rainbow-mode.el \

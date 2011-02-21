@@ -383,7 +383,6 @@
 (setq puppet-indent-level 4)
 
 ;; python
-(add-to-list 'load-path (concat dotfiles-dir "python"))
 (require 'python)
 
 (setq-default flymake-gui-warnings-enabled nil)
