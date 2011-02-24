@@ -16,3 +16,6 @@
 [submodule "submodules/python"]
 	path = submodules/python
 	url = git@github.com:bretthoerner/python.el.git
+[submodule "submodules/pianobar"]
+	path = submodules/pianobar
+	url = git@github.com:bretthoerner/pianobar.el.git
