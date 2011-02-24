@@ -377,13 +377,16 @@
 (require 'php-mode)
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 
+;; pianobar
+(require 'pianobar)
+
 ;; puppet-mode
 (require 'puppet-mode)
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
 (setq puppet-indent-level 4)
 
 ;; python
-(require 'python)
+;(require 'python)
 
 (setq-default flymake-gui-warnings-enabled nil)
 (require 'flymake)
