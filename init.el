@@ -378,7 +378,12 @@
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 
 ;; pianobar
-(require 'pianobar)
+(let ((pianobar-password-file (expand-file-name "~/.pianobarpass.el")))
+ (when (file-regular-p pianobar-password-file)
+   (load pianobar-password-file)
+
+   (require 'pianobar)
+   (setq pianobar-global-modeline nil)))
 
 ;; puppet-mode
 (require 'puppet-mode)
