@@ -383,7 +383,11 @@
    (load pianobar-password-file)
 
    (require 'pianobar)
-   (setq pianobar-global-modeline nil)))
+   (global-set-key [(control kp-5)] 'pianobar-play-or-pause)
+   (global-set-key [(control kp-6)] 'pianobar-next-song)
+   (global-set-key [(control kp-add)] 'pianobar-love-current-song)
+   (global-set-key [(control kp-subtract)] 'pianobar-ban-current-song)
+   (global-set-key [(control kp-divide)] 'pianobar-change-station)))
 
 ;; puppet-mode
 (require 'puppet-mode)
