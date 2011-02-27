@@ -395,7 +395,7 @@
 (setq puppet-indent-level 4)
 
 ;; python
-;(require 'python)
+(require 'python)
 
 (setq-default flymake-gui-warnings-enabled nil)
 (require 'flymake)

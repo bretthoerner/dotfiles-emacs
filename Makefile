@@ -40,6 +40,7 @@ MISCF =	browse-kill-ring.el \
 		php-mode.el \
 		project.el \
 		puppet-mode.el \
+		python.el \
 		quack.el \
 		rainbow-mode.el \
 		rcirc-notify.el \
