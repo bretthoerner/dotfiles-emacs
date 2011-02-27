@@ -25,6 +25,7 @@ MISCF =	browse-kill-ring.el \
 		flymake-cursor.el \
 		full-ack.el \
 		furl.el \
+		go-mode.el \
 		goto-last-change.el \
 		highlight-parentheses.el \
 		http-twiddle.el \

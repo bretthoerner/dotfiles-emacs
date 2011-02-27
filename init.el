@@ -156,6 +156,9 @@
 ;; geiser
 (load-file (concat dotfiles-dir "geiser/elisp/geiser.el"))
 
+;; go-mode
+(require 'go-mode-load)
+
 ;; goto-last-change
 (require 'goto-last-change)
 
