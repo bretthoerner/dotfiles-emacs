@@ -147,7 +147,7 @@
 (require 'project)
 (require 'find-file-in-project)
 (setq ffip-patterns
-      '("*.clj" "*.css" "*.el" "*.html" "*.js" "*.py" "*.rb" "*.txt"))
+      '("*.clj" "*.css" "*.el" "*.html" "*.js" "*.py" "*.rb" "*.txt" "*.dtjs" "*.dtpl"))
 
 ;; flyspell-mode
 (setq ispell-program-name "aspell"
