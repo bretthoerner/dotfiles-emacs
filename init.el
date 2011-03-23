@@ -648,7 +648,9 @@ makes)."
 (setq apropos-do-all t)
 
 ;; case-insensitive completion
-(setq completion-ignore-case t)
+(setq completion-ignore-case1 t
+      read-buffer-completion-ignore-case t
+      read-file-name-completion-ignore-case t)
 
 ;; use text-mode not fundamental-mode
 (setq default-major-mode 'text-mode)
