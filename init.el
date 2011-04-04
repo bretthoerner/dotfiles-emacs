@@ -104,6 +104,9 @@
 (require 'dired-x)
 (setq dired-omit-files-p t)
 
+;; - for cd .. (^)
+(define-key dired-mode-map "-" 'dired-up-directory)
+
 (defun my-dired-init ()
   "Bunch of stuff to run for dired, either immediately or when it's
    loaded."
