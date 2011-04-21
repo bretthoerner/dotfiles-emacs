@@ -547,7 +547,7 @@ makes)."
 
 ;; scpaste
 (require 'scpaste)
-(setq scpaste-http-destination "http://p.hoerner.us"
+(setq scpaste-http-destination "http://b.hoerner.us"
       scpaste-scp-destination "bretthoerner.com:~/bretthoerner.com/media/paste")
 
 ;; scratch
