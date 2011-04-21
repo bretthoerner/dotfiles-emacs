@@ -818,6 +818,19 @@ If point was already at that position, move point to beginning of line."
 (delete 'try-complete-file-name-partially hippie-expand-try-functions-list)
 (delete 'try-complete-file-name hippie-expand-try-functions-list)
 
+;; mark dedicated window
+(defun toggle-sticky-buffer-window ()
+  "Toggle whether this window is dedicated to this buffer."
+  (interactive)
+  (set-window-dedicated-p
+   (selected-window)
+   (not (window-dedicated-p (selected-window))))
+  (if (window-dedicated-p (selected-window))
+      (message "Window is now dedicated.")
+    (message "Window is no longer dedicated.")))
+
+(global-set-key [(super d)] 'toggle-sticky-buffer-window)
+
 ;; coding hook
 (defun local-comment-auto-fill ()
   (set (make-local-variable 'comment-auto-fill-only-comments) t)
