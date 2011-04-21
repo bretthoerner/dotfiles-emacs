@@ -757,6 +757,10 @@ makes)."
 ; disable auto-saving
 (setq auto-save-default nil)
 
+; don't make me double escape \
+(require 're-builder)
+(setq reb-re-syntax 'string)
+
 ;; allows "y" instead of "yes" on exit
 ;; (fset 'yes-or-no-p 'y-or-n-p)
 
