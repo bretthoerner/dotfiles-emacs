@@ -503,8 +503,9 @@ makes)."
          rcirc-default-full-name "Brett"
          rcirc-keywords '("brett" "bretthoerner" "hoerner")
          rcirc-authinfo `(("freenode" nickserv "brett_h" ,bjh-freenode-password)
-                          ("localhost" bitlbee "brett_h" ,bjh-bitlbee-password))
-         rcirc-server-alist '(("irc.freenode.net" :channels ("#disqus"))
+                          ("localhost" bitlbee "brett_h" ;,bjh-bitlbee-password
+                           ))
+         rcirc-server-alist '(("irc.freenode.net" :channels ("#disqus" "#disqus-ops"))
                               ("localhost")))
 
    (defun-rcirc-command clear (arg)
