@@ -1185,6 +1185,7 @@ buffer-local variable `show-trailing-whitespace'."
     (color-theme-blackboard)
     ;; (color-theme-irblack)
     ;; (color-theme-naquadah)
+    ;; (color-theme-gtk-ide) ; light
 
     (defun bjh-set-frame-font-size (size)
       (set-frame-font (concat bjh-font "-" (number-to-string size)))
