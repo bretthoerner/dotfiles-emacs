@@ -28,6 +28,7 @@ MISCF =	browse-kill-ring.el \
 		go-mode.el \
 		goto-last-change.el \
 		highlight-parentheses.el \
+		htmlize.el \
 		http-twiddle.el \
 		idle-highlight.el \
 		js2-mode.el \
