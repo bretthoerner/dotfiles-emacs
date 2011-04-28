@@ -639,6 +639,11 @@ makes)."
 ;; example of .dir-locals.el
 ;; ((js2-mode . ((indent-tabs-mode . t))))
 
+;; fix for S-up being interpreted as <select>
+;; https://groups.google.com/d/topic/gnu.emacs.help/rR478H4BDU8/discussion
+(if (equal "xterm" (tty-type))
+  (define-key input-decode-map "\e[1;2A" [S-up]))
+
 ;; final newlines are good
 (setq require-final-newline t)
 
@@ -1018,8 +1023,8 @@ A place is considered `tab-width' character columns."
   (interactive)
   (textmate-shift-right (* -1 (or arg 1))))
 
-(global-set-key [(meta \[)] 'textmate-shift-left)
-(global-set-key [(meta \])] 'textmate-shift-right)
+(global-set-key [(control ?c) (meta \[)] 'textmate-shift-left)
+(global-set-key [(control ?c) (meta \])] 'textmate-shift-right)
 
 ;; define and bind textmate-like next-line
 (defun textmate-next-line ()
