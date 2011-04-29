@@ -501,11 +501,12 @@ makes)."
          rcirc-default-user-name "brett"
          rcirc-default-full-name "Brett"
          rcirc-keywords '("brett" "bretthoerner" "hoerner")
-         rcirc-authinfo `(("freenode" nickserv "brett_h" ,bjh-freenode-password)
-                          ("localhost" bitlbee "brett_h" ;,bjh-bitlbee-password
-                           ))
-         rcirc-server-alist '(("irc.freenode.net" :channels ("#disqus" "#disqus-ops"))
-                              ("localhost")))
+         rcirc-authinfo `(;("freenode" nickserv "brett_h" ,bjh-freenode-password)
+                          ;("localhost" bitlbee "brett_h" ,bjh-bitlbee-password)
+                          ("bretthoerner.com" nickserv "brett" ,bjh-znc-password))
+         rcirc-server-alist `(;("irc.freenode.net" :channels ("#disqus" "#disqus-ops"))
+                              ;("localhost")
+                              ("bretthoerner.com" :port 6668 :nick "brett" :password ,bjh-znc-password)))
 
    (defun-rcirc-command clear (arg)
      "Clear rcirc buffer."
