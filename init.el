@@ -282,7 +282,6 @@
 (add-to-list 'load-path (concat dotfiles-dir "magit"))
 (require 'magit nil t)
 (global-set-key (kbd "C-x g") 'magit-status)
-(setq magit-diff-options "-w")
 
 ;; markdown-mode
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
