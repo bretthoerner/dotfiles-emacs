@@ -653,6 +653,19 @@ makes)."
 ;; kill out to clipboard
 (setq x-select-enable-clipboard t)
 
+;; interact with system clipboard when using kill/yank on OS X
+(if (eq system-type 'darwin)
+    (setq interprogram-cut-function
+          (lambda (text &optional push)
+            (let* ((process-connection-type nil)
+                   (pbproxy (start-process "pbcopy" "pbcopy" "/usr/bin/pbcopy")))
+              (process-send-string pbproxy text)
+              (process-send-eof pbproxy))))
+
+  (setq interprogram-paste-function
+        (lambda ()
+          (shell-command-to-string "pbpaste"))))
+
 ;; tell apropos to do more
 (setq apropos-do-all t)
 
