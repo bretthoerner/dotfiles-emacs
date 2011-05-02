@@ -641,7 +641,7 @@ makes)."
 
 ;; fix for S-up being interpreted as <select>
 ;; https://groups.google.com/d/topic/gnu.emacs.help/rR478H4BDU8/discussion
-(if (equal "xterm" (tty-type))
+(if (string-match "xterm" (tty-type))
   (define-key input-decode-map "\e[1;2A" [S-up]))
 
 ;; final newlines are good
