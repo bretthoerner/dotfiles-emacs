@@ -1136,6 +1136,19 @@ buffer-local variable `show-trailing-whitespace'."
 (global-set-key (kbd "<mode-line> <wheel-up>") 'next-buffer)
 (global-set-key (kbd "<mode-line> <wheel-down>") 'previous-buffer)
 
+;; color-theme
+; C-u C-x = to get font info at point
+(add-to-list 'load-path (concat dotfiles-dir "color-theme"))
+(require 'color-theme)
+(setq color-theme-is-global t
+      frame-background-mode 'dark)
+;; (load-file (concat dotfiles-dir "themes/blackboard.el"))
+;; (load-file (concat dotfiles-dir "themes/irblack.el"))
+(load-file (concat dotfiles-dir "themes/naquadah.el"))
+;; (color-theme-blackboard)
+;; (color-theme-irblack)
+;; (color-theme-gtk-ide) ; light
+
 
 ;; ----------
 ;; GUI config
@@ -1191,19 +1204,6 @@ buffer-local variable `show-trailing-whitespace'."
 
     ;; make frame larger
     (setq initial-frame-alist '((width . 140) (height . 40)))
-
-    ;; color-theme
-    ; C-u C-x = to get font info at point
-    (require 'color-theme)
-    (setq color-theme-is-global t
-          frame-background-mode 'dark)
-    (load-file (concat dotfiles-dir "themes/blackboard.el"))
-    ;; (load-file (concat dotfiles-dir "themes/irblack.el"))
-    ;; (load-file (concat dotfiles-dir "themes/naquadah.el"))
-    (color-theme-blackboard)
-    ;; (color-theme-irblack)
-    ;; (color-theme-naquadah)
-    ;; (color-theme-gtk-ide) ; light
 
     (defun bjh-set-frame-font-size (size)
       (set-frame-font (concat bjh-font "-" (number-to-string size)))
