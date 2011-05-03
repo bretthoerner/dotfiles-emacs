@@ -32,7 +32,7 @@
      (bold-italic ((t (:bold t))))
      (bold ((t (:bold t))))
      (border-glyph ((t (nil))))
-     (buffers-tab ((t (:background "#0C1021" :foreground "#F8F8F8"))))
+     (buffers-tab ((t (:background "#000000" :foreground "#F8F8F8"))))
      (default ((t (:background "#000000" :foreground "#F8F8F8"))))
      (diff-added ((t (:foreground "green4"))))
      (diff-removed ((t (:foreground "red3"))))

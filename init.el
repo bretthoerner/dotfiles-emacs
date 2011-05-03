@@ -317,7 +317,7 @@
 ; To get special control codes use: cat, xev, od -a
 ; Use `list-colors-display' to view all available colors
 (require 'multi-term)
-(setq term-default-bg-color "#0C1021"
+(setq term-default-bg-color "#000000"
       term-default-fg-color "white"
       ansi-term-color-vector [unspecified "black" "red2" "green2" "yellow2"
                                           "DodgerBlue2" "magenta2" "cyan2" "white"])
