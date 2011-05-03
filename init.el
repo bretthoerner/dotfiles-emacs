@@ -642,7 +642,7 @@ makes)."
 ;; fix for S-up being interpreted as <select>
 ;; and other keys like S-M-arrow
 ;; https://groups.google.com/d/topic/gnu.emacs.help/rR478H4BDU8/discussion
-(when (string-match "xterm" (tty-type))
+(when (and (tty-type) (string-match "xterm" (tty-type)))
   (define-key input-decode-map "\e[1;2A" [S-up])
   (define-key input-decode-map "\e\e[1;2C" [S-M-right])
   (define-key input-decode-map "\e\e[1;2D" [S-M-left]))
