@@ -46,7 +46,6 @@ MISCF =	browse-kill-ring.el \
 		quack.el \
 		rainbow-mode.el \
 		rcirc-notify.el \
-		rcirc-notify-mode.el \
 		redo+.el \
 		scpaste.el \
 		scratch.el \
