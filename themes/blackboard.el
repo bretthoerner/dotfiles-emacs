@@ -22,7 +22,7 @@
   (interactive)
   (color-theme-install
    '(color-theme-blackboard
-     ((background-color . "#0C1021")
+     ((background-color . "#000000")
       (background-mode . dark)
       (border-color . "black")
       (cursor-color . "#A7A7A7")
@@ -33,7 +33,7 @@
      (bold ((t (:bold t))))
      (border-glyph ((t (nil))))
      (buffers-tab ((t (:background "#0C1021" :foreground "#F8F8F8"))))
-     (default ((t (:background "#0C1021" :foreground "#F8F8F8"))))
+     (default ((t (:background "#000000" :foreground "#F8F8F8"))))
      (diff-added ((t (:foreground "green4"))))
      (diff-removed ((t (:foreground "red3"))))
      (font-lock-builtin-face ((t (:foreground "#94bff3"))))
