@@ -216,7 +216,9 @@
 (require 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (setq js2-highlight-level 3
-      js2-bounce-indent-p t)
+      js2-bounce-indent-p t
+      js2-consistent-level-indent-inner-bracket-p t
+      js2-pretty-multiline-decl-indentation-p t)
 
 ;; Custom indentation function since JS2 indenting is terrible.
 ;; Uses js-mode's (espresso-mode) indentation semantics.
