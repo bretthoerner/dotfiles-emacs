@@ -142,6 +142,10 @@
 
 (define-key emacs-lisp-mode-map (kbd "M-.") 'find-function-at-point)
 
+;; erlang
+(add-to-list 'load-path (concat dotfiles-dir "erlang"))
+(require 'erlang-start)
+
 ;; ffap
 (when (fboundp 'find-file-at-point)
   (global-set-key (kbd "C-c F") 'find-file-at-point))
