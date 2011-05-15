@@ -1233,7 +1233,7 @@ buffer-local variable `show-trailing-whitespace'."
      (progn
         ;; font
         (setq bjh-font "Monaco")
-        (bjh-set-frame-font-size 10)
+        (bjh-set-frame-font-size 12)
 
         ;; normal mac command shortcuts
         (require 'mac-key-mode)
