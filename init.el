@@ -1259,6 +1259,9 @@ buffer-local variable `show-trailing-whitespace'."
         (setq bjh-font "Inconsolata-dz")
         (bjh-set-frame-font-size 10)
 
+        ;; fix path
+        (setq exec-path (append (list "~/bin" "/usr/local/bin") exec-path))
+
         ;; bind 'o' to run 'open' command on selected file in dired mode
         (define-key dired-mode-map "o" 'dired-open-gnome)
         (defun dired-open-gnome ()
