@@ -88,6 +88,9 @@
 (add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
 (require 'clojure-mode nil t)
 
+;; cscope
+(require 'xcscope)
+
 ;; cua-mode
 (setq cua-rectangle-mark-key (kbd "<C-S-M-return>"))
 (cua-mode t)
