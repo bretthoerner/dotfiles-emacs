@@ -1150,10 +1150,7 @@ buffer-local variable `show-trailing-whitespace'."
 (setq color-theme-is-global t
       frame-background-mode 'dark)
 (load-file (concat dotfiles-dir "themes/blackboard.el"))
-;; (load-file (concat dotfiles-dir "themes/irblack.el"))
-;; (load-file (concat dotfiles-dir "themes/naquadah.el"))
 (color-theme-blackboard)
-;; (color-theme-irblack)
 ;; (color-theme-gtk-ide) ; light
 
 
