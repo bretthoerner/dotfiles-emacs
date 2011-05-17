@@ -50,7 +50,8 @@ MISCF =	browse-kill-ring.el \
 		scpaste.el \
 		scratch.el \
 		smooth-scrolling.el \
-		undo-tree.el
+		undo-tree.el \
+		xcscope.el
 
 LISPFILES  = $(MISCF:%=misc/%)
 ELCFILES   = $(LISPFILES:.el=.elc)
