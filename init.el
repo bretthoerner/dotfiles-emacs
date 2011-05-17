@@ -896,7 +896,7 @@ If point was already at that position, move point to beginning of line."
 (add-hook 'coding-hook 'local-comment-auto-fill)
 ;(add-hook 'coding-hook 'turn-on-hl-line-mode)
 (add-hook 'coding-hook 'turn-on-save-place-mode)
-(add-hook 'coding-hook 'turn-on-whitespace)
+;(add-hook 'coding-hook 'turn-on-whitespace)
 (add-hook 'coding-hook 'pretty-lambdas)
 (add-hook 'coding-hook 'add-watchwords)
 ;(add-hook 'coding-hook 'turn-on-electric-pair-mode)
@@ -912,6 +912,7 @@ If point was already at that position, move point to beginning of line."
 (add-hook 'python-mode-hook
           (lambda ()
             (progn
+              (turn-on-whitespace)
               (set (make-local-variable 'tab-width) 4))))
 
 ;; enable modes for lisp files
