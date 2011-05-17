@@ -584,17 +584,11 @@ makes)."
 (require 'slime nil t)
 (if (fboundp 'slime)
   (progn
-    (setq slime-lisp-implementations '((sbcl ("/usr/bin/sbcl"))
-                                       (clojure ("~/bin/clojure") :init swank-clojure-init))
-          slime-net-coding-system 'utf-8-unix
-          slime-use-autodoc-mode nil) ; swank-clojure doesn't support this
+    (setq slime-lisp-implementations '((sbcl ("/usr/bin/sbcl")))
+          slime-net-coding-system 'utf-8-unix)
     (global-set-key "\C-cs" 'slime-selector)
     (slime-setup '(slime-fancy slime-tramp slime-asdf))
     (slime-require :swank-listener-hooks)))
-
-(add-to-list 'load-path (concat dotfiles-dir "swank-clojure"))
-(setq swank-clojure-binary "~/bin/clojure")
-(require 'swank-clojure nil t)
 
 ;; smerge
 (defun sm-try-smerge ()

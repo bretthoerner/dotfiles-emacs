@@ -4,9 +4,6 @@
 [submodule "submodules/slime"]
 	path = submodules/slime
 	url = git@github.com:bretthoerner/slime.git
-[submodule "submodules/swank-clojure"]
-	path = submodules/swank-clojure
-	url = git@github.com:bretthoerner/swank-clojure.git
 [submodule "submodules/magit"]
 	path = submodules/magit
 	url = git@github.com:bretthoerner/magit.git
