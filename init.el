@@ -890,7 +890,10 @@ If point was already at that position, move point to beginning of line."
   (make-variable-buffer-local 'show-paren-mode)
   (show-paren-mode 1))
 
-;(require 'idle-highlight)
+(require 'idle-highlight-mode)
+
+(defun turn-on-idle-highlight ()
+  (idle-highlight-mode t))
 
 ;; handy coding-hook to reuse
 (add-hook 'coding-hook 'local-comment-auto-fill)
@@ -901,7 +904,7 @@ If point was already at that position, move point to beginning of line."
 (add-hook 'coding-hook 'add-watchwords)
 ;(add-hook 'coding-hook 'turn-on-electric-pair-mode)
 (add-hook 'coding-hook 'show-parens)
-;(add-hook 'coding-hook 'idle-highlight)
+(add-hook 'coding-hook 'turn-on-idle-highlight)
 
 (defun run-coding-hook ()
   "Enable things that are convenient across all coding buffers."

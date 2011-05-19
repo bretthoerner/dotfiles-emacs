@@ -30,7 +30,7 @@ MISCF =	browse-kill-ring.el \
 		highlight-parentheses.el \
 		htmlize.el \
 		http-twiddle.el \
-		idle-highlight.el \
+		idle-highlight-mode.el \
 		js2-mode.el \
 		js-comint.el \
 		mac-key-mode.el \
