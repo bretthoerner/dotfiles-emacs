@@ -89,16 +89,14 @@ same person.")
     (t (error "No method available to page you."))))
 
 (defun my-rcirc-notify (sender)
-  (when window-system
-    ;; Set default dir to appease the notification gods
-    (let ((default-directory "~/"))
-      (my-page-me (format my-rcirc-notify-message sender)))))
+  ;; Set default dir to appease the notification gods
+  (let ((default-directory "~/"))
+    (my-page-me (format my-rcirc-notify-message sender))))
 
 (defun my-rcirc-notify-private (sender)
-  (when window-system
-    ;; Set default dir to appease the notification gods
-    (let ((default-directory "~/"))
-      (my-page-me (format my-rcirc-notify-message-private sender)))))
+  ;; Set default dir to appease the notification gods
+  (let ((default-directory "~/"))
+    (my-page-me (format my-rcirc-notify-message-private sender))))
 
 (defun my-rcirc-notify-allowed (nick &optional delay)
   "Return non-nil if a notification should be made for NICK.
