@@ -1189,6 +1189,9 @@ buffer-local variable `show-trailing-whitespace'."
     ;; don't support suspend in GUI mode
     (global-unset-key (kbd "C-z"))
 
+    ;; fix path
+    (setq exec-path (append (list "~/bin" "/usr/local/bin") exec-path))
+ 
     ;; use thinkpad arrows to manipulate windows and buffers
     (defun other-other-window ()
       (interactive)
@@ -1256,9 +1259,6 @@ buffer-local variable `show-trailing-whitespace'."
         ;; font
         (setq bjh-font "Inconsolata-dz")
         (bjh-set-frame-font-size 10)
-
-        ;; fix path
-        (setq exec-path (append (list "~/bin" "/usr/local/bin") exec-path))
 
         ;; bind 'o' to run 'open' command on selected file in dired mode
         (define-key dired-mode-map "o" 'dired-open-gnome)
