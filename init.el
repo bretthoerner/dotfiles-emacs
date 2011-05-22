@@ -904,7 +904,7 @@ If point was already at that position, move point to beginning of line."
 (add-hook 'coding-hook 'add-watchwords)
 ;(add-hook 'coding-hook 'turn-on-electric-pair-mode)
 (add-hook 'coding-hook 'show-parens)
-(add-hook 'coding-hook 'turn-on-idle-highlight)
+;(add-hook 'coding-hook 'turn-on-idle-highlight)
 
 (defun run-coding-hook ()
   "Enable things that are convenient across all coding buffers."
