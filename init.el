@@ -128,6 +128,7 @@
 
 ;; elisp
 (require 'eldoc)
+(setq eldoc-minor-mode-string nil)
 
 (eldoc-add-command
  'paredit-backward-delete
@@ -161,7 +162,8 @@
 
 ;; flyspell-mode
 (setq ispell-program-name "aspell"
-      ispell-extra-args '("--sug-mode=ultra"))
+      ispell-extra-args '("--sug-mode=ultra")
+      flyspell-mode-line-string nil)
 
 ;; geiser
 (load-file (concat dotfiles-dir "geiser/elisp/geiser.el"))
@@ -177,7 +179,8 @@
 
 ;; highlight-parentheses
 (require 'highlight-parentheses)
-(setq hl-paren-colors
+(setq hl-paren-minor-mode-string nil
+      hl-paren-colors
       '("orange1" "yellow1" "greenyellow" "green1"
         "springgreen1" "cyan1" "slateblue1" "magenta1" "purple"))
 (defun enable-highlight-parentheses-mode ()
@@ -351,9 +354,7 @@
              (define-key term-raw-map (kbd "C-y") 'term-paste)))
 
 ;; nxml-mode
-(setq auto-mode-alist
-      (cons '("\\.\\(html\\|xml\\|xsl\\|xhtml\\)\\'" . nxml-mode)
-            auto-mode-alist))
+(add-to-list 'auto-mode-alist '("\\.\\(html\\|xml\\|xsl\\|xhtml\\)\\'" . nxml-mode))
 
 ; set indent to 4
 (setq nxml-child-indent 4)
@@ -628,6 +629,9 @@ makes)."
 ;; general config
 ;; --------------
 
+
+;; can't seem to get this to work
+;; (add-to-list 'minor-mode-alist '(auto-fill-function ""))
 
 ;; cold turkey
 ;; (global-unset-key (kbd "<left>"))

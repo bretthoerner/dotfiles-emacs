@@ -32,6 +32,9 @@
 ;;
 ;;; Change Log:
 ;;
+;; 2011-05-22 (1.0.2)
+;;    Added hl-paren-minor-mode-string defcustom.
+;;
 ;; 2009-03-19 (1.0.1)
 ;;    Added setter for color variables.
 ;;
@@ -57,6 +60,11 @@
   (set variable value)
   (when (fboundp 'hl-paren-color-update)
     (hl-paren-color-update)))
+
+(defcustom hl-paren-minor-mode-string (purecopy " hl-p")
+  "String to display in mode line when Highlight Paren Mode is enabled; nil for none."
+  :type '(choice string (const :tag "None" nil))
+  :group 'highlight-parentheses)
 
 (defcustom hl-paren-colors
   '("firebrick1" "IndianRed1" "IndianRed3" "IndianRed4")
@@ -113,7 +121,7 @@ This is used to prevent analyzing the same context over and over.")
 ;;;###autoload
 (define-minor-mode highlight-parentheses-mode
   "Minor mode to highlight the surrounding parentheses."
-  nil " hl-p" nil
+  nil hl-paren-minor-mode-string nil
   (if highlight-parentheses-mode
       (progn
         (hl-paren-create-overlays)
