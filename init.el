@@ -1240,6 +1240,13 @@ buffer-local variable `show-trailing-whitespace'."
         (setq bjh-font "Monaco")
         (bjh-set-frame-font-size 12)
 
+        ;; fix path for multi-term
+        (setenv "PATH"
+                (concat
+                 "/usr/local/bin:"
+                 "/Users/brett/bin:"
+                 (getenv "PATH")))
+
         ;; normal mac command shortcuts
         (require 'mac-key-mode)
         (mac-key-mode 1)
