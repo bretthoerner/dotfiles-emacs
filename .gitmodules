@@ -1,9 +1,6 @@
 [submodule "submodules/clojure-mode"]
 	path = submodules/clojure-mode
 	url = git@github.com:bretthoerner/clojure-mode.git
-[submodule "submodules/slime"]
-	path = submodules/slime
-	url = git@github.com:bretthoerner/slime.git
 [submodule "submodules/magit"]
 	path = submodules/magit
 	url = git@github.com:bretthoerner/magit.git
