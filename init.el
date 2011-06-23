@@ -8,6 +8,13 @@
 
 
 ;; -------------
+;; color config
+;; -------------
+
+(setq bjh-color 'dark) ;; light or dark?
+
+
+;; -------------
 ;; custom files
 ;; -------------
 
@@ -329,10 +336,11 @@
 ; To get special control codes use: cat, xev, od -a
 ; Use `list-colors-display' to view all available colors
 (require 'multi-term)
-(setq term-default-bg-color "#000000"
-      term-default-fg-color "white"
-      ansi-term-color-vector [unspecified "black" "red2" "green2" "yellow2"
-                                          "DodgerBlue2" "magenta2" "cyan2" "white"])
+(if (eq bjh-color 'dark)
+    (setq term-default-bg-color "#000000"
+          term-default-fg-color "white"
+          ansi-term-color-vector [unspecified "black" "red2" "green2" "yellow2"
+                                              "DodgerBlue2" "magenta2" "cyan2" "white"]))
 
 (defun bjh-term-line-mode ()
   (interactive)
@@ -1155,10 +1163,12 @@ buffer-local variable `show-trailing-whitespace'."
 (add-to-list 'load-path (concat dotfiles-dir "color-theme"))
 (require 'color-theme)
 (setq color-theme-is-global t
-      frame-background-mode 'dark)
-(load-file (concat dotfiles-dir "themes/blackboard.el"))
-(color-theme-blackboard)
-;; (color-theme-gtk-ide) ; light
+      frame-background-mode bjh-color)
+(color-theme-initialize)
+(if (eq bjh-color 'dark)
+    (progn (load-file (concat dotfiles-dir "themes/blackboard.el"))
+           (color-theme-blackboard))
+  (color-theme-gtk-ide)) ; else light
 
 
 ;; ----------
