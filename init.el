@@ -579,8 +579,8 @@ makes)."
 ;; old, ghetto auto complete
 ;(define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol)
 
-(add-to-list 'load-path (concat dotfiles-dir "slime"))
-(add-to-list 'load-path (concat dotfiles-dir "slime/contrib"))
+;(add-to-list 'load-path (concat dotfiles-dir "slime"))
+;(add-to-list 'load-path (concat dotfiles-dir "slime/contrib"))
 
 (eval-after-load 'slime
   '(define-key slime-mode-map (kbd "C-c p")
