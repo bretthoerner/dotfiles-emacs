@@ -54,6 +54,10 @@
 
 ;; ack
 (require 'full-ack)
+(autoload 'ack-same "full-ack" nil t)
+(autoload 'ack "full-ack" nil t)
+(autoload 'ack-find-same-file "full-ack" nil t)
+(autoload 'ack-find-file "full-ack" nil t)
 
 ;; auto-complete
 ;(add-to-list 'load-path (concat dotfiles-dir "auto-complete"))

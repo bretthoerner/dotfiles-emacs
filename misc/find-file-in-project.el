@@ -112,8 +112,10 @@ directory they are found in so that they are unique."
                 (add-to-list 'file-alist file-cons)
                 file-cons))
             (split-string (shell-command-to-string
-                           (format "find %s -type f %s %s"
-                                   (or ffip-project-root (ffip-project-root))
+                           (format "find %s -type f \\( %s \\) %s"
+                                   (or ffip-project-root
+                                       (ffip-project-root)
+                                       (error "no project root found"))
                                    (ffip-join-patterns)
                                    ffip-find-options))))))
 
@@ -157,7 +159,8 @@ project-local-variables.el."
            (ffip-locate-dominating-file default-directory ffip-project-file))))
 
     (or project-root
-      (message "No project was defined for the current file."))))
+        (progn (message "No project was defined for the current file.")
+               nil))))
 
 ;; Backport functionality to Emacs 22
 (if (functionp 'locate-dominating-file)
@@ -170,5 +173,4 @@ project-local-variables.el."
             (t (plv-find-project-file parent name))))))
 
 (provide 'find-file-in-project)
-
 ;;; find-file-in-project.el ends here
