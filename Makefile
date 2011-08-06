@@ -49,6 +49,7 @@ MISCF =	browse-kill-ring.el \
 		redo+.el \
 		scpaste.el \
 		scratch.el \
+		smex.el \
 		smooth-scrolling.el \
 		undo-tree.el \
 		xcscope.el

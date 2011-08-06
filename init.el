@@ -611,6 +611,14 @@ makes)."
       (smerge-mode 1))))
 (add-hook 'find-file-hook 'sm-try-smerge t)
 
+;; smex
+(require 'smex)
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; old M-x.
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
 ;; smooth-scrolling for keyboard
 ;; below are previous 'solution' to scroll one line at a time,
 ;; replaced by smooth-scrolling.el
