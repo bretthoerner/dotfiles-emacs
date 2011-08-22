@@ -811,10 +811,10 @@ makes)."
 (setq reb-re-syntax 'string)
 
 ;; allows "y" instead of "yes" on exit
-;; (fset 'yes-or-no-p 'y-or-n-p)
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; always ask if you really want to exit
-(setq confirm-kill-emacs 'yes-or-no-p)
+; (setq confirm-kill-emacs 'yes-or-no-p)
 
 ;; disable menu bar in terminal
 (menu-bar-mode -1)
