@@ -519,7 +519,7 @@ makes)."
                 (rcirc-track-minor-mode 1)
                 (flyspell-mode 1)))
 
-   (setq rcirc-fill-column 'frame-width
+   (setq rcirc-fill-column 95
          rcirc-default-nick "brett_h"
          rcirc-default-user-name "brett"
          rcirc-default-full-name "Brett"
