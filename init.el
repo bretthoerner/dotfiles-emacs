@@ -747,6 +747,14 @@ makes)."
 ;; don't copy selected text to kill-ring automatically
 (setq mouse-drag-copy-region nil)
 
+;; mouse usage in terminal
+(add-hook 'after-init-hook (lambda ()
+                             (xterm-mouse-mode 1)))
+
+;; automatically make files with #! executable on save
+(add-hook 'after-save-hook
+          'executable-make-buffer-file-executable-if-script-p)
+
 ;; don't split without me asking
 (setq-default split-width-threshold nil)
 (setq-default split-height-threshold nil)
