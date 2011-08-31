@@ -738,7 +738,8 @@ makes)."
 
 ;; no startup message or splash screen
 (setq inhibit-splash-screen t
-      inhibit-startup-message t)
+      inhibit-startup-message t
+      inhibit-startup-echo-area-message t)
 
 ;; don't insert instructions into the *scratch* buffer
 (setq initial-scratch-message nil)
@@ -790,9 +791,11 @@ makes)."
 ;; http://www.emacswiki.org/emacs/WhiteSpace
 ;(defun whitespace-post-command-hook () nil)
 
-;; use UTF-8
+;; use UTF-8 encoding
+(setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
 ;; follow symlinks to version controlled files
