@@ -112,6 +112,13 @@
 (define-key global-map (kbd "<S-mouse-1>") 'mouse-set-point)
 (put 'mouse-set-point 'CUA 'move)
 
+;; diminish
+;; TODO: add more major and minor modes
+(when (require 'diminish nil 'noerror)
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda ()
+              (setq mode-name "el"))))
+
 ;; dired
 (require 'dired)
 (require 'dired-single)

@@ -20,6 +20,7 @@ ELC = $(BATCH) -f batch-byte-compile
 MISCF =	browse-kill-ring.el \
 		buffer-move.el \
 		c-eldoc.el \
+		diminish.el \
 		dired-single.el \
 		find-file-in-project.el \
 		flymake-cursor.el \
