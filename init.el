@@ -575,6 +575,11 @@ makes)."
 (setq-default save-place t)
 (require 'saveplace)
 
+;; scala
+(add-to-list 'load-path (concat dotfiles-dir "scala"))
+(require 'scala-mode-auto)
+(add-to-list 'auto-mode-alist '("\\.scala$" . scala-mode))
+
 ;; scpaste
 (require 'scpaste)
 (setq scpaste-http-destination "http://b.hoerner.us"
