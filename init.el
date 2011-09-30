@@ -526,7 +526,7 @@ makes)."
                 (rcirc-track-minor-mode 1)
                 (flyspell-mode 1)))
 
-   (setq rcirc-fill-column 95
+   (setq rcirc-fill-column 80
          rcirc-default-nick "brett_h"
          rcirc-default-user-name "brett"
          rcirc-default-full-name "Brett"
@@ -1314,7 +1314,7 @@ buffer-local variable `show-trailing-whitespace'."
      ;; else not mac
      (progn
         ;; font
-        (setq bjh-font "Inconsolata-dz")
+        (setq bjh-font "Inconsolata-g")
         (bjh-set-frame-font-size 10)
 
         ;; bind 'o' to run 'open' command on selected file in dired mode
