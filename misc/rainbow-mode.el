@@ -1,11 +1,12 @@
-;;; rainbow-mode.el --- Displays color names with colored background.
+;;; rainbow-mode.el --- Colorize color names in buffers
 
-;; Copyright (C) 2010 Free Software Foundation, Inc
+;; Copyright (C) 2010-2011 Free Software Foundation, Inc
 
 ;; Author: Julien Danjou <julien@danjou.info>
 ;; Keywords: faces
+;; Version: 0.2
 
-;; This file is NOT part of GNU Emacs.
+;; This file is part of GNU Emacs.
 
 ;; GNU Emacs is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -22,9 +23,8 @@
 
 ;;; Commentary:
 ;;
-;; This minor mode will set background color to strings that matches color
-;; names.
-;; i.e.  #0000ff Will be printed in white with a blue background.
+;; This minor mode sets background color to strings that match color
+;; names, e.g. #0000ff is displayed in white with a blue background.
 ;;
 
 ;;; Code:
@@ -358,12 +358,12 @@ This will convert \"80 %\" to 204, \"100 %\" to 255 but \"123\" to \"123\"."
 
 (defun rainbow-color-luminance (red green blue)
   "Calculate the luminance of color composed of RED, BLUE and GREEN.
-Returned value between 0 and 1."
+Return a value between 0 and 1."
   (/ (+ (* .2126 red) (* .7152 green) (* .0722 blue)) 256))
 
 (defun rainbow-x-color-luminance (color)
   "Calculate the luminance of a color string (e.g. \"#ffaa00\", \"blue\").
-Returned value between 0 and 1."
+Return a value between 0 and 1."
   (let* ((values (x-color-values color))
 	 (r (/ (car values) 256.0))
          (g (/ (cadr values) 256.0))
@@ -420,3 +420,5 @@ This will fontify with colors the string like \"#aabbcc\" or \"blue\"."
     (font-lock-mode 1)))
 
 (provide 'rainbow-mode)
+
+;;; rainbow-mode.el ends here
