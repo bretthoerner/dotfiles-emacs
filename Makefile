@@ -41,7 +41,6 @@ MISCF =	browse-kill-ring.el \
 		paredit.el \
 		parenface.el \
 		php-mode.el \
-		project.el \
 		puppet-mode.el \
 		python.el \
 		quack.el \
