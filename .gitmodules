@@ -15,16 +15,16 @@
 	url = git@github.com:bretthoerner/pianobar.el.git
 [submodule "submodules/ido-ubiquitous"]
 	path = submodules/ido-ubiquitous
-	url = https://github.com/technomancy/ido-ubiquitous.git
+	url = git@github.com:bretthoerner/ido-ubiquitous.git
 [submodule "submodules/find-file-in-project"]
 	path = submodules/find-file-in-project
-	url = https://github.com/technomancy/find-file-in-project.git
+	url = git@github.com:bretthoerner/find-file-in-project.git
 [submodule "submodules/http-twiddle"]
 	path = submodules/http-twiddle
-	url = https://github.com/hassy/http-twiddle.git
+	url = git@github.com:bretthoerner/http-twiddle.git
 [submodule "submodules/scpaste"]
 	path = submodules/scpaste
-	url = https://github.com/technomancy/scpaste.git
+	url = git@github.com:bretthoerner/scpaste.git
 [submodule "submodules/js2-mode"]
 	path = submodules/js2-mode
-	url = https://github.com/mooz/js2-mode.git
+	url = git@github.com:bretthoerner/js2-mode.git
