@@ -234,6 +234,7 @@
       ido-save-directory-list-file nil)
 
 (require 'ido)
+(require 'ido-ubiquitous)
 (ido-mode t)
 (ido-everywhere t)
 
