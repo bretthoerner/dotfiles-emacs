@@ -16,3 +16,6 @@
 [submodule "submodules/ido-ubiquitous"]
 	path = submodules/ido-ubiquitous
 	url = https://github.com/technomancy/ido-ubiquitous.git
+[submodule "submodules/find-file-in-project"]
+	path = submodules/find-file-in-project
+	url = https://github.com/technomancy/find-file-in-project.git
