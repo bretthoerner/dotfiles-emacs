@@ -37,7 +37,6 @@ MISCF =	browse-kill-ring.el \
 		js-comint.el \
 		mac-key-mode.el \
 		markdown-mode.el \
-		mk-project.el \
 		multi-term.el \
 		paredit.el \
 		parenface.el \
