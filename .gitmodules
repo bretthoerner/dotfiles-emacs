@@ -28,3 +28,6 @@
 [submodule "submodules/js2-mode"]
 	path = submodules/js2-mode
 	url = git@github.com:bretthoerner/js2-mode.git
+[submodule "submodules/smex"]
+	path = submodules/smex
+	url = git@github.com:bretthoerner/smex.git
