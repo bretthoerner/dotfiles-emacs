@@ -19,3 +19,6 @@
 [submodule "submodules/find-file-in-project"]
 	path = submodules/find-file-in-project
 	url = https://github.com/technomancy/find-file-in-project.git
+[submodule "submodules/http-twiddle"]
+	path = submodules/http-twiddle
+	url = https://github.com/hassy/http-twiddle.git
