@@ -22,3 +22,6 @@
 [submodule "submodules/http-twiddle"]
 	path = submodules/http-twiddle
 	url = https://github.com/hassy/http-twiddle.git
+[submodule "submodules/scpaste"]
+	path = submodules/scpaste
+	url = https://github.com/technomancy/scpaste.git
