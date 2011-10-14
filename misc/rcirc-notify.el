@@ -18,6 +18,7 @@
 ;; MA 02111-1307 USA
 ;;
 ;;;; Changelog:
+;; * 2011/10/13 - Change to use notifications.el
 ;; * 2009/10/17 - Added support for osascript which is a Mac OS X
 ;;                what Mac OS 10.4 and Growl 1.1.6 require.
 ;;
@@ -51,6 +52,7 @@
 ;; * `my-rcirc-notify-timeout` controls the number of seconds
 ;;    in between notifications from the same nick.
 
+(require 'notifications)
 
 (defvar my-rcirc-notify-message "%s is calling your name."
   "Format if message to display in libnotify popup.
@@ -69,24 +71,7 @@ notification.")
 same person.")
 
 (defun my-page-me (msg)
-  (cond
-    ((executable-find "notify-send")
-     (start-process "page-me" nil
-                    ;; 8640000 ms = 1 day
-                    "notify-send" "-u" "normal" "-i" "gtk-dialog-info"
-                    "-t" "8640000" "rcirc"
-                    msg))
-    ((executable-find "growlnotify")
-     (start-process "page-me" nil "growlnotify" "-a" "Emacs" "-m" msg))
-    ((executable-find "osascript")
-     (apply 'start-process `("page-me" nil
-                 "osascript"
-                 "-e" "tell application \"GrowlHelperApp\""
-                 "-e" "register as application \"Emacs\" all notifications {\"rcirc\"} default notifications {\"rcirc\"}"
-                 "-e" ,(concat "notify with name \"rcirc\" title \"rcirc\" description \""
-                       msg "\" application name \"Emacs\"")
-                 "-e" "end tell")))
-    (t (error "No method available to page you."))))
+  (notifications-notify :title "rcirc" :body msg))
 
 (defun my-rcirc-notify (sender)
   ;; Set default dir to appease the notification gods

@@ -1,3 +1,5 @@
+;; TODO: Replace password files with use of secrets.el
+
 (set-language-environment "utf-8")
 
 ;; -------------
@@ -619,6 +621,18 @@ makes)."
 ;; but accelerate
 (setq mouse-wheel-progressive-speed t)
 
+;; sql
+(defun sql-add-newline-first (output)
+  "Add newline to beginning of OUTPUT for `comint-preoutput-filter-functions'"
+  (concat "\n" output))
+
+(defun sqli-add-hooks ()
+  "Add hooks to `sql-interactive-mode-hook'."
+  (add-hook 'comint-preoutput-filter-functions
+            'sql-add-newline-first))
+
+(add-hook 'sql-interactive-mode-hook 'sqli-add-hooks)
+
 ;; tramp
 (setq tramp-default-method "ssh"
       tramp-persistency-file-name nil)
@@ -766,6 +780,9 @@ makes)."
 ;; show line numbers
 (line-number-mode t)
 
+;; matching pairs
+;; (electric-pair-mode t)
+
 ;; show column number in status bar
 (column-number-mode 1)
 
@@ -891,9 +908,6 @@ If point was already at that position, move point to beginning of line."
 (defun turn-on-whitespace ()
   (whitespace-mode))
 
-(defun turn-on-electric-pair-mode ()
-  (electric-pair-mode))
-
 (defun pretty-lambdas ()
   (font-lock-add-keywords
    nil `(("(?\\(lambda\\>\\)"
@@ -924,7 +938,6 @@ If point was already at that position, move point to beginning of line."
 ;(add-hook 'coding-hook 'turn-on-whitespace)
 (add-hook 'coding-hook 'pretty-lambdas)
 (add-hook 'coding-hook 'add-watchwords)
-;(add-hook 'coding-hook 'turn-on-electric-pair-mode)
 (add-hook 'coding-hook 'show-parens)
 ;(add-hook 'coding-hook 'turn-on-idle-highlight)
 
