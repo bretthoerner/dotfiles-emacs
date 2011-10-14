@@ -99,7 +99,8 @@
 
 ;; clojure-mode
 (add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
-(require 'clojure-mode nil t)
+(when (require 'clojure-mode nil t)
+  (add-hook 'clojure-mode-hook 'pretty-fns))
 
 ;; cscope
 (require 'xcscope)
@@ -918,6 +919,12 @@ If point was already at that position, move point to beginning of line."
                                     ,(make-char 'greek-iso8859-7 107))
                     nil))))))
 
+(defun pretty-fns ()
+  (font-lock-add-keywords nil `(("(\\(fn\\>\\)"
+                                 (0 (progn (compose-region (match-beginning 1)
+                                                           (match-end 1)
+                                                           "\u0192") nil))))))
+
 (defun add-watchwords ()
   (font-lock-add-keywords
    nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
@@ -1168,6 +1175,18 @@ buffer-local variable `show-trailing-whitespace'."
 
 ;; default is apropos-command which is less useful
 (global-set-key [(control ?h) ?a] 'apropos)
+
+;; Activate occur easily inside isearch
+(define-key isearch-mode-map (kbd "C-o")
+  (lambda () (interactive)
+    (let ((case-fold-search isearch-case-fold-search))
+      (occur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
+
+;; Use regex searches by default.
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-S-s") 'isearch-forward)
+(global-set-key (kbd "C-S-r") 'isearch-backward)
 
 ;; M-s regex search forward
 ;(global-set-key [(meta ?s)] 'isearch-forward-regexp)
