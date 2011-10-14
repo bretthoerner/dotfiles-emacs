@@ -1,0 +1,1 @@
+../submodules/deft/deft.el

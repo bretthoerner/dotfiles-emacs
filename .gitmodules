@@ -31,3 +31,6 @@
 [submodule "submodules/smex"]
 	path = submodules/smex
 	url = git@github.com:bretthoerner/smex.git
+[submodule "submodules/deft"]
+	path = submodules/deft
+	url = git@github.com:bretthoerner/deft.git
