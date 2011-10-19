@@ -117,6 +117,7 @@
 
 ;; deft
 (require 'deft)
+(setq deft-text-mode 'org-mode)
 
 ;; diminish
 ;; TODO: add more major and minor modes
