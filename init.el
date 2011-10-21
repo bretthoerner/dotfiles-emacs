@@ -689,6 +689,9 @@ makes)."
 ;; kill out to clipboard
 (setq x-select-enable-clipboard t)
 
+;; useful for running commands that then output to the minibuffer itself
+(setq enable-recursive-minibuffers t)
+
 ;; interact with system clipboard when using kill/yank on OS X
 (when (eq system-type 'darwin)
   (setq interprogram-cut-function
