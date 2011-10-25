@@ -37,3 +37,9 @@
 [submodule "submodules/ace-jump-mode"]
 	path = submodules/ace-jump-mode
 	url = git@github.com:bretthoerner/ace-jump-mode.git
+[submodule "submodules/auto-complete"]
+	path = submodules/auto-complete
+	url = git@github.com:bretthoerner/auto-complete.git
+[submodule "submodules/ac-slime"]
+	path = submodules/ac-slime
+	url = git@github.com:bretthoerner/ac-slime.git
