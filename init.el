@@ -1228,7 +1228,7 @@ buffer-local variable `show-trailing-whitespace'."
 (if window-system
   (progn
     ;; start emacs server
-    ;(server-start)
+    (server-start)
 
     ;; bar cursor
     (setq-default cursor-type 'bar)
