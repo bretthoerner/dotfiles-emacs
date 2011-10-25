@@ -54,6 +54,10 @@
 ;; add dotfiles/misc to path
 (add-to-list 'load-path (concat dotfiles-dir "misc"))
 
+;; ace-jump-mode
+(require 'ace-jump-mode)
+(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+
 ;; ack
 (require 'full-ack)
 (autoload 'ack-same "full-ack" nil t)

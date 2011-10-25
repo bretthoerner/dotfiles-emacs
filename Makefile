@@ -17,7 +17,8 @@ BATCH=$(EMACS) -batch -q -no-site-file -eval \
 ELC = $(BATCH) -f batch-byte-compile
 
 # The following variables need to be defined by the maintainer
-MISCF =	browse-kill-ring.el \
+MISCF =	ace-jump-mode.el \
+		browse-kill-ring.el \
 		buffer-move.el \
 		c-eldoc.el \
 		deft.el \

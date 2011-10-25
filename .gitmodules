@@ -34,3 +34,6 @@
 [submodule "submodules/deft"]
 	path = submodules/deft
 	url = git@github.com:bretthoerner/deft.git
+[submodule "submodules/ace-jump-mode"]
+	path = submodules/ace-jump-mode
+	url = https://github.com/winterTTr/ace-jump-mode.git
