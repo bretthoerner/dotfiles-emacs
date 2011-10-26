@@ -1,5 +1,3 @@
-;; TODO: Replace password files with use of secrets.el
-
 (set-language-environment "utf-8")
 
 ;; -------------
@@ -121,7 +119,9 @@
 
 ;; deft
 (require 'deft)
-(setq deft-text-mode 'org-mode)
+(setq deft-text-mode 'org-mode
+      deft-auto-save-interval 0
+      deft-extension "org")
 
 ;; diminish
 ;; TODO: add more major and minor modes
