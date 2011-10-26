@@ -66,10 +66,10 @@
 (autoload 'ack-find-file "full-ack" nil t)
 
 ;; auto-complete
-;(add-to-list 'load-path (concat dotfiles-dir "auto-complete"))
-;(setq ac-dictionary-directories (list (concat dotfiles-dir "auto-complete/dict")))
-;(require 'auto-complete-config)
-;(ac-config-default)
+(add-to-list 'load-path (concat dotfiles-dir "auto-complete"))
+(setq ac-dictionary-directories (list (concat dotfiles-dir "auto-complete/dict")))
+(require 'auto-complete-config)
+(ac-config-default)
 
 ;; bnf-mode
 (define-generic-mode 'bnf-mode
@@ -574,9 +574,10 @@ makes)."
 (autoload 'scratch "scratch" nil t)
 
 ;; slime and swank
-;(add-to-list 'ac-sources 'ac-source-slime-simple)
-;(add-hook 'slime-mode-hook 'set-up-slime-ac)
-;(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+(require 'ac-slime)
+(add-to-list 'ac-sources 'ac-source-slime-simple)
+(add-hook 'slime-mode-hook 'set-up-slime-ac)
+(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
 
 ;; old, ghetto auto complete
 ;(define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol)
@@ -596,9 +597,10 @@ makes)."
 (if (fboundp 'slime)
   (progn
     (setq slime-lisp-implementations '((sbcl ("/usr/bin/sbcl")))
-          slime-net-coding-system 'utf-8-unix)
+          slime-net-coding-system 'utf-8-unix
+          slime-protocol-version 'ignore)
     (global-set-key "\C-cs" 'slime-selector)
-    (slime-setup '(slime-fancy slime-tramp slime-asdf))
+    (slime-setup '(slime-fancy slime-repl slime-tramp slime-asdf))
     (slime-require :swank-listener-hooks)))
 
 ;; smerge
