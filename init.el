@@ -376,7 +376,15 @@
 (define-key isearch-mode-map (kbd "C-o") 'isearch-occur)
 
 ;; org-mode
-(setq org-replace-disputed-keys t)
+(setq org-replace-disputed-keys t
+      org-startup-folded nil
+      org-log-done 'time
+      org-todo-keywords
+      '((sequence "TODO(t)" "|" "DONE(d)")
+        (sequence "FEATURE(f)" "|" "COMPLETED(c)")
+        (sequence "BUG(b)" "|" "FIXED(x)")
+        (sequence "|" "CANCELED(a)")))
+
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (require 'org-install)
 
