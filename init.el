@@ -123,13 +123,6 @@
       deft-auto-save-interval 0
       deft-extension "org")
 
-;; diminish
-;; TODO: add more major and minor modes
-(when (require 'diminish nil 'noerror)
-  (add-hook 'emacs-lisp-mode-hook
-            (lambda ()
-              (setq mode-name "el"))))
-
 ;; dired
 (require 'dired)
 (require 'dired-single)
@@ -663,6 +656,16 @@ makes)."
       uniquify-ignore-buffers-re "^\\*"
       uniquify-separator ": ")
 (require 'uniquify)
+
+;; diminish
+(when (require 'diminish nil 'noerror)
+  (diminish 'eldoc-mode "")
+  (diminish 'paredit-mode "PE")
+  (diminish 'auto-complete-mode "")
+  (diminish 'auto-fill-function "")
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda ()
+              (setq mode-name "el"))))
 
 
 ;; --------------
