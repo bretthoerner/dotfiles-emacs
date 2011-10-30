@@ -962,6 +962,37 @@ If point was already at that position, move point to beginning of line."
 (defun turn-on-idle-highlight ()
   (idle-highlight-mode t))
 
+(defun adaptive-indent (beg end)
+  "Indent the region between BEG and END with adaptive filling."
+  (goto-char beg)
+  (while
+      (let ((lbp (line-beginning-position))
+            (lep (line-end-position)))
+        (put-text-property lbp lep 'wrap-prefix (fill-context-prefix lbp lep))
+        (search-forward "\n" end t))))
+
+(define-minor-mode adaptive-wrap-mode
+  "Wrap the buffer text with adaptive filling."
+  :lighter ""
+  (save-excursion
+    (save-restriction
+      (widen)
+      (let ((buffer-undo-list t)
+            (inhibit-read-only t)
+            (mod (buffer-modified-p)))
+        (if adaptive-wrap-mode
+            (progn
+              (setq word-wrap t)
+              (unless (member '(continuation) fringe-indicator-alist)
+                (push '(continuation) fringe-indicator-alist))
+              (jit-lock-register 'adaptive-indent))
+          (jit-lock-unregister 'adaptive-indent)
+          (remove-text-properties (point-min) (point-max) '(wrap-prefix pref))
+          (setq fringe-indicator-alist
+                (delete '(continuation) fringe-indicator-alist))
+          (setq word-wrap nil))
+        (restore-buffer-modified-p mod)))))
+
 ;; handy coding-hook to reuse
 (add-hook 'coding-hook 'local-comment-auto-fill)
 ;(add-hook 'coding-hook 'turn-on-hl-line-mode)
@@ -971,6 +1002,7 @@ If point was already at that position, move point to beginning of line."
 (add-hook 'coding-hook 'add-watchwords)
 (add-hook 'coding-hook 'show-parens)
 ;(add-hook 'coding-hook 'turn-on-idle-highlight)
+(add-hook 'coding-hook 'adaptive-wrap-mode)
 
 (defun run-coding-hook ()
   "Enable things that are convenient across all coding buffers."
