@@ -42,7 +42,6 @@ MISCF =	ac-slime.el \
 		markdown-mode.el \
 		multi-term.el \
 		paredit.el \
-		parenface.el \
 		php-mode.el \
 		puppet-mode.el \
 		python.el \

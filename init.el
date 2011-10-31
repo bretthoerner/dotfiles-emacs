@@ -1303,7 +1303,7 @@ buffer-local variable `show-trailing-whitespace'."
 
     ;; fix path
     (setq exec-path (append (list "~/bin" "/usr/local/bin") exec-path))
- 
+
     ;; use thinkpad arrows to manipulate windows and buffers
     (defun other-other-window ()
       (interactive)
@@ -1340,6 +1340,19 @@ buffer-local variable `show-trailing-whitespace'."
     ;; shortcuts to resize fonts
     (define-key global-map (kbd "C-+") 'bjh-text-scale-increase)
     (define-key global-map (kbd "C--") 'bjh-text-scale-decrease)
+
+    ;; dim parens in lisp-modes
+    (defface bjh-paren-face
+      '((((class color) (background dark))
+         (:foreground "grey50"))
+        (((class color) (background light))
+         (:foreground "grey55")))
+      "Face used to dim parentheses."
+      :group 'starter-kit-faces)
+
+    (dolist (mode '(scheme emacs-lisp lisp clojure))
+      (font-lock-add-keywords (intern (concat (symbol-name mode) "-mode"))
+                              '(("(\\|)" . 'bjh-paren-face))))
 
     ;; mac-specific
     (if (or (string= "mac" window-system) (string= "ns" window-system))
