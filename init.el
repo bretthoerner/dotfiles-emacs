@@ -393,6 +393,10 @@
 ;; paredit
 (require 'paredit)
 
+;; paren-mode
+(require 'paren)
+(set-face-attribute 'show-paren-match nil :background "gray20" :foreground "white")
+
 ;; php-mode
 (require 'php-mode)
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
