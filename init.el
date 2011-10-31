@@ -1256,18 +1256,6 @@ buffer-local variable `show-trailing-whitespace'."
 (global-set-key (kbd "<mode-line> <wheel-up>") 'next-buffer)
 (global-set-key (kbd "<mode-line> <wheel-down>") 'previous-buffer)
 
-;; color-theme
-; C-u C-x = to get font info at point
-(add-to-list 'load-path (concat dotfiles-dir "color-theme"))
-(require 'color-theme)
-(setq color-theme-is-global t
-      frame-background-mode bjh-color)
-(color-theme-initialize)
-(if (eq bjh-color 'dark)
-    (progn (load-file (concat dotfiles-dir "themes/blackboard.el"))
-           (color-theme-blackboard))
-  (color-theme-gtk-ide)) ; else light
-
 
 ;; ----------
 ;; GUI config
@@ -1276,6 +1264,18 @@ buffer-local variable `show-trailing-whitespace'."
 
 (if window-system
   (progn
+    ;; color-theme
+    ; C-u C-x = to get font info at point
+    (add-to-list 'load-path (concat dotfiles-dir "color-theme"))
+    (require 'color-theme)
+    (setq color-theme-is-global t
+          frame-background-mode bjh-color)
+    (color-theme-initialize)
+    (if (eq bjh-color 'dark)
+        (progn (load-file (concat dotfiles-dir "themes/blackboard.el"))
+               (color-theme-blackboard))
+      (color-theme-gtk-ide)) ; else light
+
     ;; start emacs server
     (server-start)
 
