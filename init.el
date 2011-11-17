@@ -573,7 +573,8 @@ makes)."
 ;; scpaste
 (require 'scpaste)
 (setq scpaste-http-destination "http://b.hoerner.us"
-      scpaste-scp-destination "bretthoerner.com:~/bretthoerner.com/media/paste")
+      scpaste-scp-destination "bretthoerner.com:~/bretthoerner.com/media/paste"
+      scpaste-scp-port "2222")
 
 ;; scratch
 (autoload 'scratch "scratch" nil t)
