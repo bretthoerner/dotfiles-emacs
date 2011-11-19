@@ -662,7 +662,12 @@ makes)."
       uniquify-separator ": ")
 (require 'uniquify)
 
-;; diminish
+;; which-func-mode
+(which-func-mode 1)
+
+
+
+;; diminish (needs to be run after other modes are loaded)
 (when (require 'diminish nil 'noerror)
   (diminish 'eldoc-mode "")
   (diminish 'paredit-mode "PE")
