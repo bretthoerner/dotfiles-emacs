@@ -22,6 +22,7 @@ MISCF =	ac-slime.el \
 		browse-kill-ring.el \
 		buffer-move.el \
 		c-eldoc.el \
+		coffee-mode.el \
 		deft.el \
 		diminish.el \
 		dired-single.el \

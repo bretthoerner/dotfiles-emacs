@@ -43,3 +43,6 @@
 [submodule "submodules/ac-slime"]
 	path = submodules/ac-slime
 	url = git@github.com:bretthoerner/ac-slime.git
+[submodule "submodules/coffee-mode"]
+	path = submodules/coffee-mode
+	url = git@github.com:bretthoerner/coffee-mode.git

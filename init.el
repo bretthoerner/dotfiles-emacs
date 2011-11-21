@@ -104,6 +104,9 @@
 (when (require 'clojure-mode nil t)
   (add-hook 'clojure-mode-hook 'pretty-fns))
 
+;; coffee-mode
+(require 'coffee-mode)
+
 ;; cscope
 (require 'xcscope)
 
