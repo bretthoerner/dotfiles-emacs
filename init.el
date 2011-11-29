@@ -208,25 +208,25 @@ makes)."
 (add-to-list 'load-path (concat dotfiles-dir "erlang"))
 (require 'erlang-start)
 
-(add-to-list 'load-path (concat dotfiles-dir "distel"))
-(require 'distel)
-(distel-setup)
+;; (add-to-list 'load-path (concat dotfiles-dir "distel"))
+;; (require 'distel)
+;; (distel-setup)
 
-(defun flymake-erlang-init ()
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                     'flymake-create-temp-intemp))
-         (local-file (file-relative-name
-                      temp-file
-                      (file-name-directory buffer-file-name))))
-    (list "eflymake" (list local-file))))
+;; (defun flymake-erlang-init ()
+;;   (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                      'flymake-create-temp-intemp))
+;;          (local-file (file-relative-name
+;;                       temp-file
+;;                       (file-name-directory buffer-file-name))))
+;;     (list "eflymake" (list local-file))))
 
-(push '("\\.erl\\'" flymake-erlang-init)
-      flymake-allowed-file-name-masks)
+;; (push '("\\.erl\\'" flymake-erlang-init)
+;;       flymake-allowed-file-name-masks)
 
-(defun bjh-erlang-mode-hook ()
-  (flymake-mode 1))
+;; (defun bjh-erlang-mode-hook ()
+;;   (flymake-mode 1))
 
-(add-hook 'erlang-mode-hook 'bjh-erlang-mode-hook)
+;; (add-hook 'erlang-mode-hook 'bjh-erlang-mode-hook)
 
 ;; ffap
 (when (fboundp 'find-file-at-point)
