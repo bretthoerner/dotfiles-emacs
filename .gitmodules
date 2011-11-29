@@ -46,3 +46,6 @@
 [submodule "submodules/coffee-mode"]
 	path = submodules/coffee-mode
 	url = git@github.com:bretthoerner/coffee-mode.git
+[submodule "submodules/distel"]
+	path = submodules/distel
+	url = git@github.com:bretthoerner/distel.git
