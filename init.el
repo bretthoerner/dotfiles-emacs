@@ -52,6 +52,39 @@
 ;; add dotfiles/misc to path
 (add-to-list 'load-path (concat dotfiles-dir "misc"))
 
+;; flymake
+
+(setq-default flymake-gui-warnings-enabled nil)
+(require 'flymake)
+(load-library "flymake-cursor")
+
+(defun flymake-create-temp-intemp (file-name prefix)
+  "Return file name in temporary directory for checking FILE-NAME.
+This is a replacement for `flymake-create-temp-inplace'. The
+difference is that it gives a file name in
+`temporary-file-directory' instead of the same directory as
+FILE-NAME.
+
+For the use of PREFIX see that function.
+
+Note that not making the temporary file in another directory
+\(like here) will not if the file you are checking depends on
+relative paths to other files \(for the type of checks flymake
+makes)."
+  (unless (stringp file-name)
+    (error "Invalid file-name"))
+  (or prefix
+      (setq prefix "flymake"))
+  (let* ((name (concat
+                (file-name-nondirectory
+                 (file-name-sans-extension file-name))
+                "_" prefix))
+         (ext  (concat "." (file-name-extension file-name)))
+         (temp-name (make-temp-file name nil ext))
+         )
+    (flymake-log 3 "create-temp-intemp: file=%s temp=%s" file-name temp-name)
+    temp-name))
+
 ;; ace-jump-mode
 (require 'ace-jump-mode)
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
@@ -174,6 +207,22 @@
 ;; erlang
 (add-to-list 'load-path (concat dotfiles-dir "erlang"))
 (require 'erlang-start)
+
+(defun flymake-erlang-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                     'flymake-create-temp-intemp))
+         (local-file (file-relative-name
+                      temp-file
+                      (file-name-directory buffer-file-name))))
+    (list "eflymake" (list local-file))))
+
+(push '("\\.erl\\'" flymake-erlang-init)
+      flymake-allowed-file-name-masks)
+
+(defun bjh-erlang-mode-hook ()
+  (flymake-mode 1))
+
+(add-hook 'erlang-mode-hook 'bjh-erlang-mode-hook)
 
 ;; ffap
 (when (fboundp 'find-file-at-point)
@@ -423,37 +472,6 @@
 
 ;; python
 (require 'python)
-
-(setq-default flymake-gui-warnings-enabled nil)
-(require 'flymake)
-(load-library "flymake-cursor")
-
-(defun flymake-create-temp-intemp (file-name prefix)
-  "Return file name in temporary directory for checking FILE-NAME.
-This is a replacement for `flymake-create-temp-inplace'. The
-difference is that it gives a file name in
-`temporary-file-directory' instead of the same directory as
-FILE-NAME.
-
-For the use of PREFIX see that function.
-
-Note that not making the temporary file in another directory
-\(like here) will not if the file you are checking depends on
-relative paths to other files \(for the type of checks flymake
-makes)."
-  (unless (stringp file-name)
-    (error "Invalid file-name"))
-  (or prefix
-      (setq prefix "flymake"))
-  (let* ((name (concat
-                (file-name-nondirectory
-                 (file-name-sans-extension file-name))
-                "_" prefix))
-         (ext  (concat "." (file-name-extension file-name)))
-         (temp-name (make-temp-file name nil ext))
-         )
-    (flymake-log 3 "create-temp-intemp: file=%s temp=%s" file-name temp-name)
-    temp-name))
 
 (defun flymake-pyflakes-init ()
   (let* ((temp-file (flymake-init-create-temp-buffer-copy
