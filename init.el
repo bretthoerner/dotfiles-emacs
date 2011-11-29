@@ -208,6 +208,10 @@ makes)."
 (add-to-list 'load-path (concat dotfiles-dir "erlang"))
 (require 'erlang-start)
 
+(add-to-list 'load-path (concat dotfiles-dir "distel"))
+(require 'distel)
+(distel-setup)
+
 (defun flymake-erlang-init ()
   (let* ((temp-file (flymake-init-create-temp-buffer-copy
                      'flymake-create-temp-intemp))
