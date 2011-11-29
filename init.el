@@ -207,6 +207,7 @@ makes)."
 ;; erlang
 (add-to-list 'load-path (concat dotfiles-dir "erlang"))
 (require 'erlang-start)
+(require 'nitrogen-mode)
 
 ;; (add-to-list 'load-path (concat dotfiles-dir "distel"))
 ;; (require 'distel)
@@ -732,6 +733,10 @@ makes)."
   (define-key input-decode-map "\e\e[1;2C" [S-M-right])
   (define-key input-decode-map "\e\e[1;2D" [S-M-left]))
 
+;; wrap at edge of window
+(setq truncate-lines nil
+      truncate-partial-width-windows nil)
+
 ;; final newlines are good
 (setq require-final-newline t)
 
@@ -890,7 +895,7 @@ makes)."
 ;; always ask if you really want to exit
 ; (setq confirm-kill-emacs 'yes-or-no-p)
 
-;; disable menu bar in terminal
+;; disable menu bar
 (menu-bar-mode -1)
 
 ;; allow narrowing

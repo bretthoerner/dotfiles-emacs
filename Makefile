@@ -42,6 +42,7 @@ MISCF =	ac-slime.el \
 		mac-key-mode.el \
 		markdown-mode.el \
 		multi-term.el \
+		nitrogen-mode.el \
 		paredit.el \
 		php-mode.el \
 		puppet-mode.el \
