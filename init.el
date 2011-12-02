@@ -895,9 +895,6 @@ makes)."
 ;; always ask if you really want to exit
 ; (setq confirm-kill-emacs 'yes-or-no-p)
 
-;; disable menu bar
-(menu-bar-mode -1)
-
 ;; allow narrowing
 (put 'narrow-to-region 'disabled nil)
 
@@ -1449,4 +1446,7 @@ buffer-local variable `show-trailing-whitespace'."
         (define-key isearch-mode-map [(control ?y)] 'isearch-yank-kill))))
 
   ;; else (not in a window system)
+  (progn
+    ;; disable menu bar
+    (menu-bar-mode -1))
 )
