@@ -97,10 +97,10 @@ makes)."
 (autoload 'ack-find-file "full-ack" nil t)
 
 ;; auto-complete
-(add-to-list 'load-path (concat dotfiles-dir "auto-complete"))
-(setq ac-dictionary-directories (list (concat dotfiles-dir "auto-complete/dict")))
-(require 'auto-complete-config)
-(ac-config-default)
+;; (add-to-list 'load-path (concat dotfiles-dir "auto-complete"))
+;; (setq ac-dictionary-directories (list (concat dotfiles-dir "auto-complete/dict")))
+;; (require 'auto-complete-config)
+;; (ac-config-default)
 
 ;; bnf-mode
 (define-generic-mode 'bnf-mode
