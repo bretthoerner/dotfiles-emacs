@@ -606,10 +606,10 @@ makes)."
 (autoload 'scratch "scratch" nil t)
 
 ;; slime and swank
-(require 'ac-slime)
-(add-to-list 'ac-sources 'ac-source-slime-simple)
-(add-hook 'slime-mode-hook 'set-up-slime-ac)
-(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+;; (require 'ac-slime)
+;; (add-to-list 'ac-sources 'ac-source-slime-simple)
+;; (add-hook 'slime-mode-hook 'set-up-slime-ac)
+;; (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
 
 ;; old, ghetto auto complete
 ;(define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol)
@@ -702,7 +702,7 @@ makes)."
 (when (require 'diminish nil 'noerror)
   (diminish 'eldoc-mode "")
   (diminish 'paredit-mode "PE")
-  (diminish 'auto-complete-mode "")
+  ;; (diminish 'auto-complete-mode "")
   (diminish 'auto-fill-function "")
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
