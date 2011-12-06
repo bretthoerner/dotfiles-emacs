@@ -691,6 +691,11 @@ makes)."
 ;; which-func-mode
 (which-func-mode 1)
 
+;; yasnippet
+(add-to-list 'load-path (concat dotfiles-dir "yasnippet"))
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory "~/.emacs.d/yasnippet/snippets")
 
 
 ;; diminish (needs to be run after other modes are loaded)

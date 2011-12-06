@@ -49,3 +49,6 @@
 [submodule "submodules/distel"]
 	path = submodules/distel
 	url = git@github.com:bretthoerner/distel.git
+[submodule "submodules/yasnippet"]
+	path = submodules/yasnippet
+	url = git@github.com:bretthoerner/yasnippet.git
