@@ -478,6 +478,18 @@ makes)."
 ;; python
 (require 'python)
 
+(setq python-shell-virtualenv-path "/home/brett/Development/python/votizen.com"
+      python-shell-interpreter "ipython"
+      python-shell-interpreter-args ""
+      python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+      python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+      python-shell-completion-setup-code
+      "from IPython.core.completerlib import module_completion"
+      python-shell-completion-module-string-code
+      "';'.join(module_completion('''%s'''))\n"
+      python-shell-completion-string-code
+      "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+
 (defun flymake-pyflakes-init ()
   (let* ((temp-file (flymake-init-create-temp-buffer-copy
                      'flymake-create-temp-intemp))
@@ -689,7 +701,7 @@ makes)."
 (require 'uniquify)
 
 ;; which-func-mode
-(which-func-mode 1)
+;; (which-func-mode 1)
 
 ;; yasnippet
 (add-to-list 'load-path (concat dotfiles-dir "yasnippet"))
@@ -701,12 +713,13 @@ makes)."
 ;; diminish (needs to be run after other modes are loaded)
 (when (require 'diminish nil 'noerror)
   (diminish 'eldoc-mode "")
-  (diminish 'paredit-mode "PE")
+  (diminish 'paredit-mode "Par")
   ;; (diminish 'auto-complete-mode "")
   (diminish 'auto-fill-function "")
+  (diminish 'yas/minor-mode "")
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
-              (setq mode-name "el"))))
+              (setq mode-name "Elisp"))))
 
 
 ;; --------------
@@ -821,6 +834,9 @@ makes)."
 ;; don't split without me asking
 (setq-default split-width-threshold nil)
 (setq-default split-height-threshold nil)
+
+;; don't show vc info in modeline
+(setq vc-display-status nil)
 
 ;; indent via spaces not tabs
 (setq-default indent-tabs-mode nil)
