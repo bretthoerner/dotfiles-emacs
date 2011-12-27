@@ -378,7 +378,10 @@ makes)."
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.mkd$" . markdown-mode))
 
-; multi-term
+;; man
+(setq Man-notify-method 'aggressive)
+
+;; multi-term
 ; To get special control codes use: cat, xev, od -a
 ; Use `list-colors-display' to view all available colors
 (require 'multi-term)
