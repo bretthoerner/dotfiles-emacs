@@ -97,10 +97,12 @@ makes)."
 (autoload 'ack-find-file "full-ack" nil t)
 
 ;; auto-complete
-;; (add-to-list 'load-path (concat dotfiles-dir "auto-complete"))
-;; (setq ac-dictionary-directories (list (concat dotfiles-dir "auto-complete/dict")))
-;; (require 'auto-complete-config)
-;; (ac-config-default)
+(add-to-list 'load-path (concat dotfiles-dir "auto-complete"))
+(setq ac-dictionary-directories (list (concat dotfiles-dir "auto-complete/dict"))
+      ac-modes '(emacs-lisp-mode lisp-mode lisp-interaction-mode
+                 slime-repl-mode clojure-mode scheme-mode))
+(require 'auto-complete-config)
+(ac-config-default)
 
 ;; bnf-mode
 (define-generic-mode 'bnf-mode
@@ -624,10 +626,10 @@ makes)."
 (autoload 'scratch "scratch" nil t)
 
 ;; slime and swank
-;; (require 'ac-slime)
-;; (add-to-list 'ac-sources 'ac-source-slime-simple)
-;; (add-hook 'slime-mode-hook 'set-up-slime-ac)
-;; (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+(require 'ac-slime)
+(add-to-list 'ac-sources 'ac-source-slime-simple)
+(add-hook 'slime-mode-hook 'set-up-slime-ac)
+(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
 
 ;; old, ghetto auto complete
 ;(define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol)
