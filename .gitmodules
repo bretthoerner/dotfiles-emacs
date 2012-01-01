@@ -52,3 +52,6 @@
 [submodule "submodules/yasnippet"]
 	path = submodules/yasnippet
 	url = git@github.com:bretthoerner/yasnippet.git
+[submodule "submodules/slime"]
+	path = submodules/slime
+	url = git@github.com:bretthoerner/slime.git
