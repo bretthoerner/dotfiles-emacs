@@ -123,8 +123,8 @@ makes)."
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
 ;; browse-url
-;; (setq browse-url-browser-function 'browse-url-generic
-;;       browse-url-generic-program "google-chrome")
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")
 
 ;; c-mode
 ;(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
