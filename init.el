@@ -1394,9 +1394,6 @@ buffer-local variable `show-trailing-whitespace'."
     (global-set-key [(super up)] 'buf-move-up)
     (global-set-key [(super down)] 'buf-move-down)
 
-    ;; make frame larger
-    (setq initial-frame-alist '((width . 140) (height . 40)))
-
     (defun bjh-set-frame-font-size (size)
       (set-frame-font (concat bjh-font "-" (number-to-string size)))
       (setq bjh-current-font-size size))
@@ -1459,9 +1456,9 @@ buffer-local variable `show-trailing-whitespace'."
      ;; else not mac
      (progn
         ;; font
+        (add-to-list 'default-frame-alist '(font . "Inconsolata-g-10"))
         (setq bjh-font "Inconsolata-g")
         (bjh-set-frame-font-size 10)
-        (add-to-list 'default-frame-alist '(font . "Inconsolata-g"))
 
         ;; bind 'o' to run 'open' command on selected file in dired mode
         (define-key dired-mode-map "o" 'dired-open-gnome)
