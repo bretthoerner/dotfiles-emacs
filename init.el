@@ -1352,6 +1352,9 @@ buffer-local variable `show-trailing-whitespace'."
     ;; disable tool-bar
     (tool-bar-mode -1)
 
+    ;; disable menu bar
+    (menu-bar-mode -1)
+
     ;; disable scroll-bar
     (scroll-bar-mode -1)
 
@@ -1476,7 +1479,4 @@ buffer-local variable `show-trailing-whitespace'."
         (define-key isearch-mode-map [(control ?y)] 'isearch-yank-kill))))
 
   ;; else (not in a window system)
-  (progn
-    ;; disable menu bar
-    (menu-bar-mode -1))
 )
