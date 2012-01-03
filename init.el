@@ -714,8 +714,9 @@ makes)."
 ;; yasnippet
 (add-to-list 'load-path (concat dotfiles-dir "yasnippet"))
 (require 'yasnippet)
+(setq yas/snippet-dirs '("~/.emacs.d/yasnippet/snippets"))
 (yas/initialize)
-(yas/load-directory "~/.emacs.d/yasnippet/snippets")
+;; (yas/load-directory "~/.emacs.d/yasnippet/snippets")
 
 
 ;; diminish (needs to be run after other modes are loaded)
