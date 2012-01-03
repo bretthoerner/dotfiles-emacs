@@ -1461,6 +1461,7 @@ buffer-local variable `show-trailing-whitespace'."
         ;; font
         (setq bjh-font "Inconsolata-g")
         (bjh-set-frame-font-size 10)
+        (add-to-list 'default-frame-alist '(font . "Inconsolata-g"))
 
         ;; bind 'o' to run 'open' command on selected file in dired mode
         (define-key dired-mode-map "o" 'dired-open-gnome)
