@@ -1372,7 +1372,9 @@ buffer-local variable `show-trailing-whitespace'."
     (global-unset-key (kbd "C-z"))
 
     ;; fix path
-    (setq exec-path (append (list "~/bin" "/usr/local/bin") exec-path))
+    (let ((local-bin (expand-file-name "~/bin")))
+      (setq exec-path (append (list local-bin) exec-path))
+      (setenv "PATH" (concat local-bin ":" (getenv "PATH"))))
 
     ;; use thinkpad arrows to manipulate windows and buffers
     (defun other-other-window ()
