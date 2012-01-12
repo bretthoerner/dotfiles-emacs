@@ -604,6 +604,9 @@ makes)."
                       rcirc-default-full-name
                       channels)))))
 
+;; ruby-mode
+(add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
+
 ;; savehist
 (savehist-mode 1)
 
