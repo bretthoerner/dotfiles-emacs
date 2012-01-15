@@ -605,6 +605,7 @@ makes)."
                       channels)))))
 
 ;; ruby-mode
+(add-to-list 'load-path (concat dotfiles-dir "ruby"))
 (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
 
 ;; savehist
