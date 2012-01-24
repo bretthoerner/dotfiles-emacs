@@ -712,6 +712,10 @@ makes)."
       uniquify-separator ": ")
 (require 'uniquify)
 
+;; varnish
+(require 'vcl-mode)
+(setq vcl-indent-level 2)
+
 ;; which-func-mode
 ;; (which-func-mode 1)
 
