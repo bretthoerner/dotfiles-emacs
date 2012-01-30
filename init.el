@@ -466,18 +466,6 @@ makes)."
 (require 'php-mode)
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 
-;; pianobar
-(let ((pianobar-password-file (expand-file-name "~/.pianobarpass.el")))
- (when (file-regular-p pianobar-password-file)
-   (load pianobar-password-file)
-
-   (require 'pianobar)
-   (global-set-key [(control kp-5)] 'pianobar-play-or-pause)
-   (global-set-key [(control kp-6)] 'pianobar-next-song)
-   (global-set-key [(control kp-add)] 'pianobar-love-current-song)
-   (global-set-key [(control kp-subtract)] 'pianobar-ban-current-song)
-   (global-set-key [(control kp-divide)] 'pianobar-change-station)))
-
 ;; puppet-mode
 (require 'puppet-mode)
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
