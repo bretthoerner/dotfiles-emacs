@@ -131,7 +131,7 @@
    ([menu-bar] scala-mode-menu-bar-map)
 
    ;; Attach keyboard Shortcuts
-   ([(control tab)]            'scala-undent-line)
+   ;; ([(control tab)]            'scala-undent-line)
    ([backspace]                'backward-delete-char-untabify)
 
    ("\r"                       'scala-newline)
