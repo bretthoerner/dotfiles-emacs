@@ -232,6 +232,7 @@ makes)."
 ;; (add-hook 'erlang-mode-hook 'bjh-erlang-mode-hook)
 
 ;; expand-region
+(add-to-list 'load-path (concat dotfiles-dir "expand-region"))
 (require 'expand-region)
 (global-set-key (kbd "C-@") 'er/expand-region)
 
