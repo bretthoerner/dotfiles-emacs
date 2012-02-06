@@ -231,6 +231,10 @@ makes)."
 
 ;; (add-hook 'erlang-mode-hook 'bjh-erlang-mode-hook)
 
+;; expand-region
+(require 'expand-region)
+(global-set-key (kbd "C-@") 'er/expand-region)
+
 ;; ffap
 (when (fboundp 'find-file-at-point)
   (global-set-key (kbd "C-c F") 'find-file-at-point))
