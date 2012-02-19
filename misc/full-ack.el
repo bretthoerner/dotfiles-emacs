@@ -4,7 +4,7 @@
 ;; Copyright (C) 2009-2011 Nikolaj Schumacher
 ;;
 ;; Author: Nikolaj Schumacher <bugs * nschum de>
-;; Version: 0.2.2
+;; Version: 0.2.3
 ;; Keywords: tools, matching
 ;; URL: http://nschum.de/src/emacs/full-ack/
 ;; Compatibility: GNU Emacs 22.x, GNU Emacs 23.x, GNU Emacs 24.x
@@ -48,6 +48,7 @@
 ;;
 ;;; Change Log:
 ;;
+;; 2011-12-16 (0.2.3)
 ;;    Added `ack-again' (bound to "g" in search buffers).
 ;;    Added default value for search.
 ;;
@@ -364,7 +365,8 @@ This can be used in `ack-root-directory-functions'."
       (push "-i" arguments))
     (unless regexp
       (push "--literal" arguments))
-    (push (format "--context=%d" ack-context) arguments)
+    (when (and ack-context (/= ack-context 0))
+      (push (format "--context=%d" ack-context) arguments))
     arguments))
 
 (defun ack-run (directory regexp &rest arguments)
@@ -689,7 +691,7 @@ DIRECTORY is the root directory.  If called interactively, it is determined by
     (define-key keymap "r" 'ack-again)
     keymap))
 
-(defconst ack-font-lock-regexp-color-fg-begin "\\(\33\\[1;..m\\)")
+(defconst ack-font-lock-regexp-color-fg-begin "\\(\33\\[1;..?m\\)")
 (defconst ack-font-lock-regexp-color-bg-begin "\\(\33\\[30;..m\\)")
 (defconst ack-font-lock-regexp-color-end "\\(\33\\[0m\\)")
 
