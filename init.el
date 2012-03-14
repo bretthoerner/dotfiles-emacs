@@ -478,8 +478,8 @@ makes)."
 
 ;; python
 (require 'python)
-
-(setq python-shell-virtualenv-path "/home/brett/Development/python/votizen.com"
+(setq python-indent-offset 2
+      python-shell-virtualenv-path "/home/brett/Development/python/votizen.com"
       python-shell-interpreter "ipython"
       python-shell-interpreter-args ""
       python-shell-prompt-regexp "In \\[[0-9]+\\]: "
@@ -856,11 +856,11 @@ makes)."
 (setq-default indent-tabs-mode nil)
 
 ;; tab = 4 spaces
-(setq-default default-tab-width 4)
-(setq-default tab-width 4)
+(setq-default default-tab-width 2)
+(setq-default tab-width 2)
 
-;; set C indent to 4 spaces
-(setq-default c-basic-offset 4)
+;; set C indent to 2 spaces
+(setq-default c-basic-offset 2)
 
 ;; set tab stops based on default-tab-width
 (setq-default tab-stop-list (loop for i
