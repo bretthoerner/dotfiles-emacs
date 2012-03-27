@@ -55,3 +55,6 @@
 [submodule "submodules/expand-region.el"]
 	path = submodules/expand-region.el
 	url = git@github.com:bretthoerner/expand-region.el.git
+[submodule "submodules/popup"]
+	path = submodules/popup
+	url = git@github.com:bretthoerner/popup-el.git
