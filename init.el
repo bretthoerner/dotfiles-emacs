@@ -395,6 +395,9 @@ makes)."
 (define-key term-raw-map (kbd "<C-right>") 'term-send-forward-word)
 (define-key term-raw-map (kbd "<C-left>") 'term-send-backward-word)
 (define-key term-raw-map (kbd "<M-backspace>") 'term-send-backward-kill-word)
+(define-key term-raw-map (kbd "<C-prior>") 'multi-term-prev)
+(define-key term-raw-map (kbd "<C-next>") 'multi-term-next)
+(global-set-key (kbd "C-S-t") 'multi-term)
 (if (eq bjh-color 'dark)
     (setq term-default-bg-color "#000000"
           term-default-fg-color "white"
