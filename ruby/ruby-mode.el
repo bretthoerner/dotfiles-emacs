@@ -46,7 +46,7 @@
 
 ;;; Code:
 
-(defconst ruby-mode-revision "$Revision: 32338 $"
+(defconst ruby-mode-revision "$Revision$"
   "Ruby mode revision string.")
 
 (defconst ruby-mode-version

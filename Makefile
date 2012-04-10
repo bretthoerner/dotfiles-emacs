@@ -42,9 +42,11 @@ MISCF =	ac-slime.el \
 		mac-key-mode.el \
 		markdown-mode.el \
 		multi-term.el \
+		nagios-mode.el \
 		nitrogen-mode.el \
 		paredit.el \
 		php-mode.el \
+		popup.el \
 		puppet-mode.el \
 		python.el \
 		quack.el \
@@ -55,6 +57,7 @@ MISCF =	ac-slime.el \
 		scratch.el \
 		smex.el \
 		smooth-scrolling.el \
+		vcl-mode.el \
 		xcscope.el
 
 LISPFILES  = $(MISCF:%=misc/%)

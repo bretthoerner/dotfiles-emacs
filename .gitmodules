@@ -58,3 +58,6 @@
 [submodule "submodules/popup"]
 	path = submodules/popup
 	url = git@github.com:bretthoerner/popup-el.git
+[submodule "submodules/haskell-mode"]
+	path = submodules/haskell-mode
+	url = git@github.com:bretthoerner/haskell-mode.git
