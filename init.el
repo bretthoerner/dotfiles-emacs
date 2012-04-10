@@ -615,10 +615,10 @@ makes)."
 (add-to-list 'load-path (concat dotfiles-dir "scala"))
 (require 'scala-mode-auto)
 (add-to-list 'auto-mode-alist '("\\.scala$" . scala-mode))
-(add-to-list 'load-path "/usr/share/ensime/elisp")
-(add-to-list 'exec-path "/usr/share/ensime")
-(when (require 'ensime nil t)
-  (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
+; (add-to-list 'load-path "/usr/share/ensime/elisp")
+; (add-to-list 'exec-path "/usr/share/ensime")
+; (when (require 'ensime nil t)
+;  (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
 
 ;; scpaste
 (require 'scpaste)
