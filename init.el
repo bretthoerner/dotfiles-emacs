@@ -100,7 +100,7 @@ makes)."
 (add-to-list 'load-path (concat dotfiles-dir "auto-complete"))
 (setq ac-dictionary-directories (list (concat dotfiles-dir "auto-complete/dict"))
       ac-modes '(emacs-lisp-mode lisp-mode lisp-interaction-mode
-                 slime-repl-mode clojure-mode scheme-mode))
+                 slime-repl-mode clojure-mode scheme-mode scala-mode))
 (require 'auto-complete-config)
 (ac-config-default)
 
@@ -615,10 +615,9 @@ makes)."
 (add-to-list 'load-path (concat dotfiles-dir "scala"))
 (require 'scala-mode-auto)
 (add-to-list 'auto-mode-alist '("\\.scala$" . scala-mode))
-; (add-to-list 'load-path "/usr/share/ensime/elisp")
-; (add-to-list 'exec-path "/usr/share/ensime")
-; (when (require 'ensime nil t)
-;  (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
+(add-to-list 'load-path "/home/brett/Development/src-mirror/ensime/dist_2.9.2/elisp")
+(when (require 'ensime nil t)
+ (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
 
 ;; scpaste
 (require 'scpaste)
