@@ -1,5 +1,5 @@
 # Name of your emacs binary
-EMACS = /usr/bin/emacs
+EMACS = /usr/bin/emacs-snapshot-gtk
 
 # Where local software is found
 EMACS_HOME = $(HOME)/.emacs.d
