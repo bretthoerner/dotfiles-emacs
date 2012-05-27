@@ -243,7 +243,8 @@ makes)."
 ;; ffip
 (require 'find-file-in-project)
 (setq ffip-patterns
-      '("*.clj" "*.css" "*.el" "*.html" "*.js" "*.py" "*.rb" "*.txt" "*.dtjs" "*.dtpl"))
+      '("*.clj" "*.css" "*.el" "*.html" "*.js" "*.py" "*.rb"
+        "*.txt" "*.dtjs" "*.dtpl" "*.erb" "*.yml" "*.conf"))
 
 ;; flyspell-mode
 (setq ispell-program-name "aspell"
