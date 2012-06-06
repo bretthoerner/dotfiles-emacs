@@ -236,6 +236,11 @@ makes)."
 (require 'expand-region)
 (global-set-key (kbd "C-@") 'er/expand-region)
 
+;; evil
+(add-to-list 'load-path (concat dotfiles-dir "evil"))
+(require 'evil)
+(evil-mode 1)
+
 ;; ffap
 (when (fboundp 'find-file-at-point)
   (global-set-key (kbd "C-c F") 'find-file-at-point))
