@@ -61,3 +61,6 @@
 [submodule "submodules/haskell-mode"]
 	path = submodules/haskell-mode
 	url = git@github.com:bretthoerner/haskell-mode.git
+[submodule "submodules/evil"]
+	path = submodules/evil
+	url = git@github.com:bretthoerner/evil.git
