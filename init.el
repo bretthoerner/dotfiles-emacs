@@ -239,6 +239,7 @@ makes)."
 ;; evil
 (add-to-list 'load-path (concat dotfiles-dir "evil"))
 (require 'evil)
+(setq evil-emacs-state-cursor 'bar)
 (evil-mode 1)
 
 ;; ffap
