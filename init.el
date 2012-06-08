@@ -237,10 +237,10 @@ makes)."
 (global-set-key (kbd "C-@") 'er/expand-region)
 
 ;; evil
-(add-to-list 'load-path (concat dotfiles-dir "evil"))
-(require 'evil)
-(setq evil-emacs-state-cursor 'bar)
-(evil-mode 1)
+;; (add-to-list 'load-path (concat dotfiles-dir "evil"))
+;; (require 'evil)
+;; (setq evil-emacs-state-cursor 'bar)
+;; (evil-mode 1)
 
 ;; ffap
 (when (fboundp 'find-file-at-point)
