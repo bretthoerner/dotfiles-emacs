@@ -507,6 +507,9 @@ makes)."
 
    (require 'rcirc)
    (require 'rcirc-notify)
+   (setq my-rcirc-notify-message "%s has mentioned you."
+         my-rcirc-notify-keyword "%s has mentioned you."
+         my-rcirc-notify-message-private "%s sent you a private message.")
    ;; (require 'rcirc-notify-mode)
 
    (add-hook 'rcirc-mode-hook
