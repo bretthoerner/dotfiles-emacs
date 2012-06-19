@@ -248,7 +248,8 @@ makes)."
 
 ;; ffip
 (require 'find-file-in-project)
-(setq ffip-patterns
+(setq ffip-limit 2048
+      ffip-patterns
       '("*.clj" "*.css" "*.el" "*.html" "*.js" "*.py" "*.rb"
         "*.txt" "*.dtjs" "*.dtpl" "*.erb" "*.yml" "*.conf"))
 
