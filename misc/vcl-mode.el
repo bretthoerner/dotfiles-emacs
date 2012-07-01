@@ -64,6 +64,9 @@
      "if"
      "remove"
      "set"
+     "unset"
+     "synthetic"
+     "return"
      )
     'font-lock-keyword-face)
    
@@ -83,6 +86,7 @@
      "sub"
      "vcl_deliver"
      "vcl_discard"
+     "vcl_error"
      "vcl_fetch"
      "vcl_hash"
      "vcl_hit"
@@ -139,7 +143,7 @@
     'font-lock-variable-name-face)
 
    ;; More variables
-   '("\\(\\(be\\)?req\\|resp\\|obj\\)\.http\.[A-Za-z-]+" .
+   '("\\(\\(be\\)?req\\|\\(be\\)?resp\\|obj\\)\.http\.[A-Za-z-]+" .
      font-lock-variable-name-face))
   
   ;; Filenames to highlight
