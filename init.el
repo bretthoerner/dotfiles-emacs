@@ -493,8 +493,8 @@ makes)."
     (message "Aborting")))
 
 ;; redo
-(require 'redo+)
-(global-set-key [(control ??)] 'redo)
+;; (require 'redo+)
+;; (global-set-key [(control ??)] 'redo)
 
 ;; rcirc
 (let ((irc-password-file (expand-file-name "~/.ircpass.el")))
