@@ -57,6 +57,7 @@ MISCF =	ac-slime.el \
 		scratch.el \
 		smex.el \
 		smooth-scrolling.el \
+                undo-tree.el \
 		vcl-mode.el \
 		xcscope.el
 

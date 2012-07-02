@@ -666,6 +666,10 @@ makes)."
       tramp-persistency-file-name nil)
 (require 'tramp)
 
+;; undo-tree
+(require 'undo-tree)
+(global-undo-tree-mode)
+
 ;; uniquify
 (setq uniquify-after-kill-buffer-p t
       uniquify-buffer-name-style 'post-forward
