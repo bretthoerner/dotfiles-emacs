@@ -64,3 +64,6 @@
 [submodule "submodules/evil"]
 	path = submodules/evil
 	url = git@github.com:bretthoerner/evil.git
+[submodule "submodules/rinari"]
+	path = submodules/rinari
+	url = git://github.com/eschulte/rinari.git
