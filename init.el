@@ -357,11 +357,59 @@ makes)."
 (define-key term-raw-map (kbd "<C-prior>") 'multi-term-prev)
 (define-key term-raw-map (kbd "<C-next>") 'multi-term-next)
 (global-set-key (kbd "C-S-t") 'multi-term)
+
+(defface bjh-term-color-black
+  '((t :foreground "black" :background "black"))
+  "Face used to render black color code."
+  :group 'term)
+
+(defface bjh-term-color-red
+  '((t :foreground "red2" :background "red2"))
+  "Face used to render red2 color code."
+  :group 'term)
+
+(defface bjh-term-color-green
+  '((t :foreground "green2" :background "green2"))
+  "Face used to render green2 color code."
+  :group 'term)
+
+(defface bjh-term-color-yellow
+  '((t :foreground "yellow2" :background "yellow2"))
+  "Face used to render yellow2 color code."
+  :group 'term)
+
+(defface bjh-term-color-blue
+  '((t :foreground "DodgerBlue2" :background "DodgerBlue2"))
+  "Face used to render DodgerBlue2 color code."
+  :group 'term)
+
+(defface bjh-term-color-magenta
+  '((t :foreground "magenta2" :background "magenta2"))
+  "Face used to render magenta2 color code."
+  :group 'term)
+
+(defface bjh-term-color-cyan
+  '((t :foreground "cyan2" :background "cyan2"))
+  "Face used to render cyan2 color code."
+  :group 'term)
+
+(defface bjh-term-color-white
+  '((t :foreground "white" :background "white"))
+  "Face used to render white color code."
+  :group 'term)
+
 (if (eq bjh-color 'dark)
     (setq term-default-bg-color "#000000"
           term-default-fg-color "white"
-          ansi-term-color-vector [unspecified "black" "red2" "green2" "yellow2"
-                                              "DodgerBlue2" "magenta2" "cyan2" "white"]))
+          ansi-term-color-vector [term-face
+                                  bjh-term-color-black
+                                  bjh-term-color-red
+                                  bjh-term-color-green
+                                  bjh-term-color-yellow
+                                  bjh-term-color-blue
+                                  bjh-term-color-magenta
+                                  bjh-term-color-cyan
+                                  bjh-term-color-white]))
 
 (defun bjh-term-line-mode ()
   (interactive)
