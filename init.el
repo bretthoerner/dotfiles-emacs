@@ -261,6 +261,10 @@ makes)."
 ;; geiser
 (load-file (concat dotfiles-dir "geiser/elisp/geiser.el"))
 
+;; gist
+(add-to-list 'load-path (concat dotfiles-dir "gh.el"))
+(require 'gist)
+
 ;; go-mode
 (require 'go-mode-load)
 

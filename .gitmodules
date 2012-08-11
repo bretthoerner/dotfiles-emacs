@@ -64,3 +64,15 @@
 [submodule "submodules/evil"]
 	path = submodules/evil
 	url = git@github.com:bretthoerner/evil.git
+[submodule "submodules/gist.el"]
+	path = submodules/gist.el
+	url = git://github.com/defunkt/gist.el.git
+[submodule "submodules/gh.el"]
+	path = submodules/gh.el
+	url = git@github.com:bretthoerner/gh.el.git
+[submodule "submodules/pcache"]
+	path = submodules/pcache
+	url = git@github.com:bretthoerner/pcache.git
+[submodule "submodules/logito"]
+	path = submodules/logito
+	url = git@github.com:bretthoerner/logito.git
