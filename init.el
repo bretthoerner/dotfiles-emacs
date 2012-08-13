@@ -126,7 +126,7 @@ makes)."
 
 ;; browse-url
 (setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "google-chrome")
+      browse-url-generic-program "chromium")
 
 ;; c-mode
 ;(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
@@ -1483,8 +1483,8 @@ buffer-local variable `show-trailing-whitespace'."
      ;; else not mac
      (progn
         ;; font
-        (add-to-list 'default-frame-alist '(font . "Inconsolata-g-10"))
-        (setq bjh-font "Inconsolata-g")
+        (add-to-list 'default-frame-alist '(font . "Ubuntu Mono-11"))
+        (setq bjh-font "Ubuntu Mono")
         (bjh-set-frame-font-size 10)
 
         ;; bind 'o' to run 'open' command on selected file in dired mode
