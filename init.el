@@ -4,7 +4,7 @@
 ;; debug config
 ;; -------------
 
-(setq debug-on-error nil)
+(setq debug-on-error t)
 
 
 ;; -------------
@@ -740,7 +740,7 @@ makes)."
 (add-to-list 'load-path (concat dotfiles-dir "yasnippet"))
 (require 'yasnippet)
 (setq yas/snippet-dirs '("~/.emacs.d/yasnippet/snippets"))
-(yas/initialize)
+(yas-global-mode 1)
 ;; (yas/load-directory "~/.emacs.d/yasnippet/snippets")
 
 
@@ -750,7 +750,6 @@ makes)."
   (diminish 'paredit-mode "Par")
   ;; (diminish 'auto-complete-mode "")
   (diminish 'auto-fill-function "")
-  (diminish 'yas/minor-mode "")
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
               (setq mode-name "Elisp"))))
