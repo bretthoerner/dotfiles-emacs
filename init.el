@@ -273,6 +273,7 @@ makes)."
 
 ;; haskell-mode
 (load (concat dotfiles-dir "haskell-mode/haskell-site-file"))
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
 ;; highlight-parentheses
 (require 'highlight-parentheses)
