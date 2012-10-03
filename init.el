@@ -992,6 +992,7 @@ If point was already at that position, move point to beginning of line."
   (insert "ಠ_ಠ"))
 
 ;; hippie-expand
+(require 'hippie-exp)
 (global-set-key (kbd "M-/") 'hippie-expand)
 (delete 'try-expand-line hippie-expand-try-functions-list)
 (delete 'try-expand-list hippie-expand-try-functions-list)
