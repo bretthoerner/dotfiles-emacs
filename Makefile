@@ -38,7 +38,6 @@ MISCF =	ac-slime.el \
 		ido-ubiquitous.el \
 		js2-mode.el \
 		js-comint.el \
-		mac-key-mode.el \
 		markdown-mode.el \
 		multi-term.el \
 		nagios-mode.el \
