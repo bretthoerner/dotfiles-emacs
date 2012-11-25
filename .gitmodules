@@ -76,3 +76,6 @@
 [submodule "submodules/logito"]
 	path = submodules/logito
 	url = git@github.com:bretthoerner/logito.git
+[submodule "submodules/scala-mode2"]
+	path = submodules/scala-mode2
+	url = git://github.com/hvesalai/scala-mode2.git

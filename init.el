@@ -100,7 +100,7 @@ makes)."
 ;; (add-to-list 'load-path (concat dotfiles-dir "auto-complete"))
 ;; (setq ac-dictionary-directories (list (concat dotfiles-dir "auto-complete/dict"))
 ;;       ac-modes '(emacs-lisp-mode lisp-mode lisp-interaction-mode
-;;                  slime-repl-mode clojure-mode scheme-mode scala-mode))
+;;                  slime-repl-mode clojure-mode scheme-mode))
 ;; (require 'auto-complete-config)
 ;; (ac-config-default)
 
@@ -627,12 +627,8 @@ makes)."
 (require 'saveplace)
 
 ;; scala
-(add-to-list 'load-path (concat dotfiles-dir "scala"))
-(require 'scala-mode-auto)
-(add-to-list 'auto-mode-alist '("\\.scala$" . scala-mode))
-(add-to-list 'load-path "/home/brett/Development/src-mirror/ensime/dist_2.9.2/elisp")
-(when (require 'ensime nil t)
- (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
+(add-to-list 'load-path (concat dotfiles-dir "scala-mode2"))
+(require 'scala-mode)
 
 ;; scpaste
 (require 'scpaste)
@@ -738,12 +734,10 @@ makes)."
 ;; (which-func-mode 1)
 
 ;; yasnippet
-(add-to-list 'load-path (concat dotfiles-dir "yasnippet"))
-(require 'yasnippet)
-(setq yas/snippet-dirs '("~/.emacs.d/yasnippet/snippets"))
-(yas-global-mode 1)
-;; (yas/load-directory "~/.emacs.d/yasnippet/snippets")
-
+;; (add-to-list 'load-path (concat dotfiles-dir "yasnippet"))
+;; (require 'yasnippet)
+;; (setq yas/snippet-dirs '("~/.emacs.d/yasnippet/snippets"))
+;; (yas-global-mode 1)
 
 ;; diminish (needs to be run after other modes are loaded)
 (when (require 'diminish nil 'noerror)
