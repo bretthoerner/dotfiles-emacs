@@ -406,7 +406,7 @@ makes)."
 (if (eq bjh-color 'dark)
     (setq term-default-bg-color "#000000"
           term-default-fg-color "white"
-          ansi-term-color-vector [term-face
+          ansi-term-color-vector [term
                                   bjh-term-color-black
                                   bjh-term-color-red
                                   bjh-term-color-green
@@ -628,7 +628,10 @@ makes)."
 
 ;; scala
 (add-to-list 'load-path (concat dotfiles-dir "scala-mode2"))
-(require 'scala-mode)
+(require 'scala-mode2)
+(add-to-list 'load-path (expand-file-name "~/Development/src-mirror/ensime/dist_2.10.0-RC3/elisp"))
+(require 'ensime)
+(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 ;; scpaste
 (require 'scpaste)
