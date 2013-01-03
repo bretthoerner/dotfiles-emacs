@@ -36,7 +36,6 @@ MISCF =	ac-slime.el \
 		http-twiddle.el \
 		idle-highlight-mode.el \
 		ido-ubiquitous.el \
-		js2-mode.el \
 		js-comint.el \
 		markdown-mode.el \
 		multi-term.el \
