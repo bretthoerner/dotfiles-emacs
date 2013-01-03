@@ -321,13 +321,17 @@ makes)."
 ;; imenu
 (require 'imenu)
 
+;; js-mode
+(setq js-indent-level 2)
+
 ;; js2-mode
-(require 'js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(setq js2-highlight-level 3
-      js2-bounce-indent-p t
-      js2-consistent-level-indent-inner-bracket-p t
-      js2-pretty-multiline-decl-indentation-p t)
+;; (require 'js2-mode)
+;; (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+;; (setq js2-highlight-level 3
+;;       js2-bounce-indent-p t
+;;       js2-consistent-level-indent-inner-bracket-p t
+;;       js2-pretty-multiline-decl-indentation-p t
+;;       js2-basic-offset 2)
 
 ;; js-comint
 (require 'js-comint)
@@ -737,10 +741,10 @@ makes)."
 ;; (which-func-mode 1)
 
 ;; yasnippet
-;; (add-to-list 'load-path (concat dotfiles-dir "yasnippet"))
-;; (require 'yasnippet)
-;; (setq yas/snippet-dirs '("~/.emacs.d/yasnippet/snippets"))
-;; (yas-global-mode 1)
+(add-to-list 'load-path (concat dotfiles-dir "yasnippet"))
+(require 'yasnippet)
+(setq yas/snippet-dirs '("~/.emacs.d/yasnippet/snippets"))
+(yas-global-mode 1)
 
 ;; diminish (needs to be run after other modes are loaded)
 (when (require 'diminish nil 'noerror)
