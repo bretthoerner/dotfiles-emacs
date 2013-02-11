@@ -271,6 +271,12 @@ makes)."
 ;; goto-last-change
 (require 'goto-last-change)
 
+;; gnuplot
+(add-to-list 'load-path (concat dotfiles-dir "gnuplot-mode"))
+(autoload 'gnuplot-mode "gnuplot" "gnuplot major mode" t)
+(autoload 'gnuplot-make-buffer "gnuplot" "open a buffer in gnuplot mode" t)
+(setq auto-mode-alist (append '(("\\.gp$" . gnuplot-mode)) auto-mode-alist))
+
 ;; haskell-mode
 (load (concat dotfiles-dir "haskell-mode/haskell-site-file"))
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)

@@ -76,3 +76,6 @@
 [submodule "submodules/scala-mode2"]
 	path = submodules/scala-mode2
 	url = git://github.com/hvesalai/scala-mode2.git
+[submodule "submodules/gnuplot-mode"]
+	path = submodules/gnuplot-mode
+	url = git://github.com/bruceravel/gnuplot-mode.git
