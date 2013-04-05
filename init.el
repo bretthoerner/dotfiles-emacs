@@ -629,6 +629,10 @@ makes)."
 (add-to-list 'load-path (concat dotfiles-dir "ruby"))
 (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
 
+;; rust
+(add-to-list 'load-path (concat dotfiles-dir "rust"))
+(require 'rust-mode)
+
 ;; savehist
 (savehist-mode 1)
 
