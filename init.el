@@ -267,6 +267,10 @@ makes)."
 
 ;; go-mode
 (require 'go-mode-load)
+(setenv "PATH"
+        (concat
+         "/opt/go/bin:"
+         (getenv "PATH")))
 
 ;; goto-last-change
 (require 'goto-last-change)
@@ -503,18 +507,7 @@ makes)."
 
 ;; python
 (require 'python)
-(setq python-indent-offset 2
-      python-shell-virtualenv-path "/home/brett/Development/python/votizen.com"
-      python-shell-interpreter "ipython"
-      python-shell-interpreter-args ""
-      python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-      python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-      python-shell-completion-setup-code
-      "from IPython.core.completerlib import module_completion"
-      python-shell-completion-module-string-code
-      "';'.join(module_completion('''%s'''))\n"
-      python-shell-completion-string-code
-      "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+(setq python-indent-offset 2)
 
 (defun flymake-pyflakes-init ()
   (let* ((temp-file (flymake-init-create-temp-buffer-copy
@@ -643,9 +636,9 @@ makes)."
 ;; scala
 (add-to-list 'load-path (concat dotfiles-dir "scala-mode2"))
 (require 'scala-mode2)
-(add-to-list 'load-path (expand-file-name "~/Development/src-mirror/ensime/dist_2.10.0-RC3/elisp"))
-(require 'ensime)
-(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+;(add-to-list 'load-path (expand-file-name "~/Development/src-mirror/ensime/dist_2.10.0-RC3/elisp"))
+;(require 'ensime)
+;(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 ;; scpaste
 (require 'scpaste)
