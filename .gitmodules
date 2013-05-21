@@ -79,3 +79,6 @@
 [submodule "submodules/gnuplot-mode"]
 	path = submodules/gnuplot-mode
 	url = git://github.com/bruceravel/gnuplot-mode.git
+[submodule "submodules/autopair"]
+	path = submodules/autopair
+	url = git@github.com:bretthoerner/autopair.git

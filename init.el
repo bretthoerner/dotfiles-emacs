@@ -104,6 +104,11 @@ makes)."
 ;; (require 'auto-complete-config)
 ;; (ac-config-default)
 
+;; autopair
+(add-to-list 'load-path (concat dotfiles-dir "autopair"))
+(require 'autopair)
+(autopair-global-mode) ;; enable autopair in all buffers
+
 ;; bnf-mode
 (define-generic-mode 'bnf-mode
   () ;; comment char: inapplicable because # must be at start of line
@@ -574,7 +579,8 @@ makes)."
                 (set (make-local-variable 'blink-matching-paren) nil)
                 (set (make-local-variable 'scroll-conservatively) 8192)
                 (rcirc-track-minor-mode 1)
-                (flyspell-mode 1)))
+                (flyspell-mode 1)
+                (autopair-mode -1)))
 
    (setq rcirc-fill-column 80
          rcirc-default-nick "brett_h"
