@@ -287,7 +287,8 @@ makes)."
 (setq auto-mode-alist (append '(("\\.gp$" . gnuplot-mode)) auto-mode-alist))
 
 ;; haskell-mode
-(load (concat dotfiles-dir "haskell-mode/haskell-site-file"))
+(add-to-list 'load-path (concat dotfiles-dir "haskell-mode"))
+(require 'haskell-mode-autoloads)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
 ;; highlight-parentheses
