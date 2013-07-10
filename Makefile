@@ -45,7 +45,6 @@ MISCF =	browse-kill-ring.el \
 		popup.el \
 		puppet-mode.el \
 		python.el \
-		quack.el \
 		rainbow-mode.el \
 		rcirc-notify.el \
 		redo+.el \

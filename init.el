@@ -533,11 +533,6 @@ makes)."
             ;; Activate flymake unless buffer is a tmp buffer for the interpreter
             (unless (eq buffer-file-name nil) (flymake-mode t))))
 
-;; quack
-(require 'quack)
-(setq quack-programs '("racket")
-      quack-default-program "racket")
-
 ;; rainbow-mode
 (require 'rainbow-mode)
 
@@ -590,7 +585,7 @@ makes)."
          rcirc-keywords '("brett" "bretthoerner" "hoerner")
          rcirc-authinfo `(;("freenode" nickserv "brett_h" ,bjh-freenode-password)
                           ;("localhost" bitlbee "brett_h" ,bjh-bitlbee-password)
-                          ("bretthoerner.com" nickserv "brett_h" ,bjh-znc-password))
+                          ("bretthoerner.com" nickserv "brett_h" ,bjh-freenode-password))
          rcirc-server-alist `(;("irc.freenode.net" :channels ("#emacs"))
                               ;("localhost")
                               ("bretthoerner.com" :port 6668 :nick "brett_h" :password ,bjh-znc-password)))
