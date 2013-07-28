@@ -64,9 +64,6 @@
 [submodule "submodules/gist.el"]
 	path = submodules/gist.el
 	url = git://github.com/defunkt/gist.el.git
-[submodule "submodules/gh.el"]
-	path = submodules/gh.el
-	url = git@github.com:bretthoerner/gh.el.git
 [submodule "submodules/pcache"]
 	path = submodules/pcache
 	url = git@github.com:bretthoerner/pcache.git
