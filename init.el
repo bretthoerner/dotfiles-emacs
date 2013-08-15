@@ -130,8 +130,7 @@ makes)."
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
 ;; browse-url
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "firefox")
+(setq browse-url-browser-function 'browse-url-firefox)
 
 ;; c-mode
 ;(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
