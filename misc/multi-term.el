@@ -5,8 +5,8 @@
 ;; Copyright (C) 2008, 2009, Andy Stewart, all rights reserved.
 ;; Copyright (C) 2010, ahei, all rights reserved.
 ;; Created: <2008-09-19 23:02:42>
-;; Version: 0.8.8
-;; Last-Updated: <2010-05-13 00:40:24 Thursday by ahei>
+;; Version: 0.8.9
+;; Last-Updated: <2013-01-08 10:11:43 Tuesday by jpkotta>
 ;; URL: http://www.emacswiki.org/emacs/download/multi-term.el
 ;; Keywords: term, terminal, multiple buffer
 ;; Compatibility: GNU Emacs 23.2.1
@@ -126,6 +126,10 @@
 ;;
 
 ;;; Change log:
+;; 2013/01/08
+;;      * Fix customize group of `multi-term-try-create'.
+;;      * Add autoloads.
+;;      * Add new commands `term-send-quote' and `term-send-M-x'.
 ;;
 ;; 2009/07/04
 ;;      * Add new option `multi-term-dedicated-select-after-open-p'.
@@ -244,13 +248,18 @@ If this is nil, setup to environment variable of `SHELL'."
   :type 'string
   :group 'multi-term)
 
+(defcustom multi-term-program-switches nil
+  "The command-line switches to pass to the term program."
+  :type 'string
+  :group 'multi-term)
+
 (defcustom multi-term-try-create t
   "Try to create a new term buffer when switch.
 
 When use `multi-term-next' or `multi-term-prev', switch term buffer,
 and try to create a new term buffer if no term buffers exist."
   :type 'boolean
-  :group 'multi-shell)
+  :group 'multi-term)
 
 (defcustom multi-term-default-dir "~/"
   "The default directory for terms if current directory doesn't exist."
@@ -380,18 +389,21 @@ Will prompt you shell name when you type `C-u' before this command."
     ;; Switch buffer
     (switch-to-buffer term-buffer)))
 
+;;;###autoload
 (defun multi-term-next (&optional offset)
   "Go to the next term buffer.
 If OFFSET is `non-nil', will goto next term buffer with OFFSET."
   (interactive "P")
   (multi-term-switch 'NEXT (or offset 1)))
 
+;;;###autoload
 (defun multi-term-prev (&optional offset)
   "Go to the previous term buffer.
 If OFFSET is `non-nil', will goto previous term buffer with OFFSET."
   (interactive "P")
   (multi-term-switch 'PREVIOUS (or offset 1)))
 
+;;;###autoload
 (defun multi-term-dedicated-open ()
   "Open dedicated `multi-term' window.
 Will prompt you shell name when you type `C-u' before this command."
@@ -450,6 +462,7 @@ Will prompt you shell name when you type `C-u' before this command."
              (<= win-height multi-term-dedicated-max-window-height))
         (setq multi-term-dedicated-window-height win-height))))
 
+;;;###autoload
 (defun multi-term-dedicated-toggle ()
   "Toggle dedicated `multi-term' window."
   (interactive)
@@ -457,6 +470,7 @@ Will prompt you shell name when you type `C-u' before this command."
       (multi-term-dedicated-close)
     (multi-term-dedicated-open)))
 
+;;;###autoload
 (defun multi-term-dedicated-select ()
   "Select the `multi-term' dedicated window."
   (interactive)
@@ -488,6 +502,17 @@ Will prompt you shell name when you type `C-u' before this command."
   "Search history reverse."
   (interactive)
   (term-send-raw-string "\C-r"))
+
+(defun term-send-quote ()
+  "Quote the next character in term-mode.
+Similar to how `quoted-insert' works in a regular buffer."
+  (interactive)
+  (term-send-raw-string "\C-v"))
+
+(defun term-send-M-x ()
+  "Type M-x in term-mode."
+  (interactive)
+  (term-send-raw-string "\ex"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Utilise Functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun multi-term-internal ()
@@ -534,7 +559,10 @@ If option DEDICATED-WINDOW is `non-nil' will create dedicated `multi-term' windo
       (if special-shell
           (setq shell-name (read-from-minibuffer "Run program: " shell-name)))
       ;; Make term, details to see function `make-term' in `term.el'.
-      (make-term term-name shell-name))))
+      (if multi-term-program-switches
+          (make-term term-name shell-name nil multi-term-program-switches)
+          (make-term term-name shell-name)))))
+
 
 (defun multi-term-handle-close ()
   "Close current term buffer when `exit' from term buffer."
@@ -761,6 +789,6 @@ This advice can make `other-window' skip `multi-term' dedicated window."
 ;; time-stamp-end: ">"
 ;; End:
 
-;;; LocalWords:  multi el dir sr Hawley eb ef cd
-
 ;;; multi-term.el ends here
+
+;;; LocalWords:  multi el dir sr Hawley eb ef cd

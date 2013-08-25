@@ -450,6 +450,8 @@ makes)."
 
 (add-hook 'term-mode-hook
           '(lambda ()
+             (autopair-mode -1)
+             (yas-minor-mode -1)
              (define-key term-raw-map (kbd "C-c C-j") 'bjh-term-line-mode)
              (define-key term-mode-map (kbd "C-c C-k") 'bjh-term-char-mode)
              (define-key term-raw-map (kbd "C-y") 'term-paste)))
