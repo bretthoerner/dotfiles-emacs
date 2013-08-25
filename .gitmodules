@@ -1,3 +1,0 @@
-[submodule "submodules/python"]
-	path = submodules/python
-	url = git@github.com:bretthoerner/python.el.git

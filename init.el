@@ -107,6 +107,7 @@ makes)."
 ;; (ac-config-default)
 
 ;; autopair
+(require 'autopair)
 (autopair-global-mode) ;; enable autopair in all buffers
 
 ;; bnf-mode
@@ -345,11 +346,8 @@ makes)."
                             (local-set-key "\C-cl" 'js-load-file-and-go)))
 
 ;; magit
-(global-set-key
- (kbd "C-x g")
- (lambda ()
-   (interactive)
-   (call-interactively 'magit-status)))
+(require 'magit)
+(global-set-key (kbd "C-x g") 'magit-status)
 
 ;; markdown-mode
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
@@ -1434,60 +1432,26 @@ buffer-local variable `show-trailing-whitespace'."
       (font-lock-add-keywords (intern (concat (symbol-name mode) "-mode"))
                               '(("(\\|)" . 'bjh-paren-face))))
 
-    ;; mac-specific
-    (if (or (string= "mac" window-system) (string= "ns" window-system))
-     (progn
-        ;; font
-        (setq bjh-font "Monaco")
-        (bjh-set-frame-font-size 12)
+    ;; font
+    (add-to-list 'default-frame-alist '(font . "Ubuntu Mono-11"))
+    (setq bjh-font "Ubuntu Mono")
+    (bjh-set-frame-font-size 10)
 
-        ;; fix path for multi-term
-        (setenv "PATH"
-                (concat
-                 "/usr/local/bin:"
-                 "/Users/brett/bin:"
-                 (getenv "PATH")))
+    ;; bind 'o' to run 'open' command on selected file in dired mode
+    (define-key dired-mode-map "o" 'dired-open-gnome)
+    (defun dired-open-gnome ()
+      (interactive)
+      (let ((file-name (dired-get-file-for-visit)))
+        (if (file-exists-p file-name)
+            (call-process "/usr/bin/gnome-open" nil 0 nil file-name))))
 
-        ;; normal mac command shortcuts
-        (require 'mac-key-mode)
-        (mac-key-mode 1)
+    (defun switch-full-screen ()
+      (interactive)
+      (shell-command "wmctrl -r :ACTIVE: -btoggle,fullscreen"))
+    (global-set-key [f11] 'switch-full-screen)
 
-        ;; bind 'o' to run 'open' command on selected file in dired mode
-        (define-key dired-mode-map "o" 'dired-open-mac)
-        (defun dired-open-mac ()
-               (interactive)
-               (let ((file-name (dired-get-file-for-visit)))
-                 (if (file-exists-p file-name)
-                     (call-process "/usr/bin/open" nil 0 nil file-name))))
-
-        ;; allow command-v to paste in search
-        (define-key isearch-mode-map [(alt ?v)] 'isearch-yank-kill)
-
-        ;; use alt for meta
-        (setq mac-option-modifier 'meta))
-
-     ;; else not mac
-     (progn
-        ;; font
-        (add-to-list 'default-frame-alist '(font . "Ubuntu Mono-11"))
-        (setq bjh-font "Ubuntu Mono")
-        (bjh-set-frame-font-size 10)
-
-        ;; bind 'o' to run 'open' command on selected file in dired mode
-        (define-key dired-mode-map "o" 'dired-open-gnome)
-        (defun dired-open-gnome ()
-               (interactive)
-               (let ((file-name (dired-get-file-for-visit)))
-                 (if (file-exists-p file-name)
-                     (call-process "/usr/bin/gnome-open" nil 0 nil file-name))))
-
-        (defun switch-full-screen ()
-          (interactive)
-          (shell-command "wmctrl -r :ACTIVE: -btoggle,fullscreen"))
-        (global-set-key [f11] 'switch-full-screen)
-
-        ;; allow command-v to paste in search
-        (define-key isearch-mode-map [(control ?y)] 'isearch-yank-kill))))
+    ;; allow command-v to paste in search
+    (define-key isearch-mode-map [(control ?y)] 'isearch-yank-kill))
 
   ;; else (not in a window system)
 )
