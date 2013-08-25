@@ -1,1 +1,0 @@
-../submodules/ido-ubiquitous/ido-ubiquitous.el

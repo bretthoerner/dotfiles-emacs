@@ -1,1 +1,0 @@
-../submodules/gist.el/gist.el

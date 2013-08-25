@@ -1,1 +1,0 @@
-../submodules/smex/smex.el

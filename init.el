@@ -41,8 +41,11 @@
 ;; -----------------
 
 (require 'package)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+(setq package-enable-at-startup nil)
+(package-initialize)
 
 ;; -------------
 ;; plugin config
@@ -97,7 +100,6 @@ makes)."
 (autoload 'ack-find-file "full-ack" nil t)
 
 ;; auto-complete
-;; (add-to-list 'load-path (concat dotfiles-dir "auto-complete"))
 ;; (setq ac-dictionary-directories (list (concat dotfiles-dir "auto-complete/dict"))
 ;;       ac-modes '(emacs-lisp-mode lisp-mode lisp-interaction-mode
 ;;                  slime-repl-mode clojure-mode scheme-mode))
@@ -105,8 +107,6 @@ makes)."
 ;; (ac-config-default)
 
 ;; autopair
-(add-to-list 'load-path (concat dotfiles-dir "autopair"))
-(require 'autopair)
 (autopair-global-mode) ;; enable autopair in all buffers
 
 ;; bnf-mode
@@ -139,7 +139,6 @@ makes)."
 (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
 
 ;; clojure-mode
-(add-to-list 'load-path (concat dotfiles-dir "clojure-mode"))
 (when (require 'clojure-mode nil t)
   (add-hook 'clojure-mode-hook 'pretty-fns))
 
@@ -211,11 +210,8 @@ makes)."
 (define-key emacs-lisp-mode-map (kbd "M-.") 'find-function-at-point)
 
 ;; erlang
-(add-to-list 'load-path (concat dotfiles-dir "erlang"))
 (require 'erlang-start)
-(require 'nitrogen-mode)
 
-;; (add-to-list 'load-path (concat dotfiles-dir "distel"))
 ;; (require 'distel)
 ;; (distel-setup)
 
@@ -236,12 +232,10 @@ makes)."
 ;; (add-hook 'erlang-mode-hook 'bjh-erlang-mode-hook)
 
 ;; expand-region
-(add-to-list 'load-path (concat dotfiles-dir "expand-region"))
 (require 'expand-region)
 (global-set-key (kbd "C-@") 'er/expand-region)
 
 ;; evil
-;; (add-to-list 'load-path (concat dotfiles-dir "evil"))
 ;; (require 'evil)
 ;; (setq evil-emacs-state-cursor 'bar)
 ;; (evil-mode 1)
@@ -262,11 +256,7 @@ makes)."
       ispell-extra-args '("--sug-mode=ultra")
       flyspell-mode-line-string nil)
 
-;; geiser
-(load-file (concat dotfiles-dir "geiser/elisp/geiser.el"))
-
 ;; gist
-(add-to-list 'load-path (concat dotfiles-dir "gh.el"))
 (require 'gist)
 
 ;; go-mode
@@ -280,14 +270,9 @@ makes)."
 (require 'goto-last-change)
 
 ;; gnuplot
-(add-to-list 'load-path (concat dotfiles-dir "gnuplot-mode"))
-(autoload 'gnuplot-mode "gnuplot" "gnuplot major mode" t)
-(autoload 'gnuplot-make-buffer "gnuplot" "open a buffer in gnuplot mode" t)
 (setq auto-mode-alist (append '(("\\.gp$" . gnuplot-mode)) auto-mode-alist))
 
 ;; haskell-mode
-(add-to-list 'load-path (concat dotfiles-dir "haskell-mode"))
-(require 'haskell-mode-autoloads)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
 ;; highlight-parentheses
@@ -360,9 +345,11 @@ makes)."
                             (local-set-key "\C-cl" 'js-load-file-and-go)))
 
 ;; magit
-(add-to-list 'load-path (concat dotfiles-dir "magit"))
-(require 'magit nil t)
-(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key
+ (kbd "C-x g")
+ (lambda ()
+   (interactive)
+   (call-interactively 'magit-status)))
 
 ;; markdown-mode
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
@@ -622,11 +609,9 @@ makes)."
                       channels)))))
 
 ;; ruby-mode
-(add-to-list 'load-path (concat dotfiles-dir "ruby"))
-(add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.rake$" . enh-ruby-mode))
 
 ;; rust
-(add-to-list 'load-path (concat dotfiles-dir "rust"))
 (require 'rust-mode)
 
 ;; savehist
@@ -635,13 +620,6 @@ makes)."
 ;; saveplace
 (setq-default save-place t)
 (require 'saveplace)
-
-;; scala
-(add-to-list 'load-path (concat dotfiles-dir "scala-mode2"))
-(require 'scala-mode2)
-;(add-to-list 'load-path (expand-file-name "~/Development/src-mirror/ensime/dist_2.10.0-RC3/elisp"))
-;(require 'ensime)
-;(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 ;; scpaste
 (require 'scpaste)
@@ -679,7 +657,7 @@ makes)."
           slime-net-coding-system 'utf-8-unix
           slime-protocol-version 'ignore)
     (global-set-key "\C-cs" 'slime-selector)
-    (slime-setup '(slime-fancy slime-repl slime-tramp slime-asdf))
+    (slime-setup '(slime-repl))
     (slime-require :swank-listener-hooks)))
 
 ;; smerge
@@ -747,9 +725,7 @@ makes)."
 ;; (which-func-mode 1)
 
 ;; yasnippet
-(add-to-list 'load-path (concat dotfiles-dir "yasnippet"))
 (require 'yasnippet)
-(setq yas/snippet-dirs '("~/.emacs.d/yasnippet/snippets"))
 (yas-global-mode 1)
 
 ;; diminish (needs to be run after other modes are loaded)
@@ -1366,7 +1342,6 @@ buffer-local variable `show-trailing-whitespace'."
   (progn
     ;; color-theme
     ; C-u C-x = to get font info at point
-    (add-to-list 'load-path (concat dotfiles-dir "color-theme"))
     (require 'color-theme)
     (setq color-theme-is-global t
           frame-background-mode bjh-color)
@@ -1375,6 +1350,9 @@ buffer-local variable `show-trailing-whitespace'."
         (progn (load-file (concat dotfiles-dir "themes/blackboard.el"))
                (color-theme-blackboard))
       (color-theme-gtk-ide)) ; else light
+
+    ;; emacs 24+ themes
+    (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
     ;; start emacs server
     (server-start)

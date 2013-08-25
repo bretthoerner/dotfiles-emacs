@@ -17,43 +17,7 @@ BATCH=$(EMACS) -batch -q -no-site-file -eval \
 ELC = $(BATCH) -f batch-byte-compile
 
 # The following variables need to be defined by the maintainer
-MISCF =	browse-kill-ring.el \
-		buffer-move.el \
-		c-eldoc.el \
-		coffee-mode.el \
-		deft.el \
-		diminish.el \
-		dired-single.el \
-		find-file-in-project.el \
-		flymake-cursor.el \
-		full-ack.el \
-		furl.el \
-		go-mode.el \
-		goto-last-change.el \
-		highlight-parentheses.el \
-		htmlize.el \
-		http-twiddle.el \
-		idle-highlight-mode.el \
-		ido-ubiquitous.el \
-		js-comint.el \
-		markdown-mode.el \
-		multi-term.el \
-		nagios-mode.el \
-		nitrogen-mode.el \
-		paredit.el \
-		php-mode.el \
-		popup.el \
-		puppet-mode.el \
-		python.el \
-		rainbow-mode.el \
-		rcirc-notify.el \
-		redo+.el \
-		scpaste.el \
-		scratch.el \
-		smex.el \
-		smooth-scrolling.el \
-                undo-tree.el \
-		vcl-mode.el \
+MISCF =	python.el \
 		xcscope.el
 
 LISPFILES  = $(MISCF:%=misc/%)
