@@ -11,23 +11,23 @@
 ;; color config
 ;; -------------
 
-(setq bjh-color 'dark) ;; light or dark?
+(defvar bjh-color 'dark) ;; light or dark?
 
 
 ;; -------------
 ;; custom files
 ;; -------------
 
-(setq dotfiles-dir (expand-file-name "~/.emacs.d/"))
+(defvar dotfiles-dir (expand-file-name "~/.emacs.d/"))
 
 ;; work around a bug on OS X where system-name is FQDN
 (if (eq system-type 'darwin)
     (setq system-name (car (split-string system-name "\\."))))
 
 ;; keep system- or user-specific customizations here
-(setq system-specific-config (concat dotfiles-dir system-name ".el")
-      user-specific-config (concat dotfiles-dir user-login-name ".el")
-      user-specific-dir (concat dotfiles-dir user-login-name))
+(defvar system-specific-config (concat dotfiles-dir system-name ".el"))
+(defvar user-specific-config (concat dotfiles-dir user-login-name ".el"))
+(defvar user-specific-dir (concat dotfiles-dir user-login-name))
 (add-to-list 'load-path user-specific-dir)
 
 (if (file-exists-p system-specific-config) (load system-specific-config))
@@ -41,11 +41,79 @@
 ;; -----------------
 
 (require 'package)
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
+(setq package-archives '(;("gnu" . "http://elpa.gnu.org/packages/")
+                         ;("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (setq package-enable-at-startup nil)
 (package-initialize)
+
+(defvar bjh-packages
+  '(ace-jump-mode
+    ag
+    autopair
+    browse-kill-ring
+    buffer-move
+    c-eldoc
+    clojure-mode
+    coffee-mode
+    color-theme
+    dash
+    deft
+    diminish
+    dired-single
+    enh-ruby-mode
+    erlang
+    evil
+    expand-region
+    find-file-in-project
+    flycheck
+    flymake
+    flymake-go
+    full-ack
+    gist
+    git-commit-mode
+    git-rebase-mode
+    gitconfig-mode
+    gitignore-mode
+    gnuplot-mode
+    go-mode
+    goto-last-change
+    haskell-mode
+    highlight-parentheses
+    htmlize
+    idle-highlight-mode
+    ido-ubiquitous
+    ido-vertical-mode
+    js-comint
+    js2-mode
+    magit
+    markdown-mode
+    multi-term
+    paredit
+    php-mode
+    puppet-mode
+    rainbow-mode
+    redo+
+    ruby-end
+    rust-mode
+    scala-mode2
+    scpaste
+    scratch
+    slime
+    smex
+    smooth-scrolling
+    undo-tree
+    vcl-mode
+    yaml-mode
+    yasnippet))
+
+(defun bjh-install-packages ()
+  (interactive)
+  (package-refresh-contents)
+  (mapc #'(lambda (package)
+            (unless (package-installed-p package)
+              (package-install package)))
+        bjh-packages))
 
 ;; -------------
 ;; plugin config
@@ -55,8 +123,10 @@
 ;; add dotfiles/misc to path
 (add-to-list 'load-path (concat dotfiles-dir "misc"))
 
-;; flymake
+;; flycheck
+(global-flycheck-mode)
 
+;; flymake
 (setq-default flymake-gui-warnings-enabled nil)
 (require 'flymake)
 (load-library "flymake-cursor")
@@ -279,11 +349,11 @@ makes)."
 ;; highlight-parentheses
 (require 'highlight-parentheses)
 (setq hl-paren-minor-mode-string nil
-      hl-paren-colors
-      '("orange1" "yellow1" "greenyellow" "green1"
-        "springgreen1" "cyan1" "slateblue1" "magenta1" "purple"))
+     hl-paren-colors
+     '("orange1" "yellow1" "greenyellow" "green1"
+       "springgreen1" "cyan1" "slateblue1" "magenta1" "purple"))
 (defun enable-highlight-parentheses-mode ()
-  (highlight-parentheses-mode t))
+ (highlight-parentheses-mode t))
 
 ;; ibuffer
 (require 'ibuffer)
@@ -608,6 +678,7 @@ makes)."
 
 ;; ruby-mode
 (add-to-list 'auto-mode-alist '("\\.rake$" . enh-ruby-mode))
+(add-hook 'enh-ruby-mode-hook 'ruby-end-mode)
 
 ;; rust
 (require 'rust-mode)
