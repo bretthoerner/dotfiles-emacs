@@ -14,28 +14,6 @@
 (defvar bjh-color 'dark) ;; light or dark?
 
 
-;; -------------
-;; custom files
-;; -------------
-
-(defvar dotfiles-dir (expand-file-name "~/.emacs.d/"))
-
-;; work around a bug on OS X where system-name is FQDN
-(if (eq system-type 'darwin)
-    (setq system-name (car (split-string system-name "\\."))))
-
-;; keep system- or user-specific customizations here
-(defvar system-specific-config (concat dotfiles-dir system-name ".el"))
-(defvar user-specific-config (concat dotfiles-dir user-login-name ".el"))
-(defvar user-specific-dir (concat dotfiles-dir user-login-name))
-(add-to-list 'load-path user-specific-dir)
-
-(if (file-exists-p system-specific-config) (load system-specific-config))
-(if (file-exists-p user-specific-config) (load user-specific-config))
-(if (file-exists-p user-specific-dir)
-    (mapc #'load (directory-files user-specific-dir nil ".*el$")))
-
-
 ;; -----------------
 ;; package.el config
 ;; -----------------
@@ -120,9 +98,6 @@
 ;; -------------
 
 
-;; add dotfiles/misc to path
-(add-to-list 'load-path (concat dotfiles-dir "misc"))
-
 ;; flycheck
 (global-flycheck-mode)
 
@@ -162,20 +137,6 @@ makes)."
 (require 'ace-jump-mode)
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 
-;; ack
-(require 'full-ack)
-(autoload 'ack-same "full-ack" nil t)
-(autoload 'ack "full-ack" nil t)
-(autoload 'ack-find-same-file "full-ack" nil t)
-(autoload 'ack-find-file "full-ack" nil t)
-
-;; auto-complete
-;; (setq ac-dictionary-directories (list (concat dotfiles-dir "auto-complete/dict"))
-;;       ac-modes '(emacs-lisp-mode lisp-mode lisp-interaction-mode
-;;                  slime-repl-mode clojure-mode scheme-mode))
-;; (require 'auto-complete-config)
-;; (ac-config-default)
-
 ;; autopair
 (require 'autopair)
 (autopair-global-mode) ;; enable autopair in all buffers
@@ -205,7 +166,7 @@ makes)."
 
 ;; c-mode
 ;(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
-(setq c-eldoc-includes "-I./ -I../ ")
+(setq-default c-eldoc-includes "-I./ -I../ ")
 (load "c-eldoc")
 (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
 
@@ -388,6 +349,7 @@ makes)."
 ; (require 'ido-ubiquitous)
 (ido-mode t)
 (ido-everywhere t)
+(ido-vertical-mode)
 
 ;; imenu
 (require 'imenu)
@@ -699,18 +661,7 @@ makes)."
 ;; scratch
 (autoload 'scratch "scratch" nil t)
 
-;; slime and swank
-;; (require 'ac-slime)
-;; (add-to-list 'ac-sources 'ac-source-slime-simple)
-;; (add-hook 'slime-mode-hook 'set-up-slime-ac)
-;; (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
-
-;; old, ghetto auto complete
-;(define-key read-expression-map (kbd "TAB") 'lisp-complete-symbol)
-
-;(add-to-list 'load-path (concat dotfiles-dir "slime"))
-;(add-to-list 'load-path (concat dotfiles-dir "slime/contrib"))
-
+;; slime
 (eval-after-load 'slime
   '(define-key slime-mode-map (kbd "C-c p")
      'slime-pprint-eval-last-expression))
@@ -746,10 +697,6 @@ makes)."
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;; smooth-scrolling for keyboard
-;; below are previous 'solution' to scroll one line at a time,
-;; replaced by smooth-scrolling.el
-;(setq-default scroll-conservatively 10000)
-;(setq-default scroll-step 1)
 (require 'smooth-scrolling)
 
 ;; mouse-wheel scroll one line at a time
@@ -961,11 +908,6 @@ makes)."
 ;; highlight characters after 80 columns
 (setq whitespace-style '(face trailing lines-tail space-before-tab
                               space-after-tab))
-;(global-whitespace-mode 1)
-;; global-whitespace-mode slows thngs down a lot, so disable (some)
-;; fontification. Tip due to
-;; http://www.emacswiki.org/emacs/WhiteSpace
-;(defun whitespace-post-command-hook () nil)
 
 ;; use UTF-8 encoding
 (setq locale-coding-system 'utf-8)
@@ -1416,15 +1358,16 @@ buffer-local variable `show-trailing-whitespace'."
           frame-background-mode bjh-color)
     (color-theme-initialize)
     (if (eq bjh-color 'dark)
-        (progn (load-file (concat dotfiles-dir "themes/blackboard.el"))
-               (color-theme-blackboard))
+        (progn
+          (load-file (expand-file-name "~/.emacs.d/themes/blackboard.el"))
+          (color-theme-blackboard))
       (color-theme-gtk-ide)) ; else light
 
     ;; emacs 24+ themes
     (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
     ;; start emacs server
-    (server-start)
+    ;; (server-start)
 
     ;; bar cursor
     (setq-default cursor-type 'bar)
@@ -1440,10 +1383,6 @@ buffer-local variable `show-trailing-whitespace'."
 
     ;; don't blink cursor
     (blink-cursor-mode -1)
-
-    ;; shift+cursor to select text
-    ;(setq pc-select-selection-keys-only t)
-    ;(pc-selection-mode 1)
 
     ;; restore old `exchange-point-and-mark' (which pc-selection-mode overrides)
     (global-set-key (kbd "C-x C-x") 'exchange-point-and-mark)
