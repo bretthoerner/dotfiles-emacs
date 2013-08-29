@@ -61,7 +61,6 @@
     htmlize
     idle-highlight-mode
     ido-ubiquitous
-    ido-vertical-mode
     js-comint
     js2-mode
     magit
@@ -349,7 +348,6 @@ makes)."
 ; (require 'ido-ubiquitous)
 (ido-mode t)
 (ido-everywhere t)
-(ido-vertical-mode)
 
 ;; imenu
 (require 'imenu)
