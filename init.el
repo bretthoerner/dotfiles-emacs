@@ -97,6 +97,9 @@
 ;; -------------
 
 
+;; auto-complete
+(require 'auto-complete)
+
 ;; flycheck
 (global-flycheck-mode)
 
@@ -292,10 +295,11 @@ makes)."
 
 ;; go-mode
 (require 'go-mode-load)
-(setenv "PATH"
-        (concat
-         "/opt/go/bin:"
-         (getenv "PATH")))
+(add-hook 'before-save-hook 'gofmt-before-save)
+(add-hook 'go-mode-hook (lambda ()
+                          (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)))
+(add-hook 'go-mode-hook (lambda ()
+                          (local-set-key (kbd "C-c i") 'go-goto-imports)))
 
 ;; goto-last-change
 (require 'goto-last-change)
@@ -1389,9 +1393,12 @@ buffer-local variable `show-trailing-whitespace'."
     (global-unset-key (kbd "C-z"))
 
     ;; fix path
-    (let ((local-bin (expand-file-name "~/bin")))
-      (setq exec-path (append (list local-bin) exec-path))
-      (setenv "PATH" (concat local-bin ":" (getenv "PATH"))))
+    (mapc (lambda (bin-path)
+            (let ((expanded-bin-path (expand-file-name bin-path)))
+              (add-to-list 'exec-path expanded-bin-path)
+              (setenv "PATH" (concat expanded-bin-path ":" (getenv "PATH")))))
+          '("~/bin"
+            "~/.go/bin"))
 
     ;; use thinkpad arrows to manipulate windows and buffers
     (defun other-other-window ()
