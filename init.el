@@ -51,13 +51,16 @@
     gist
     git-commit-mode
     git-rebase-mode
-    gitconfig-mode
     gitignore-mode
     gnuplot-mode
+    go-autocomplete
+    go-eldoc
+    go-errcheck
     go-mode
     goto-last-change
     haskell-mode
     highlight-parentheses
+    gitconfig-mode
     htmlize
     idle-highlight-mode
     ido-ubiquitous
@@ -300,6 +303,11 @@ makes)."
                           (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)))
 (add-hook 'go-mode-hook (lambda ()
                           (local-set-key (kbd "C-c i") 'go-goto-imports)))
+
+(require 'go-autocomplete)
+(require 'auto-complete-config)
+(require 'go-eldoc)
+(add-hook 'go-mode-hook 'go-eldoc-setup)
 
 ;; goto-last-change
 (require 'goto-last-change)
