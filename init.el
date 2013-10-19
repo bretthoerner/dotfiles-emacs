@@ -18,6 +18,7 @@
 ;; package.el config
 ;; -----------------
 
+(require 'cl)
 (require 'package)
 (setq package-archives '(;("gnu" . "http://elpa.gnu.org/packages/")
                          ;("marmalade" . "http://marmalade-repo.org/packages/")
@@ -26,8 +27,7 @@
 (package-initialize)
 
 (defvar bjh-packages
-  '(ace-jump-mode
-    ag
+  '(ag
     autopair
     browse-kill-ring
     buffer-move
@@ -74,7 +74,6 @@
     puppet-mode
     rainbow-mode
     redo+
-    ruby-end
     rust-mode
     scala-mode2
     scpaste
@@ -139,12 +138,12 @@ makes)."
     temp-name))
 
 ;; ace-jump-mode
-(require 'ace-jump-mode)
-(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+;(require 'ace-jump-mode)
+;(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 
 ;; autopair
 (require 'autopair)
-(autopair-global-mode) ;; enable autopair in all buffers
+; (autopair-global-mode) ;; enable autopair in all buffers
 
 ;; bnf-mode
 (define-generic-mode 'bnf-mode
@@ -167,7 +166,8 @@ makes)."
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
 ;; browse-url
-(setq browse-url-browser-function 'browse-url-firefox)
+(setq browse-url-browser-function 'browse-url-chromium
+      browse-url-chromium-program "google-chrome")
 
 ;; c-mode
 ;(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
@@ -178,12 +178,14 @@ makes)."
 ;; clojure-mode
 (when (require 'clojure-mode nil t)
   (add-hook 'clojure-mode-hook 'pretty-fns))
+(add-hook 'nrepl-interaction-mode-hook
+  'nrepl-turn-on-eldoc-mode)
 
 ;; coffee-mode
 (require 'coffee-mode)
 
 ;; cscope
-(require 'xcscope)
+;; (require 'xcscope)
 
 ;; cua-mode
 (setq cua-rectangle-mark-key (kbd "<C-S-M-return>"))
@@ -650,7 +652,6 @@ makes)."
 
 ;; ruby-mode
 (add-to-list 'auto-mode-alist '("\\.rake$" . enh-ruby-mode))
-(add-hook 'enh-ruby-mode-hook 'ruby-end-mode)
 
 ;; rust
 (require 'rust-mode)

@@ -1,5 +1,6 @@
 abbrev_defs
 ac-comphist.dat
+bookmarks
 *.elc
 elpa/
 history
