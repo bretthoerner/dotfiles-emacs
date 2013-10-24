@@ -618,7 +618,7 @@ makes)."
                           ("bretthoerner.com" nickserv "brett_h" ,bjh-freenode-password))
          rcirc-server-alist `(;("irc.freenode.net" :channels ("#emacs"))
                               ;("localhost")
-                              ("bretthoerner.com" :port 6668 :nick "brett_h" :password ,bjh-znc-password)))
+                              ("localhost" :port 6668 :nick "brett_h" :password ,bjh-znc-password)))
 
    (defun-rcirc-command clear (arg)
      "Clear rcirc buffer."
