@@ -13,7 +13,6 @@
 
 (defvar bjh-color 'dark) ;; light or dark?
 
-
 ;; -----------------
 ;; package.el config
 ;; -----------------
@@ -40,7 +39,6 @@
     diminish
     dired-single
     enh-ruby-mode
-    erlang
     evil
     expand-region
     find-file-in-project
@@ -94,6 +92,16 @@
               (package-install package)))
         bjh-packages))
 
+;; removed from Emacs but still used in some libraries http://repo.or.cz/w/emacs.git/patch/3ffbb1932753854b275cd2be6b8c0009cf3380a5
+(defun ad-advised-definition-p (definition)
+  "Return non-nil if DEFINITION was generated from advice information."
+  (if (or (ad-lambda-p definition)
+	  (macrop definition)
+	  (ad-compiled-p definition))
+      (let ((docstring (ad-docstring definition)))
+	(and (stringp docstring)
+	     (get-text-property 0 'dynamic-docstring-function docstring)))))
+
 ;; -------------
 ;; plugin config
 ;; -------------
@@ -143,7 +151,7 @@ makes)."
 
 ;; autopair
 (require 'autopair)
-; (autopair-global-mode) ;; enable autopair in all buffers
+(autopair-global-mode) ;; enable autopair in all buffers
 
 ;; bnf-mode
 (define-generic-mode 'bnf-mode
@@ -167,7 +175,7 @@ makes)."
 
 ;; browse-url
 (setq browse-url-browser-function 'browse-url-chromium
-      browse-url-chromium-program "google-chrome")
+      browse-url-chromium-program "google-chrome-stable")
 
 ;; c-mode
 ;(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
@@ -247,28 +255,6 @@ makes)."
                   (delete-file (concat buffer-file-name "c"))))))
 
 (define-key emacs-lisp-mode-map (kbd "M-.") 'find-function-at-point)
-
-;; erlang
-(require 'erlang-start)
-
-;; (require 'distel)
-;; (distel-setup)
-
-;; (defun flymake-erlang-init ()
-;;   (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;;                      'flymake-create-temp-intemp))
-;;          (local-file (file-relative-name
-;;                       temp-file
-;;                       (file-name-directory buffer-file-name))))
-;;     (list "eflymake" (list local-file))))
-
-;; (push '("\\.erl\\'" flymake-erlang-init)
-;;       flymake-allowed-file-name-masks)
-
-;; (defun bjh-erlang-mode-hook ()
-;;   (flymake-mode 1))
-
-;; (add-hook 'erlang-mode-hook 'bjh-erlang-mode-hook)
 
 ;; expand-region
 (require 'expand-region)
@@ -662,6 +648,9 @@ makes)."
 ;; saveplace
 (setq-default save-place t)
 (require 'saveplace)
+
+;; scala
+(require 'sbt-mode)
 
 ;; scpaste
 (require 'scpaste)
