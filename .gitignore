@@ -1,6 +1,7 @@
 abbrev_defs
 ac-comphist.dat
 bookmarks
+cider-history
 *.elc
 elpa/
 history
