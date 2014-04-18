@@ -26,8 +26,7 @@
 (package-initialize)
 
 (defvar bjh-packages
-  '(ac-nrepl
-    ag
+  '(ag
     auto-complete
     autopair
     browse-kill-ring
@@ -35,14 +34,11 @@
     c-eldoc
     cider
     clojure-mode
-    clojure-test-mode
-    coffee-mode
     color-theme
     dash
     deft
     diminish
     dired-single
-    docker-mode
     enh-ruby-mode
     evil
     expand-region
@@ -50,7 +46,6 @@
     flycheck
     flymake
     flymake-cursor
-    flymake-go
     full-ack
     gh
     gist
@@ -75,17 +70,16 @@
     magit
     markdown-mode
     multi-term
-    nrepl
     paredit
     php-mode
     puppet-mode
-    rainbow-mode
+    rainbow-delimiters
     redo+
     rust-mode
+    sbt-mode
     scala-mode2
     scpaste
     scratch
-    slime
     smex
     smooth-scrolling
     undo-tree
@@ -98,18 +92,20 @@
   (package-refresh-contents)
   (mapc #'(lambda (package)
             (unless (package-installed-p package)
-              (package-install package)))
+		(package-install package)))
         bjh-packages))
+
+;(bjh-install-packages)
 
 ;; removed from Emacs but still used in some libraries http://repo.or.cz/w/emacs.git/patch/3ffbb1932753854b275cd2be6b8c0009cf3380a5
 (defun ad-advised-definition-p (definition)
   "Return non-nil if DEFINITION was generated from advice information."
   (if (or (ad-lambda-p definition)
-	  (macrop definition)
-	  (ad-compiled-p definition))
+    (macrop definition)
+    (ad-compiled-p definition))
       (let ((docstring (ad-docstring definition)))
 	(and (stringp docstring)
-	     (get-text-property 0 'dynamic-docstring-function docstring)))))
+       (get-text-property 0 'dynamic-docstring-function docstring)))))
 
 ;; -------------
 ;; plugin config
@@ -123,9 +119,9 @@
 (global-flycheck-mode)
 
 ;; flymake
-(setq-default flymake-gui-warnings-enabled nil)
-(require 'flymake)
-(load-library "flymake-cursor")
+;(setq-default flymake-gui-warnings-enabled nil)
+;(require 'flymake)
+;(load-library "flymake-cursor")
 
 ;; autopair
 (require 'autopair)
@@ -162,19 +158,14 @@
 (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
 
 ;; cider
-(add-hook 'cider-repl-mode-hook 'paredit-mode)
-(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-(setq cider-repl-pop-to-buffer-on-connect nil)
-(setq cider-repl-history-file (expand-file-name "~/.emacs.d/cider-history"))
+;(add-hook 'cider-repl-mode-hook 'paredit-mode)
+;(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+;(setq cider-repl-pop-to-buffer-on-connect nil)
+;(setq cider-repl-history-file (expand-file-name "~/.emacs.d/cider-history"))
 
 ;; clojure-mode
 (when (require 'clojure-mode nil t)
-  (add-hook 'clojure-mode-hook 'pretty-fns))
-(add-hook 'nrepl-interaction-mode-hook
-  'nrepl-turn-on-eldoc-mode)
-
-;; coffee-mode
-(require 'coffee-mode)
+ (add-hook 'clojure-mode-hook 'pretty-fns))
 
 ;; cscope
 ;; (require 'xcscope)
@@ -515,8 +506,8 @@
 (require 'python)
 (setq python-indent-offset 2)
 
-;; rainbow-mode
-(require 'rainbow-mode)
+;; rainbow-delimiters
+;(require 'rainbow-delimiters)
 
 ;; recentf
 (require 'recentf)
@@ -628,23 +619,23 @@
 (autoload 'scratch "scratch" nil t)
 
 ;; slime
-(eval-after-load 'slime
-  '(define-key slime-mode-map (kbd "C-c p")
-     'slime-pprint-eval-last-expression))
-
-(eval-after-load 'slime-repl
-  '(define-key slime-repl-mode-map (kbd "C-c p")
-     'slime-pprint-eval-last-expression))
-
-(require 'slime nil t)
-(if (fboundp 'slime)
-  (progn
-    (setq slime-lisp-implementations '((sbcl ("/usr/bin/sbcl")))
-          slime-net-coding-system 'utf-8-unix
-          slime-protocol-version 'ignore)
-    (global-set-key "\C-cs" 'slime-selector)
-    (slime-setup '(slime-repl))
-    (slime-require :swank-listener-hooks)))
+; (eval-after-load 'slime
+;   '(define-key slime-mode-map (kbd "C-c p")
+;      'slime-pprint-eval-last-expression))
+;
+; (eval-after-load 'slime-repl
+;   '(define-key slime-repl-mode-map (kbd "C-c p")
+;      'slime-pprint-eval-last-expression))
+;
+; (require 'slime nil t)
+; (if (fboundp 'slime)
+;   (progn
+;     (setq slime-lisp-implementations '((sbcl ("/usr/bin/sbcl")))
+;           slime-net-coding-system 'utf-8-unix
+;           slime-protocol-version 'ignore)
+;     (global-set-key "\C-cs" 'slime-selector)
+;     (slime-setup '(slime-repl))
+;     (slime-require :swank-listener-hooks)))
 
 ;; smerge
 (defun sm-try-smerge ()
