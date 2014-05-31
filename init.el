@@ -39,7 +39,6 @@
     deft
     diminish
     dired-single
-    enh-ruby-mode
     evil
     expand-region
     find-file-in-project
@@ -156,6 +155,22 @@
 (setq-default c-eldoc-includes "-I./ -I../ ")
 (load "c-eldoc")
 (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/irony-mode/elisp/"))
+(require 'irony)
+
+(defun my-c++-hooks ()
+  "Enable the hooks in the preferred order: 'yas -> auto-complete -> irony'."
+  ;; be cautious, if yas is not enabled before (auto-complete-mode 1), overlays
+  ;; *may* persist after an expansion.
+  (yas/minor-mode-on)
+  (auto-complete-mode 1)
+
+  ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: php-mode
+  (when (member major-mode irony-known-modes)
+    (irony-mode 1)))
+
+(add-hook 'c++-mode-hook 'my-c++-hooks)
+(add-hook 'c-mode-hook 'my-c++-hooks)
 
 ;; cider
 ;(add-hook 'cider-repl-mode-hook 'paredit-mode)
@@ -168,7 +183,7 @@
  (add-hook 'clojure-mode-hook 'pretty-fns))
 
 ;; cscope
-;; (require 'xcscope)
+(require 'xcscope)
 
 ;; cua-mode
 (setq cua-rectangle-mark-key (kbd "<C-S-M-return>"))
@@ -239,6 +254,9 @@
 ;; (require 'evil)
 ;; (setq evil-emacs-state-cursor 'bar)
 ;; (evil-mode 1)
+
+;; find-file
+(global-set-key (kbd "C-x C-o") 'ff-find-other-file)
 
 ;; ffap
 (when (fboundp 'find-file-at-point)
@@ -592,9 +610,6 @@
                       rcirc-default-user-name
                       rcirc-default-full-name
                       channels)))))
-
-;; ruby-mode
-(add-to-list 'auto-mode-alist '("\\.rake$" . enh-ruby-mode))
 
 ;; rust
 (require 'rust-mode)

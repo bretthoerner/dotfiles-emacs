@@ -12,3 +12,5 @@ srecode-map.el
 swank
 url/
 var/
+places
+recentf
