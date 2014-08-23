@@ -26,7 +26,8 @@
 (package-initialize)
 
 (defvar bjh-packages
-  '(ag
+  '(ac-cider
+    ag
     auto-complete
     autopair
     browse-kill-ring
@@ -39,12 +40,14 @@
     deft
     diminish
     dired-single
+    enh-ruby-mode
     evil
     expand-region
     find-file-in-project
     flycheck
     flymake
     flymake-cursor
+    flymake-rust
     full-ack
     gh
     gist
@@ -71,6 +74,7 @@
     multi-term
     paredit
     php-mode
+    protobuf-mode
     puppet-mode
     rainbow-delimiters
     redo+
@@ -83,6 +87,7 @@
     smooth-scrolling
     undo-tree
     vcl-mode
+    xcscope
     yaml-mode
     yasnippet))
 
@@ -97,14 +102,14 @@
 ;(bjh-install-packages)
 
 ;; removed from Emacs but still used in some libraries http://repo.or.cz/w/emacs.git/patch/3ffbb1932753854b275cd2be6b8c0009cf3380a5
-(defun ad-advised-definition-p (definition)
-  "Return non-nil if DEFINITION was generated from advice information."
-  (if (or (ad-lambda-p definition)
-    (macrop definition)
-    (ad-compiled-p definition))
-      (let ((docstring (ad-docstring definition)))
-	(and (stringp docstring)
-       (get-text-property 0 'dynamic-docstring-function docstring)))))
+;(defun ad-advised-definition-p (definition)
+;  "Return non-nil if DEFINITION was generated from advice information."
+;  (if (or (ad-lambda-p definition)
+;    (macrop definition)
+;    (ad-compiled-p definition))
+;      (let ((docstring (ad-docstring definition)))
+;	(and (stringp docstring)
+;       (get-text-property 0 'dynamic-docstring-function docstring)))))
 
 ;; -------------
 ;; plugin config
@@ -147,8 +152,7 @@
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
 ;; browse-url
-(setq browse-url-browser-function 'browse-url-chromium
-      browse-url-chromium-program "google-chrome-stable")
+(setq browse-url-browser-function 'browse-url-firefox)
 
 ;; c-mode
 ;(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
@@ -173,10 +177,17 @@
 (add-hook 'c-mode-hook 'my-c++-hooks)
 
 ;; cider
-;(add-hook 'cider-repl-mode-hook 'paredit-mode)
-;(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-;(setq cider-repl-pop-to-buffer-on-connect nil)
-;(setq cider-repl-history-file (expand-file-name "~/.emacs.d/cider-history"))
+(add-hook 'cider-repl-mode-hook 'paredit-mode)
+(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+(setq cider-repl-pop-to-buffer-on-connect nil)
+(setq cider-repl-history-file (expand-file-name "~/.emacs.d/cider-history"))
+(require 'ac-cider)
+(add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+(add-hook 'cider-mode-hook 'ac-cider-setup)
+(add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'cider-mode))
+(setq cider-stacktrace-frames-background-color "#2D2828")
 
 ;; clojure-mode
 (when (require 'clojure-mode nil t)
@@ -184,6 +195,7 @@
 
 ;; cscope
 (require 'xcscope)
+(cscope-setup)
 
 ;; cua-mode
 (setq cua-rectangle-mark-key (kbd "<C-S-M-return>"))
@@ -525,7 +537,7 @@
 (setq python-indent-offset 2)
 
 ;; rainbow-delimiters
-;(require 'rainbow-delimiters)
+;; (require 'rainbow-delimiters)
 
 ;; recentf
 (require 'recentf)
@@ -574,12 +586,15 @@
          rcirc-default-user-name "brett"
          rcirc-default-full-name "Brett"
          rcirc-keywords '("brett" "bretthoerner" "hoerner")
-         rcirc-authinfo `(;("freenode" nickserv "brett_h" ,bjh-freenode-password)
-                          ;("localhost" bitlbee "brett_h" ,bjh-bitlbee-password)
-                          ("bretthoerner.com" nickserv "brett_h" ,bjh-freenode-password))
+         ;rcirc-authinfo `(;("freenode" nickserv "brett_h" ,bjh-freenode-password)
+         ;                 ;("localhost" bitlbee "brett_h" ,bjh-bitlbee-password)
+         ;                 ;("bretthoerner.com" nickserv "brett_h" ,bjh-freenode-password))
          rcirc-server-alist `(;("irc.freenode.net" :channels ("#emacs"))
                               ;("localhost")
-                              ("localhost" :port 6668 :nick "brett_h" :password ,bjh-znc-password)))
+                              ("freenode.local" :port 6668 :nick "brett_h" :password ,bjh-freenode-password)
+                              ;("mozilla.local" :port 6668 :nick "brett_h/mozilla" :password ,bjh-mozilla-password)
+                              ;("irc.mozilla.org" :port 6667 :nick "brett_h" :password ,bjh-mozilla-password)
+                              ))
 
    (defun-rcirc-command clear (arg)
      "Clear rcirc buffer."
@@ -613,6 +628,7 @@
 
 ;; rust
 (require 'rust-mode)
+(setq rust-indent-offset 2)
 
 ;; savehist
 (savehist-mode 1)
@@ -851,7 +867,8 @@
 (setq-default tab-width 2)
 
 ;; set C indent to 2 spaces
-(setq-default c-basic-offset 2)
+(setq-default c-basic-offset 2
+              c-default-style "linux")
 
 ;; set tab stops based on default-tab-width
 (setq-default tab-stop-list (loop for i
