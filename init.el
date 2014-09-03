@@ -152,7 +152,8 @@
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
 ;; browse-url
-(setq browse-url-browser-function 'browse-url-firefox)
+(setq browse-url-browser-function 'browse-url-chromium
+      browse-url-chromium-program "google-chrome-stable")
 
 ;; c-mode
 ;(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
@@ -309,7 +310,9 @@
 (setq auto-mode-alist (append '(("\\.gp$" . gnuplot-mode)) auto-mode-alist))
 
 ;; haskell-mode
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(require 'hi2)
+(add-hook 'haskell-mode-hook 'turn-on-hi2)
 
 ;; highlight-parentheses
 (require 'highlight-parentheses)
