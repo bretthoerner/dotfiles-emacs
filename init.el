@@ -19,9 +19,8 @@
 
 (require 'cl)
 (require 'package)
-(setq package-archives '(;("gnu" . "http://elpa.gnu.org/packages/")
-                         ;("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (setq package-enable-at-startup nil)
 (package-initialize)
 
@@ -50,6 +49,7 @@
     flymake-rust
     full-ack
     gh
+    ghc
     gist
     git-commit-mode
     gitignore-mode
@@ -313,6 +313,7 @@
 ;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 (require 'hi2)
 (add-hook 'haskell-mode-hook 'turn-on-hi2)
+(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
 
 ;; highlight-parentheses
 (require 'highlight-parentheses)
