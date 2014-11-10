@@ -85,6 +85,7 @@
     scratch
     smex
     smooth-scrolling
+    toml-mode
     undo-tree
     vcl-mode
     xcscope
@@ -120,7 +121,7 @@
 (require 'auto-complete)
 
 ;; flycheck
-(global-flycheck-mode)
+; (global-flycheck-mode)
 
 ;; flymake
 ;(setq-default flymake-gui-warnings-enabled nil)
@@ -311,7 +312,10 @@
 
 ;; haskell-mode
 ;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(require 'ghc)
+(setq ghc-display-error 'minibuffer)
 (require 'hi2)
+(setq hi2-show-indentations nil)
 (add-hook 'haskell-mode-hook 'turn-on-hi2)
 (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
 
@@ -733,8 +737,8 @@
 ;; (which-func-mode 1)
 
 ;; yasnippet
-(require 'yasnippet)
-(yas-global-mode 1)
+;(require 'yasnippet)
+;(yas-global-mode 1)
 
 ;; diminish (needs to be run after other modes are loaded)
 (when (require 'diminish nil 'noerror)
