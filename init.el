@@ -62,6 +62,7 @@
     go-mode
     goto-last-change
     haskell-mode
+    hi2
     highlight-parentheses
     gitconfig-mode
     htmlize
@@ -161,8 +162,8 @@
 (setq-default c-eldoc-includes "-I./ -I../ ")
 (load "c-eldoc")
 (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/irony-mode/elisp/"))
-(require 'irony)
+;(add-to-list 'load-path (expand-file-name "~/.emacs.d/irony-mode/elisp/"))
+;(require 'irony)
 
 (defun my-c++-hooks ()
   "Enable the hooks in the preferred order: 'yas -> auto-complete -> irony'."
@@ -292,7 +293,7 @@
 (require 'gist)
 
 ;; go-mode
-(require 'go-mode-load)
+(require 'go-mode-autoloads)
 (add-hook 'before-save-hook 'gofmt-before-save)
 (add-hook 'go-mode-hook (lambda ()
                           (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)))
@@ -599,7 +600,7 @@
          ;                 ;("bretthoerner.com" nickserv "brett_h" ,bjh-freenode-password))
          rcirc-server-alist `(;("irc.freenode.net" :channels ("#emacs"))
                               ;("localhost")
-                              ("freenode.local" :port 6668 :nick "brett_h" :password ,bjh-freenode-password)
+                              ("localhost" :port 6668 :nick "brett_h" :password ,bjh-freenode-password)
                               ;("mozilla.local" :port 6668 :nick "brett_h/mozilla" :password ,bjh-mozilla-password)
                               ;("irc.mozilla.org" :port 6667 :nick "brett_h" :password ,bjh-mozilla-password)
                               ))
@@ -1393,6 +1394,7 @@ buffer-local variable `show-trailing-whitespace'."
               (add-to-list 'exec-path expanded-bin-path)
               (setenv "PATH" (concat expanded-bin-path ":" (getenv "PATH")))))
           '("~/bin"
+            "/usr/local/bin"
             "~/.go/bin"))
 
     ;; use thinkpad arrows to manipulate windows and buffers
@@ -1408,12 +1410,15 @@ buffer-local variable `show-trailing-whitespace'."
     (global-set-key [(control XF86Back)] 'previous-buffer)
 
     (require 'buffer-move)
-    (global-set-key [(shift XF86Forward)] 'buf-move-right)
-    (global-set-key [(shift XF86Back)] 'buf-move-left)
-    (global-set-key [(super right)] 'buf-move-right)
-    (global-set-key [(super left)] 'buf-move-left)
-    (global-set-key [(super up)] 'buf-move-up)
-    (global-set-key [(super down)] 'buf-move-down)
+    (global-set-key [(meta super right)] 'buf-move-right)
+    (global-set-key [(meta super left)] 'buf-move-left)
+    (global-set-key [(meta super up)] 'buf-move-up)
+    (global-set-key [(meta super down)] 'buf-move-down)
+
+    (global-set-key [(super right)] 'end-of-line)
+    (global-set-key [(super left)] 'beginning-of-line)
+    (global-set-key [(super up)] 'beginning-of-buffer)
+    (global-set-key [(super down)] 'end-of-buffer)
 
     (defun bjh-set-frame-font-size (size)
       (set-frame-font (concat bjh-font "-" (number-to-string size)))
@@ -1439,9 +1444,9 @@ buffer-local variable `show-trailing-whitespace'."
                               '(("(\\|)" . 'bjh-paren-face))))
 
     ;; font
-    (add-to-list 'default-frame-alist '(font . "Ubuntu Mono-11"))
-    (setq bjh-font "Ubuntu Mono")
-    (bjh-set-frame-font-size 10)
+    (add-to-list 'default-frame-alist '(font . "Ubuntu Mono derivative Powerline-14"))
+    (setq bjh-font "Ubuntu Mono derivative Powerline")
+    (bjh-set-frame-font-size 14)
 
     ;; bind 'o' to run 'open' command on selected file in dired mode
     (define-key dired-mode-map "o" 'dired-open-gnome)
