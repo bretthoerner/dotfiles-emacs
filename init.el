@@ -78,7 +78,6 @@
     protobuf-mode
     puppet-mode
     rainbow-delimiters
-    redo+
     rust-mode
     sbt-mode
     scala-mode2
@@ -560,10 +559,6 @@
   (if (find-file (ido-completing-read "Find recent file: " recentf-list))
       (message "Opening file...")
     (message "Aborting")))
-
-;; redo
-;; (require 'redo+)
-;; (global-set-key [(control ??)] 'redo)
 
 ;; rcirc
 (let ((irc-password-file (expand-file-name "~/.ircpass.el")))
@@ -1408,6 +1403,9 @@ buffer-local variable `show-trailing-whitespace'."
 
     (global-set-key [(control XF86Forward)] 'next-buffer)
     (global-set-key [(control XF86Back)] 'previous-buffer)
+
+    (global-set-key [(super z)] 'undo-tree-undo)
+    (global-set-key [(shift super z)] 'undo-tree-redo)
 
     (require 'buffer-move)
     (global-set-key [(meta super right)] 'buf-move-right)
