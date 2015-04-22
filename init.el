@@ -25,9 +25,10 @@
 (package-initialize)
 
 (defvar bjh-packages
-  '(ac-cider
-    ag
-    auto-complete
+  '(ag
+    ansible
+    anzu
+    auto-package-update
     autopair
     browse-kill-ring
     buffer-move
@@ -37,10 +38,11 @@
     color-theme
     dash
     deft
-    diminish
     dired-single
+    dockerfile-mode
     enh-ruby-mode
     evil
+    exec-path-from-shell
     expand-region
     find-file-in-project
     flycheck
@@ -52,11 +54,10 @@
     ghc
     gist
     git-commit-mode
-    gitignore-mode
     git-rebase-mode
+    git-timemachine
     gitignore-mode
     gnuplot-mode
-    go-autocomplete
     go-eldoc
     go-errcheck
     go-mode
@@ -70,14 +71,17 @@
     ido-ubiquitous
     js-comint
     js2-mode
+    json-mode
+    lua-mode
     magit
     markdown-mode
     multi-term
     paredit
-    php-mode
     protobuf-mode
+    pt
     puppet-mode
     rainbow-delimiters
+    rich-minority
     rust-mode
     sbt-mode
     scala-mode2
@@ -89,18 +93,27 @@
     undo-tree
     vcl-mode
     xcscope
-    yaml-mode
-    yasnippet))
+    yaml-mode))
 
-(defun bjh-install-packages ()
-  (interactive)
+(defun bjh-packages-installed-p ()
+  (loop for p in bjh-packages
+        when (not (package-installed-p p)) do (return nil)
+        finally (return t)))
+
+(unless (bjh-packages-installed-p)
+  ;; check for new packages (package versions)
+  (message "%s" "Emacs is now refreshing its package database...")
   (package-refresh-contents)
-  (mapc #'(lambda (package)
-            (unless (package-installed-p package)
-		(package-install package)))
-        bjh-packages))
+  (message "%s" " done.")
+  ;; install the missing packages
+  (dolist (p bjh-packages)
+    (when (not (package-installed-p p))
+      (package-install p))))
 
-;(bjh-install-packages)
+;; update weekly
+(require 'auto-package-update)
+(setq auto-package-update-interval 7)
+(auto-package-update-maybe)
 
 ;; removed from Emacs but still used in some libraries http://repo.or.cz/w/emacs.git/patch/3ffbb1932753854b275cd2be6b8c0009cf3380a5
 ;(defun ad-advised-definition-p (definition)
@@ -117,9 +130,6 @@
 ;; -------------
 
 
-;; auto-complete
-(require 'auto-complete)
-
 ;; flycheck
 ; (global-flycheck-mode)
 
@@ -127,6 +137,9 @@
 ;(setq-default flymake-gui-warnings-enabled nil)
 ;(require 'flymake)
 ;(load-library "flymake-cursor")
+
+;; show total matches in modeline
+(global-anzu-mode t)
 
 ;; autopair
 (require 'autopair)
@@ -154,7 +167,7 @@
 
 ;; browse-url
 (setq browse-url-browser-function 'browse-url-chromium
-      browse-url-chromium-program "google-chrome-stable")
+      browse-url-chromium-program "/Users/brett/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
 ;; c-mode
 ;(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
@@ -168,8 +181,8 @@
   "Enable the hooks in the preferred order: 'yas -> auto-complete -> irony'."
   ;; be cautious, if yas is not enabled before (auto-complete-mode 1), overlays
   ;; *may* persist after an expansion.
-  (yas/minor-mode-on)
-  (auto-complete-mode 1)
+  ;; (yas/minor-mode-on)
+  ;; (auto-complete-mode 1)
 
   ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: php-mode
   (when (member major-mode irony-known-modes)
@@ -183,12 +196,7 @@
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 (setq cider-repl-pop-to-buffer-on-connect nil)
 (setq cider-repl-history-file (expand-file-name "~/.emacs.d/cider-history"))
-(require 'ac-cider)
 (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
-(add-hook 'cider-mode-hook 'ac-cider-setup)
-(add-hook 'cider-repl-mode-hook 'ac-cider-setup)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'cider-mode))
 (setq cider-stacktrace-frames-background-color "#2D2828")
 
 ;; clojure-mode
@@ -293,14 +301,21 @@
 
 ;; go-mode
 (require 'go-mode-autoloads)
-(add-hook 'before-save-hook 'gofmt-before-save)
-(add-hook 'go-mode-hook (lambda ()
-                          (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)))
-(add-hook 'go-mode-hook (lambda ()
-                          (local-set-key (kbd "C-c i") 'go-goto-imports)))
+(require 'company)
+(require 'company-go)
+;; (add-hook 'before-save-hook 'gofmt-before-save)
+(add-hook 'go-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
+            (local-set-key (kbd "C-c i") 'go-goto-imports)
+            (local-set-key (kbd "M-.") 'godef-jump)
+            (setq-default)
+            (setq tab-width 2)
+            (setq standard-indent 2)
+            (setq indent-tabs-mode nil)
+            (set (make-local-variable 'company-backends) '(company-go))
+            (company-mode)))
 
-(require 'go-autocomplete)
-(require 'auto-complete-config)
 (require 'go-eldoc)
 (add-hook 'go-mode-hook 'go-eldoc-setup)
 
@@ -389,6 +404,7 @@
                             (local-set-key "\C-cl" 'js-load-file-and-go)))
 
 ;; magit
+(setq-default magit-last-seen-setup-instructions "1.4.0")
 (require 'magit)
 (global-set-key (kbd "C-x g") 'magit-status)
 
@@ -479,7 +495,6 @@
 (add-hook 'term-mode-hook
           '(lambda ()
              (autopair-mode -1)
-             (yas-minor-mode -1)
              (define-key term-raw-map (kbd "C-c C-j") 'bjh-term-line-mode)
              (define-key term-mode-map (kbd "C-c C-k") 'bjh-term-char-mode)
              (define-key term-raw-map (kbd "C-y") 'term-paste)))
@@ -530,10 +545,6 @@
 ;; paren-mode
 (require 'paren)
 (set-face-attribute 'show-paren-match nil :background "gray20" :foreground "white")
-
-;; php-mode
-(require 'php-mode)
-(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 
 ;; puppet-mode
 (require 'puppet-mode)
@@ -629,6 +640,28 @@
                       rcirc-default-user-name
                       rcirc-default-full-name
                       channels)))))
+
+;; rich-minority
+(require 'rich-minority)
+(setq rm-blacklist (quote (" Abbrev"
+                           " Anzu"
+                           " ElDoc"
+                           " FIC"
+                           " Fill"
+                           " Fly"
+                           " GitGutter"
+                           " MRev"
+                           " Paredit"
+                           " Projectile"
+                           " Undo-Tree"
+                           " VHl"
+                           " WS"
+                           " company"
+                           " hl-p"
+                           " hl-s"
+                           " pair"
+                           " yas")))
+(rich-minority-mode)
 
 ;; rust
 (require 'rust-mode)
@@ -728,24 +761,6 @@
 ;; varnish
 (require 'vcl-mode)
 (setq vcl-indent-level 2)
-
-;; which-func-mode
-;; (which-func-mode 1)
-
-;; yasnippet
-;(require 'yasnippet)
-;(yas-global-mode 1)
-
-;; diminish (needs to be run after other modes are loaded)
-(when (require 'diminish nil 'noerror)
-  (diminish 'eldoc-mode "")
-  (diminish 'paredit-mode "Par")
-  ;; (diminish 'auto-complete-mode "")
-  (diminish 'auto-fill-function "")
-  (add-hook 'emacs-lisp-mode-hook
-            (lambda ()
-              (setq mode-name "Elisp"))))
-
 
 ;; --------------
 ;; general config
@@ -998,6 +1013,11 @@ If point was already at that position, move point to beginning of line."
     (message "Window is no longer dedicated.")))
 
 (global-set-key [(super d)] 'toggle-sticky-buffer-window)
+
+;; OS X misc
+(when (eq system-type 'darwin)
+  ;; use core-utils for dired
+  (setq insert-directory-program "gls"))
 
 ;; coding hook
 (defun local-comment-auto-fill ()
@@ -1383,14 +1403,15 @@ buffer-local variable `show-trailing-whitespace'."
     ;; don't support suspend in GUI mode
     (global-unset-key (kbd "C-z"))
 
+    ;; Apple-W to kill buffer, not frame
+    (global-set-key (kbd "s-w") 'kill-this-buffer)
+
     ;; fix path
-    (mapc (lambda (bin-path)
-            (let ((expanded-bin-path (expand-file-name bin-path)))
-              (add-to-list 'exec-path expanded-bin-path)
-              (setenv "PATH" (concat expanded-bin-path ":" (getenv "PATH")))))
-          '("~/bin"
-            "/usr/local/bin"
-            "~/.go/bin"))
+    (exec-path-from-shell-initialize)
+
+    ;; slow down mouse scroll
+    (setq mouse-wheel-scroll-amount '(3))
+    (setq mouse-wheel-progressive-speed nil)
 
     ;; use thinkpad arrows to manipulate windows and buffers
     (defun other-other-window ()

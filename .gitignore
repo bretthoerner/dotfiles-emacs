@@ -1,3 +1,4 @@
+.last-package-update-day
 abbrev_defs
 ac-comphist.dat
 bookmarks
@@ -9,6 +10,7 @@ malabar-mode/
 projects/
 semanticdb
 srecode-map.el
+smex-items
 swank
 url/
 var/
