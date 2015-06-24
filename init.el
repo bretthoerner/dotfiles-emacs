@@ -167,7 +167,7 @@
 
 ;; browse-url
 (setq browse-url-browser-function 'browse-url-chromium
-      browse-url-chromium-program "/Users/brett/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+      browse-url-chromium-program "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
 ;; c-mode
 ;(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
@@ -1292,6 +1292,9 @@ is a comment, uncomment."
 ;; bind above to C-#
 (global-set-key [(meta ?#)] 'comment-or-uncomment-region-or-line)
 
+;; pretty!
+(global-set-key (kbd "C-x \\") 'align-regexp)
+
 ;; always replace region with M-|
 (global-set-key [(meta ?|)]
                 (lambda (beg end out command)
@@ -1439,15 +1442,8 @@ buffer-local variable `show-trailing-whitespace'."
     (global-set-key [(super up)] 'beginning-of-buffer)
     (global-set-key [(super down)] 'end-of-buffer)
 
-    (defun bjh-set-frame-font-size (size)
-      (set-frame-font (concat bjh-font "-" (number-to-string size)))
-      (setq bjh-current-font-size size))
-    (defun bjh-text-scale-increase (inc)
-      (interactive "p")
-      (bjh-set-frame-font-size (+ bjh-current-font-size inc)))
-    (defun bjh-text-scale-decrease (dec)
-      (interactive "p")
-      (bjh-set-frame-font-size (- bjh-current-font-size dec)))
+    (global-set-key (kbd "C-+") 'text-scale-increase)
+    (global-set-key (kbd "C--") 'text-scale-decrease)
 
     ;; dim parens in lisp-modes
     (defface bjh-paren-face
@@ -1464,8 +1460,6 @@ buffer-local variable `show-trailing-whitespace'."
 
     ;; font
     (add-to-list 'default-frame-alist '(font . "Ubuntu Mono derivative Powerline-14"))
-    (setq bjh-font "Ubuntu Mono derivative Powerline")
-    (bjh-set-frame-font-size 14)
 
     ;; bind 'o' to run 'open' command on selected file in dired mode
     (define-key dired-mode-map "o" 'dired-open-gnome)
