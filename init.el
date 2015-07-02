@@ -37,7 +37,6 @@
     clojure-mode
     color-theme
     dash
-    deft
     dired-single
     dockerfile-mode
     enh-ruby-mode
@@ -53,8 +52,6 @@
     gh
     ghc
     gist
-    git-commit-mode
-    git-rebase-mode
     git-timemachine
     gitignore-mode
     gnuplot-mode
@@ -216,12 +213,6 @@
 (define-key global-map (kbd "<S-down-mouse-1>") 'ignore) ; turn off font dialog
 (define-key global-map (kbd "<S-mouse-1>") 'mouse-set-point)
 (put 'mouse-set-point 'CUA 'move)
-
-;; deft
-(require 'deft)
-(setq deft-text-mode 'org-mode
-      deft-auto-save-interval 0
-      deft-extension "org")
 
 ;; dired
 (require 'dired)
