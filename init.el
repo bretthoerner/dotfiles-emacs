@@ -36,6 +36,8 @@
     cider
     clojure-mode
     color-theme
+    company
+    company-go
     dash
     dired-single
     dockerfile-mode
@@ -1450,7 +1452,7 @@ buffer-local variable `show-trailing-whitespace'."
                               '(("(\\|)" . 'bjh-paren-face))))
 
     ;; font
-    (add-to-list 'default-frame-alist '(font . "Ubuntu Mono derivative Powerline-14"))
+    (add-to-list 'default-frame-alist '(font . "Ubuntu Mono-13"))
 
     ;; bind 'o' to run 'open' command on selected file in dired mode
     (define-key dired-mode-map "o" 'dired-open-gnome)
